@@ -1,0 +1,137 @@
+﻿@model List<tontine.MVC.Models.TontineViewModel>
+@{
+    ViewData["Title"] = "Tontines";
+}
+<div style="padding:8px 0;">
+    @if (TempData["Success"] != null) {
+        <div style="margin-bottom:12px; padding:12px; background:#E6F4EE; border-left:4px solid #0F6E56; border-radius:6px; color:#085041;">
+            @TempData["Success"]
+        </div>
+    }
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <div>
+            <h2 style="margin:0; font-size:22px; font-weight:600; color:#1a1a1a;">Gestion des tontines</h2>
+            <p style="margin:4px 0 0; color:#888780; font-size:14px;">@Model.Count tontine(s) enregistré(es)</p>
+        </div>
+        <button type="button" onclick="ouvrirModal()" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 20px; font-size:14px; font-weight:500; cursor:pointer;">
+            + Nouvelle tontine
+        </button>
+    </div>
+
+    <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead>
+                <tr style="background:linear-gradient(135deg, #0F6E56, #1D9E75); color:white;">
+                    <th style="padding:14px 18px; text-align:left;">Libellé</th>
+                    <th style="padding:14px 18px; text-align:left;">Montant</th>
+                    <th style="padding:14px 18px; text-align:left;">Fréquence</th>
+                    <th style="padding:14px 18px; text-align:left;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model) {
+                    <tr style="border-bottom:1px solid #F1EFE8;" onmouseover="this.style.background='#F8FDF9'" onmouseout="this.style.background='white'">
+                        <td style="padding:14px 18px; font-weight:600;">@t.Libelle</td>
+                        <td style="padding:14px 18px;">@(t.Montant.HasValue? t.Montant.Value.ToString("N0") : "0") FCFA</td>
+                        <td style="padding:14px 18px;">@t.Frequence</td>
+                        <td style="padding:14px 18px;">
+                            <div style="display:flex; gap:8px;">
+                                <a asp-action="Edit" asp-route-id="@t.IdTontine" data-confirm-message="Voulez-vous modifier cette tontine ?" style="background:#FFF8E1; color:#F57F17; border:1px solid #FFE082; border-radius:6px; padding:6px 14px; text-decoration:none; font-weight:500;">
+                                    ✏️ Modifier
+                                </a>
+                                <button type="button" onclick="confirmerSuppression(@t.IdTontine, '@t.Libelle')" style="background:#FFEBEE; color:#C62828; border:1px solid #FFCDD2; border-radius:6px; padding:6px 14px; cursor:pointer;">
+                                    🗑️ Supprimer
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any()) {
+                    <tr>
+                        <td colspan="4" style="padding:48px; text-align:center; color:#888780;">
+                            <div style="font-size:32px; margin-bottom:8px;">💸</div>
+                            <div style="font-weight:500;">Aucune tontine enregistrée</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Ajout -->
+<div id="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; overflow-y:auto;">
+    <div style="background:white; border-radius:16px; max-width:700px; margin:40px auto; padding:32px; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid #F1EFE8; padding-bottom:16px;">
+            <div>
+                <h3 style="margin:0; font-size:18px; font-weight:600; color:#1a1a1a;">Nouvelle tontine</h3>
+                <p style="margin:4px 0 0; color:#888780; font-size:13px;">Remplissez les informations</p>
+            </div>
+            <button type="button" onclick="fermerModal()" style="background:#F1EFE8; border:none; border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer; color:#5F5E5A;">✕</button>
+        </div>
+
+        <form asp-action="Create" method="post" data-confirm-message="Voulez-vous enregistrer cette tontine ?">
+            @Html.AntiForgeryToken()
+            <div style="display:grid; gap:14px;">
+                <div>
+                    <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Libellé *</label>
+                    <input name="Libelle" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;" />
+                </div>
+                <div>
+                    <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Montant *</label>
+                    <input name="Montant" type="number" step="0.01" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;" />
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:8px; font-weight:600; color:#0F6E56;">Fréquence</label>
+                    <div style="display:flex; gap:10px;">
+                        <label style="padding:10px; border-radius:8px; border:1px solid #E0E0E0;"><input type="radio" name="Frequence" value="Journalier" /> Journalier</label>
+                        <label style="padding:10px; border-radius:8px; border:1px solid #E0E0E0;"><input type="radio" name="Frequence" value="Hebdomadaire" /> Hebdomadaire</label>
+                        <label style="padding:10px; border-radius:8px; border:1px solid #E0E0E0;"><input type="radio" name="Frequence" value="Mensuel" checked /> Mensuel</label>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px;">
+                    <button type="button" onclick="fermerModal()" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px;">Annuler</button>
+                    <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 24px;">Enregistrer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Suppression -->
+<div id="modal-suppression" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000;">
+    <div style="background:white; border-radius:16px; max-width:420px; margin:120px auto; padding:28px; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+        <div style="text-align:center; margin-bottom:20px;">
+            <div style="font-size:40px; margin-bottom:12px;">⚠️</div>
+            <h3 style="margin:0; font-size:16px; font-weight:600; color:#1a1a1a;">Confirmer la suppression</h3>
+            <p id="msg-suppression" style="margin:8px 0 0; color:#888780; font-size:14px;"></p>
+        </div>
+        <div style="background:#FFEBEE; border-radius:8px; padding:12px; margin-bottom:20px; font-size:13px; color:#C62828;">Cette action est irréversible.</div>
+
+        <form id="form-suppression" method="post" data-confirm-message="Voulez-vous supprimer cette tontine ?">
+            @Html.AntiForgeryToken()
+            <div style="display:flex; gap:12px; justify-content:center;">
+                <button type="button" onclick="fermerSuppression()" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px;">Annuler</button>
+                <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 24px;">🗑️ Supprimer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function ouvrirModal(){ document.getElementById('modal-overlay').style.display='block'; document.body.style.overflow='hidden'; }
+        function fermerModal(){ document.getElementById('modal-overlay').style.display='none'; document.body.style.overflow='auto'; }
+        function confirmerSuppression(id, libelle){
+            document.getElementById('msg-suppression').textContent = `Voulez-vous supprimer : ${libelle} ?`;
+            document.getElementById('form-suppression').action = `/Tontine/Delete/${id}`;
+            document.getElementById('modal-suppression').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        function fermerSuppression(){ document.getElementById('modal-suppression').style.display='none'; document.body.style.overflow='auto'; }
+        document.getElementById('modal-overlay').addEventListener('click', function(e){ if(e.target===this) fermerModal(); });
+        document.getElementById('modal-suppression').addEventListener('click', function(e){ if(e.target===this) fermerSuppression(); });
+    </script>
+}

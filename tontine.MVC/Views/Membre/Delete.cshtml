@@ -1,0 +1,94 @@
+﻿@model tontine.MVC.Models.MembreViewModel
+@{
+    ViewData["Title"] = "Supprimer le membre";
+}
+
+<div style="max-width:600px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">
+            ← Retour à la liste
+        </a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600; color:#1a1a1a;">Supprimer le membre</h2>
+        <p style="margin:0; color:#888780; font-size:14px;">Cette action est irréversible</p>
+    </div>
+
+    <div style="background:white; border-radius:12px; padding:28px;
+                box-shadow:0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);">
+
+        <div style="display:flex; align-items:flex-start; gap:14px;
+                    background:#FFEBEE; border-left:4px solid #C62828;
+                    border-radius:8px; padding:16px; margin-bottom:24px;">
+            <div style="font-size:22px; line-height:1;">⚠️</div>
+            <div>
+                <p style="margin:0; font-weight:600; color:#C62828; font-size:14px;">Attention — suppression définitive</p>
+                <p style="margin:6px 0 0; color:#B71C1C; font-size:13px;">
+                    Voulez-vous vraiment supprimer ce membre ? Toutes ses données seront perdues.
+                </p>
+            </div>
+        </div>
+
+        <div style="background:#F8FDF9; border:1.5px solid #E1F5EE; border-radius:10px; padding:20px; margin-bottom:24px;">
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;
+                        padding-bottom:16px; border-bottom:1px dashed #C8E6C9;">
+                <div style="width:48px; height:48px; border-radius:50%;
+                            background:#0F6E56; color:white; display:flex;
+                            align-items:center; justify-content:center;
+                            font-size:18px; font-weight:600; overflow:hidden;">
+                    @if (!string.IsNullOrEmpty(Model.Photo))
+                    {
+                        <img src="/uploads/@Model.Photo"
+                             style="width:100%; height:100%; object-fit:cover;" />
+                    }
+                    else
+                    {
+                        @Model.Nom.Substring(0, 1).ToUpper()
+                        @Model.Prenom.Substring(0, 1).ToUpper()
+                    }
+                </div>
+                <div>
+                    <p style="margin:0; font-size:16px; font-weight:600; color:#1a1a1a;">@Model.Nom @Model.Prenom</p>
+                    <p style="margin:2px 0 0; font-size:13px; color:#0F6E56;">
+                        Membre depuis le @Model.DateInscription.ToString("dd/MM/yyyy")
+                    </p>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
+                <div>
+                    <span style="color:#888780; display:block; margin-bottom:2px;">Téléphone</span>
+                    <span style="color:#1a1a1a; font-weight:500;">@(Model.Telephone ?? "—")</span>
+                </div>
+                <div>
+                    <span style="color:#888780; display:block; margin-bottom:2px;">Email</span>
+                    <span style="color:#1a1a1a; font-weight:500;">@(Model.Email ?? "—")</span>
+                </div>
+                <div>
+                    <span style="color:#888780; display:block; margin-bottom:2px;">Ville</span>
+                    <span style="color:#1a1a1a; font-weight:500;">@(Model.Ville ?? "—")</span>
+                </div>
+                <div>
+                    <span style="color:#888780; display:block; margin-bottom:2px;">Profession</span>
+                    <span style="color:#1a1a1a; font-weight:500;">@(Model.Profession ?? "—")</span>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdMembre" />
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:20px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index"
+                   style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
+                          border-radius:8px; padding:10px 24px; font-size:14px;
+                          text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit"
+                        style="background:#C62828; color:white; border:none; border-radius:8px;
+                               padding:10px 24px; font-size:14px; font-weight:500; cursor:pointer;
+                               box-shadow:0 2px 8px rgba(198,40,40,0.35);">
+                    🗑️ Confirmer la suppression
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

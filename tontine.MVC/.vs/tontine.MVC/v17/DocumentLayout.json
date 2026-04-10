@@ -1,0 +1,1009 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\tontine.mvc.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:tontine.mvc.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\tontine\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\tontine\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\penalite\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\penalite\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\penalite\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\penalite\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\poste\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\poste\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\cycle\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\cycle\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\penalite\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\penalite\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\poste\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\poste\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\poste\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\poste\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\cycle\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\cycle\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\cycle\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\cycle\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\tontine\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\tontine\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\tontine\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\tontine\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\controllers\\penalitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:controllers\\penalitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\membre\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\membre\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\membre\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\membre\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\controllers\\cyclecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:controllers\\cyclecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\jsonconverters\\dateonlyjsonconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\controllers\\membrecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:controllers\\membrecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\views\\membre\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:views\\membre\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\models\\cycleviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:models\\cycleviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\controllers\\postecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:controllers\\postecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\controllers\\tontinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:controllers\\tontinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\models\\penaliteviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:models\\penaliteviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\models\\posteviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:models\\posteviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\models\\tontineviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:models\\tontineviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\models\\membreviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:models\\membreviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\cycleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\cycleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\penaliteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\penaliteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\ipenaliteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\ipenaliteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\posteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\posteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\iposteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\iposteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\icycleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\icycleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\tontineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\tontineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\itontineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\itontineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\membreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\membreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|c:\\users\\morellelight\\source\\repos\\tontine.mvc\\services\\imembreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{592A5382-8FD8-4C50-8393-002C255EDD0D}|tontine.MVC.csproj|solutionrelative:services\\imembreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\cycletontinepenalitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\membrepostecyclecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\membrecycletontinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\cycletontinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\penalitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\postecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\cyclecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\tontinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\controllers\\membrecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\cycletontinepenalitemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\membrepostecyclemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\membrecycletontinemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\cycletontinemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\penalitemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\postemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\cyclemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\tontinemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\models\\membremodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\tontine.webapi.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{365F24A4-DD39-45C6-8466-8DB5A2102846}|..\\tontine.WebAPI\\tontine.WebAPI.csproj|c:\\users\\morellelight\\source\\repos\\tontine.webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Penalite\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Penalite\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Penalite\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Penalite\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:07:01.255Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Penalite\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Penalite\\Index.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Penalite\\Index.cshtml",
+              "RelativeToolTip": "Views\\Penalite\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAASwAgAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:53.151Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "tontine.MVC.csproj",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\tontine.MVC.csproj",
+              "RelativeDocumentMoniker": "tontine.MVC.csproj",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\tontine.MVC.csproj",
+              "RelativeToolTip": "tontine.MVC.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-07T18:09:02.777Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Cycle\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cycle\\Index.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Cycle\\Index.cshtml",
+              "RelativeToolTip": "Views\\Cycle\\Index.cshtml",
+              "ViewState": "AgIAAIcAAAAAAAAAAAASwJAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:21.003Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Tontine\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tontine\\Index.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Tontine\\Index.cshtml",
+              "RelativeToolTip": "Views\\Tontine\\Index.cshtml",
+              "ViewState": "AgIAABoAAAAAAAAAAAAiwCgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:05:50.185Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Penalite\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Penalite\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Penalite\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Penalite\\Delete.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:07:06.238Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Poste\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Poste\\Index.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Poste\\Index.cshtml",
+              "RelativeToolTip": "Views\\Poste\\Index.cshtml",
+              "ViewState": "AgIAAHQAAAAAAAAAAAASwH0AAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:36.888Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Poste\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Poste\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Poste\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Poste\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:48.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Poste\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Poste\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Poste\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Poste\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:44.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Cycle\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cycle\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Cycle\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Cycle\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:33.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Cycle\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Cycle\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Cycle\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Cycle\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:29.456Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Tontine\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tontine\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Tontine\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Tontine\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:15.643Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Tontine\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tontine\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Tontine\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Tontine\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-07T19:06:01.52Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Membre\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Membre\\Index.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Membre\\Index.cshtml",
+              "RelativeToolTip": "Views\\Membre\\Index.cshtml",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAqwGwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-31T12:31:30.864Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAcwF0AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-31T12:27:17.862Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC8AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:14:11.094Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Membre\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Membre\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Membre\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Membre\\Delete.cshtml",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAqwF0AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-31T12:40:16.067Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PenaliteController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\PenaliteController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PenaliteController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\PenaliteController.cs",
+              "RelativeToolTip": "Controllers\\PenaliteController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAkwDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:24:44.252Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "DateOnlyJsonConverter.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\JsonConverters\\DateOnlyJsonConverter.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\JsonConverters\\DateOnlyJsonConverter.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\JsonConverters\\DateOnlyJsonConverter.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\JsonConverters\\DateOnlyJsonConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T18:04:10.135Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Membre\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Membre\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Views\\Membre\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Membre\\Edit.cshtml",
+              "ViewState": "AgIAALgAAAAAAAAAAAAiwMsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-31T12:36:49.052Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CycleController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\CycleController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CycleController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\CycleController.cs",
+              "RelativeToolTip": "Controllers\\CycleController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAkwDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:21:47.956Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAwwA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-29T21:55:59.428Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Program.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Program.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Program.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAwAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:27:03.72Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "MembreController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\MembreController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MembreController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\MembreController.cs",
+              "RelativeToolTip": "Controllers\\MembreController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwA4AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:18:19.083Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "PosteController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\PosteController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PosteController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\PosteController.cs",
+              "RelativeToolTip": "Controllers\\PosteController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAkwDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:23:13.76Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "TontineController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\TontineController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TontineController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Controllers\\TontineController.cs",
+              "RelativeToolTip": "Controllers\\TontineController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAkwDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:19:41.315Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "CycleViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\CycleViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\CycleViewModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\CycleViewModel.cs",
+              "RelativeToolTip": "Models\\CycleViewModel.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAA3wBUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:11:05.505Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "PenaliteViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\PenaliteViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\PenaliteViewModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\PenaliteViewModel.cs",
+              "RelativeToolTip": "Models\\PenaliteViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:16:09.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "PosteViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\PosteViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\PosteViewModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\PosteViewModel.cs",
+              "RelativeToolTip": "Models\\PosteViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:14:29.028Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "TontineViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\TontineViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\TontineViewModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\TontineViewModel.cs",
+              "RelativeToolTip": "Models\\TontineViewModel.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAAAQAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T12:09:26.424Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "MembreViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\MembreViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\MembreViewModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Models\\MembreViewModel.cs",
+              "RelativeToolTip": "Models\\MembreViewModel.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAA3wDUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:56:47.81Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "PenaliteService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\PenaliteService.cs",
+              "RelativeDocumentMoniker": "Services\\PenaliteService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\PenaliteService.cs",
+              "RelativeToolTip": "Services\\PenaliteService.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:52:44.285Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "IPenaliteService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\IPenaliteService.cs",
+              "RelativeDocumentMoniker": "Services\\IPenaliteService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\IPenaliteService.cs",
+              "RelativeToolTip": "Services\\IPenaliteService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:35:23.086Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "PosteService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\PosteService.cs",
+              "RelativeDocumentMoniker": "Services\\PosteService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\PosteService.cs",
+              "RelativeToolTip": "Services\\PosteService.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAkwDsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:34:08.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "IPosteService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\IPosteService.cs",
+              "RelativeDocumentMoniker": "Services\\IPosteService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\IPosteService.cs",
+              "RelativeToolTip": "Services\\IPosteService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:32:55.908Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "CycleService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\CycleService.cs",
+              "RelativeDocumentMoniker": "Services\\CycleService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\CycleService.cs",
+              "RelativeToolTip": "Services\\CycleService.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAkwDYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:29:52.464Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ICycleService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\ICycleService.cs",
+              "RelativeDocumentMoniker": "Services\\ICycleService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\ICycleService.cs",
+              "RelativeToolTip": "Services\\ICycleService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:28:39.958Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "TontineService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\TontineService.cs",
+              "RelativeDocumentMoniker": "Services\\TontineService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\TontineService.cs",
+              "RelativeToolTip": "Services\\TontineService.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAkwDsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:20:40.38Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "ITontineService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\ITontineService.cs",
+              "RelativeDocumentMoniker": "Services\\ITontineService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\ITontineService.cs",
+              "RelativeToolTip": "Services\\ITontineService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:19:53.943Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "MembreService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\MembreService.cs",
+              "RelativeDocumentMoniker": "Services\\MembreService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\MembreService.cs",
+              "RelativeToolTip": "Services\\MembreService.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAkwEYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:18:56.543Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "IMembreService.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\IMembreService.cs",
+              "RelativeDocumentMoniker": "Services\\IMembreService.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.MVC\\Services\\IMembreService.cs",
+              "RelativeToolTip": "Services\\IMembreService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-31T11:17:56.413Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "CycleTontinePenaliteController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\CycleTontinePenaliteController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\CycleTontinePenaliteController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\CycleTontinePenaliteController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\CycleTontinePenaliteController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAkwDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:53:25.359Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "MembrePosteCycleController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\MembrePosteCycleController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\MembrePosteCycleController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\MembrePosteCycleController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\MembrePosteCycleController.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAkwD4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:51:30.763Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "MembreCycleTontineController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\MembreCycleTontineController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\MembreCycleTontineController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\MembreCycleTontineController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\MembreCycleTontineController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAkwDwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:50:21.519Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "CycleTontineController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\CycleTontineController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\CycleTontineController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\CycleTontineController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\CycleTontineController.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAkwDoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:49:09.853Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "PenaliteController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\PenaliteController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\PenaliteController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\PenaliteController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\PenaliteController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAkwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:48:08.193Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "PosteController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\PosteController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\PosteController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\PosteController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\PosteController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAkwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:47:25.726Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "CycleController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\CycleController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\CycleController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\CycleController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\CycleController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAkwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:46:43.652Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "TontineController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\TontineController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\TontineController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\TontineController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\TontineController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAkwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:45:31.4Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "MembreController.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\MembreController.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Controllers\\MembreController.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Controllers\\MembreController.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Controllers\\MembreController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAkwDQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:44:15.196Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "CycleTontinePenaliteModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\CycleTontinePenaliteModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\CycleTontinePenaliteModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\CycleTontinePenaliteModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\CycleTontinePenaliteModel.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAA3wCQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:40:05.016Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "MembrePosteCycleModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\MembrePosteCycleModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\MembrePosteCycleModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\MembrePosteCycleModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\MembrePosteCycleModel.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAA3wCcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:39:11.564Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "MembreCycleTontineModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\MembreCycleTontineModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\MembreCycleTontineModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\MembreCycleTontineModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\MembreCycleTontineModel.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA3wB4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:38:10.168Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAA6wBIAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:30:42.685Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "CycleTontineModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\CycleTontineModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\CycleTontineModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\CycleTontineModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\CycleTontineModel.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAkwBgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:37:25.399Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "PenaliteModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\PenaliteModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\PenaliteModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\PenaliteModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\PenaliteModel.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAkwBIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:36:26.268Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 56,
+              "Title": "PosteModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\PosteModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\PosteModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\PosteModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\PosteModel.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAkwBMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:35:08.966Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 57,
+              "Title": "CycleModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\CycleModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\CycleModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\CycleModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\CycleModel.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAkwBgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:34:16.894Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "TontineModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\TontineModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\TontineModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\TontineModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\TontineModel.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAkwBUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:33:15.533Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "MembreModel.cs",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\MembreModel.cs",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Models\\MembreModel.cs",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Models\\MembreModel.cs",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Models\\MembreModel.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAA3wDUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-29T22:32:14.949Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "tontine.WebAPI",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\tontine.WebAPI.csproj",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\tontine.WebAPI.csproj",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\tontine.WebAPI.csproj",
+              "RelativeToolTip": "..\\tontine.WebAPI\\tontine.WebAPI.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-29T22:28:03.994Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\appsettings.json",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\appsettings.json",
+              "RelativeToolTip": "..\\tontine.WebAPI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-29T22:21:56.722Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 62,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "..\\tontine.WebAPI\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\MorelleLight\\source\\repos\\tontine.WebAPI\\Properties\\launchSettings.json",
+              "RelativeToolTip": "..\\tontine.WebAPI\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwBUAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-29T22:03:08.583Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

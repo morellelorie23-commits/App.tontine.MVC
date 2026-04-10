@@ -1,0 +1,30 @@
+﻿@model tontine.MVC.Models.PosteViewModel
+@{
+    ViewData["Title"] = "Supprimer le poste";
+}
+<div style="max-width:600px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Supprimer le poste</h2>
+        <p style="margin:0; color:#888780; font-size:14px;">Cette action est irréversible</p>
+    </div>
+
+    <div style="background:white; border-radius:12px; padding:28px;">
+        <div style="display:flex; gap:14px; margin-bottom:16px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:#0F6E56; color:white; display:flex; align-items:center; justify-content:center;">🏷️</div>
+            <div>
+                <p style="margin:0; font-size:16px; font-weight:600;">@Model.LibellePoste</p>
+                <p style="margin:6px 0 0; color:#888780;">@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</p>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post" data-confirm-message="Confirmer la suppression du poste ?">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdPoste" />
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:20px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px;">Annuler</a>
+                <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 24px;">🗑️ Confirmer la suppression</button>
+            </div>
+        </form>
+    </div>
+</div>
