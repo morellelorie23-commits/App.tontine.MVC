@@ -1,8 +1,558 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model tontine.MVC.Models.StatistiqueViewModel
+
+@{
+    ViewData["Title"] = "Tableau de bord";
+
+    string FormatFcfa(decimal v) => v >= 1_000_000
+        ? (v / 1_000_000m).ToString("F1") + " M FCFA"
+        : v >= 1_000
+            ? (v / 1_000m).ToString("F0") + " K FCFA"
+            : v.ToString("N0") + " FCFA";
+
+    int pctPayes = Model.NbCotisations > 0
+        ? (int)Math.Round(100.0 * Model.CotisationsPayees / Model.NbCotisations)
+        : 0;
+
+    string ActionIcon(string action) => action switch {
+        var a when a.Contains("cotisation") => "coins",
+        var a when a.Contains("versement")  => "banknote",
+        var a when a.Contains("membre")     => "user",
+        var a when a.Contains("prêt") || a.Contains("pret") => "credit-card",
+        var a when a.Contains("cycle")      => "refresh-cw",
+        var a when a.Contains("suppression")=> "trash-2",
+        _ => "activity"
+    };
+
+    string TimeAgo(DateTime d) {
+        var diff = DateTime.Now - d;
+        if (diff.TotalMinutes < 1)  return "À l'instant";
+        if (diff.TotalMinutes < 60) return $"Il y a {(int)diff.TotalMinutes} min";
+        if (diff.TotalHours   < 24) return $"Il y a {(int)diff.TotalHours} h";
+        if (diff.TotalDays    < 30) return $"Il y a {(int)diff.TotalDays} j";
+        return d.ToString("dd/MM/yyyy");
+    }
+
+    var chartLabels  = Model.CotisationsParMois.Select(m => m.Mois).ToList();
+    var chartAmounts = Model.CotisationsParMois.Select(m => m.Montant).ToList();
+    var chartCounts  = Model.CotisationsParMois.Select(m => m.Total).ToList();
+    var inscLabels   = Model.InscriptionsParMois.Select(m => m.Mois).ToList();
+    var inscCounts   = Model.InscriptionsParMois.Select(m => m.Total).ToList();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero -->
+<div style="background-image:url('/photo/dashboard.jfif');background-size:cover;background-position:center;margin:-26px -28px 28px -28px;position:relative;overflow:hidden;min-height:90px;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,60,42,0.90) 0%,rgba(11,89,64,0.84) 60%,rgba(15,110,86,0.72) 100%);"></div>
+    <div style="position:absolute;inset:0;padding:20px 36px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;">Tableau de bord</div>
+        <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 3px;">Bonjour, @Context.Session.GetString("user_nom") 👋</h2>
+        <p style="color:rgba(255,255,255,0.8);font-size:14px;margin:0;">@DateTime.Now.ToString("dddd d MMMM yyyy", new System.Globalization.CultureInfo("fr-FR")) — Rôle : <strong style="color:white;">@Context.Session.GetString("user_role")</strong></p>
+    </div>
 </div>
+
+<!-- Filtre par tontine -->
+@if (ViewBag.Tontines != null && ((System.Collections.IList)ViewBag.Tontines).Count > 0)
+{
+    <div style="background:white;border-radius:12px;padding:14px 20px;box-shadow:0 1px 4px rgba(0,0,0,0.07);margin-bottom:24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <i data-lucide="filter" style="width:16px;height:16px;color:#0F6E56;flex-shrink:0;"></i>
+        <span style="font-size:13px;font-weight:600;color:#444;white-space:nowrap;">Filtrer par tontine :</span>
+        <select id="sel-tontine" onchange="chargerStatsTontine(this.value)"
+                style="flex:1;min-width:200px;padding:7px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;outline:none;cursor:pointer;"
+                onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'">
+            <option value="">— Toutes les tontines —</option>
+            @foreach (var t in (List<tontine.MVC.Models.TontineViewModel>)ViewBag.Tontines)
+            {
+                <option value="@t.IdTontine">@t.Libelle</option>
+            }
+        </select>
+        <button onclick="document.getElementById('sel-tontine').value='';document.getElementById('panel-tontine').style.display='none';"
+                style="background:#F4F6F9;border:1px solid #E0E0E0;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;color:#666;">
+            Réinitialiser
+        </button>
+    </div>
+}
+
+<!-- Panneau stats tontine -->
+<div id="panel-tontine" style="display:none;margin-bottom:24px;">
+    <div style="background:linear-gradient(135deg,#0F6E56,#1D9E75);border-radius:12px;padding:18px 24px;color:white;margin-bottom:14px;">
+        <div style="font-size:11px;opacity:0.7;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Analyse tontine</div>
+        <div id="pt-titre" style="font-size:20px;font-weight:800;"></div>
+        <div id="pt-freq"  style="font-size:13px;opacity:0.85;margin-top:2px;"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:10px;">
+        <div style="background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+            <div id="pt-membres" style="font-size:22px;font-weight:800;color:#0F6E56;">—</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Participants</div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+            <div id="pt-cotis" style="font-size:22px;font-weight:800;color:#1565C0;">—</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Total cotisations (FCFA)</div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+            <div id="pt-vers" style="font-size:22px;font-weight:800;color:#E65100;">—</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Total versements (FCFA)</div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);border-left:4px solid #C62828;">
+            <div id="pt-retard" style="font-size:22px;font-weight:800;color:#C62828;">—</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Cotisations en retard</div>
+        </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <div style="flex:1;background:white;border-radius:10px;padding:12px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:10px;">
+            <div style="width:9px;height:9px;border-radius:50%;background:#0F6E56;flex-shrink:0;"></div>
+            <div><span id="pt-payees" style="font-weight:700;">—</span> <span style="font-size:12px;color:#888;">payées</span></div>
+        </div>
+        <div style="flex:1;background:white;border-radius:10px;padding:12px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:10px;">
+            <div style="width:9px;height:9px;border-radius:50%;background:#F57F17;flex-shrink:0;"></div>
+            <div><span id="pt-attente" style="font-weight:700;">—</span> <span style="font-size:12px;color:#888;">en attente</span></div>
+        </div>
+        <div style="flex:1;background:white;border-radius:10px;padding:12px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:10px;">
+            <div style="width:9px;height:9px;border-radius:50%;background:#C62828;flex-shrink:0;"></div>
+            <div><span id="pt-retard2" style="font-weight:700;">—</span> <span style="font-size:12px;color:#888;">en retard</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- ── KPI Cards ──────────────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;">
+
+    <!-- Solde total collecté -->
+    <div class="kpi-card" style="background:linear-gradient(135deg,#0F6E56 0%,#1D9E75 100%);border-radius:14px;padding:20px 22px;color:white;box-shadow:0 4px 20px rgba(15,110,86,0.30);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-18px;right:-18px;width:80px;height:80px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>
+        <div style="position:absolute;bottom:-28px;right:14px;width:110px;height:110px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;opacity:0.85;">Solde collecté</span>
+            <div style="width:36px;height:36px;background:rgba(255,255,255,0.18);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="landmark" style="width:18px;height:18px;"></i>
+            </div>
+        </div>
+        <div style="font-size:24px;font-weight:800;letter-spacing:-0.5px;position:relative;">@FormatFcfa(Model.TotalCotisations)</div>
+        <div style="font-size:11px;opacity:0.75;margin-top:6px;position:relative;">
+            Versements : @FormatFcfa(Model.TotalVersements)
+        </div>
+    </div>
+
+    <!-- Cotisations payées % -->
+    <div class="kpi-card" style="background:white;border-radius:14px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:3px solid #1565C0;position:relative;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#666;">Cotisations payées</span>
+            <div style="width:36px;height:36px;background:#E3F2FD;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="check-circle-2" style="width:18px;height:18px;color:#1565C0;"></i>
+            </div>
+        </div>
+        <div style="font-size:28px;font-weight:800;color:#1565C0;">@pctPayes<span style="font-size:16px;font-weight:600;">%</span></div>
+        <!-- Progress bar -->
+        <div style="margin-top:10px;background:#E3F2FD;border-radius:99px;height:6px;">
+            <div style="background:#1565C0;border-radius:99px;height:6px;width:@pctPayes%;transition:width 1s ease;"></div>
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">@Model.CotisationsPayees payée(s) sur @Model.NbCotisations</div>
+    </div>
+
+    <!-- Retards -->
+    <div class="kpi-card" style="background:white;border-radius:14px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:3px solid @(Model.CotisationsEnRetard > 0 ? "#C62828" : "#0F6E56");position:relative;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#666;">Paiements en retard</span>
+            <div style="width:36px;height:36px;background:@(Model.CotisationsEnRetard > 0 ? "#FFEBEE" : "#E6F4EE");border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="@(Model.CotisationsEnRetard > 0 ? "alert-triangle" : "check")" style="width:18px;height:18px;color:@(Model.CotisationsEnRetard > 0 ? "#C62828" : "#0F6E56");"></i>
+            </div>
+        </div>
+        <div style="font-size:28px;font-weight:800;color:@(Model.CotisationsEnRetard > 0 ? "#C62828" : "#0F6E56");">@Model.CotisationsEnRetard</div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">@Model.CotisationsEnAttente en attente</div>
+        <a asp-controller="Cotisation" asp-action="Index" style="font-size:11px;color:#C62828;text-decoration:none;font-weight:600;">Voir les retards →</a>
+    </div>
+
+    <!-- Prêts actifs -->
+    <div class="kpi-card" style="background:white;border-radius:14px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:3px solid #E65100;position:relative;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#666;">Prêts actifs</span>
+            <div style="width:36px;height:36px;background:#FFF3E0;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="credit-card" style="width:18px;height:18px;color:#E65100;"></i>
+            </div>
+        </div>
+        <div style="font-size:28px;font-weight:800;color:#E65100;">@Model.PretsEnCours</div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">
+            @if (Model.PretsEnRetard > 0)
+            {
+                <span style="color:#C62828;font-weight:600;">⚠ @Model.PretsEnRetard en retard</span>
+            }
+            else
+            {
+                <span style="color:#0F6E56;font-weight:600;">✓ Aucun retard</span>
+            }
+        </div>
+        <a asp-controller="Pret" asp-action="Index" style="font-size:11px;color:#E65100;text-decoration:none;font-weight:600;">Gérer les prêts →</a>
+    </div>
+
+</div>
+
+<!-- ── Charts Row ─────────────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:3fr 2fr;gap:20px;margin-bottom:28px;">
+
+    <!-- Line chart : Cotisations / mois -->
+    <div style="background:white;border-radius:14px;padding:22px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div>
+                <h4 style="margin:0;font-size:14px;font-weight:700;color:#1a1a1a;">Cotisations — 6 derniers mois</h4>
+                <p style="margin:3px 0 0;font-size:12px;color:#888;">Montants collectés (FCFA)</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;font-size:11px;color:#666;">
+                <span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:3px;background:#0F6E56;border-radius:2px;display:inline-block;"></span>Montant</span>
+                <span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:3px;background:#1565C0;border-radius:2px;display:inline-block;border-style:dashed;"></span>Nb cotisations</span>
+            </div>
+        </div>
+        @if (!Model.CotisationsParMois.Any())
+        {
+            <div style="height:180px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">
+                <div style="text-align:center;">
+                    <i data-lucide="bar-chart-2" style="width:32px;height:32px;opacity:.3;display:block;margin:0 auto 8px;"></i>
+                    Aucune donnée sur cette période
+                </div>
+            </div>
+        }
+        else
+        {
+            <canvas id="chartCotisations" style="max-height:200px;"></canvas>
+        }
+    </div>
+
+    <!-- Bar chart : Inscriptions / mois -->
+    <div style="background:white;border-radius:14px;padding:22px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <div style="margin-bottom:20px;">
+            <h4 style="margin:0;font-size:14px;font-weight:700;color:#1a1a1a;">Nouveaux membres</h4>
+            <p style="margin:3px 0 0;font-size:12px;color:#888;">Inscriptions par mois</p>
+        </div>
+        @if (!Model.InscriptionsParMois.Any())
+        {
+            <div style="height:180px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">
+                <div style="text-align:center;">
+                    <i data-lucide="users" style="width:32px;height:32px;opacity:.3;display:block;margin:0 auto 8px;"></i>
+                    Aucune inscription
+                </div>
+            </div>
+        }
+        else
+        {
+            <canvas id="chartMembres" style="max-height:200px;"></canvas>
+        }
+    </div>
+
+</div>
+
+<!-- ── Bottom Row : Stats + Quick Actions + Alerts + Journal ──────── -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:28px;">
+
+    <!-- Résumé données -->
+    <div style="background:white;border-radius:14px;padding:22px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <h4 style="margin:0 0 18px;font-size:14px;font-weight:700;color:#1a1a1a;">Résumé général</h4>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            @foreach (var (label, value, bg, clr) in new (string, string, string, string)[]
+            {
+                ("Membres",        Model.TotalMembres.ToString(),  "#E6F4EE", "#0F6E56"),
+                ("Tontines",       Model.TotalTontines.ToString(), "#E3F2FD", "#1565C0"),
+                ("Cycles actifs",  Model.CyclesActifs.ToString(),  "#E8F5E9", "#2E7D32"),
+                ("Postes",         Model.TotalPostes.ToString(),   "#F3E5F5", "#6A1B9A"),
+                ("Types pénalités",Model.TotalPenalites.ToString(),"#FFF3E0", "#E65100"),
+                ("Amendes en attente",Model.AmendesEnAttente.ToString(),"#F3E5F5", "#7B1FA2"),
+            })
+            {
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:@bg;border-radius:10px;">
+                    <span style="font-size:13px;font-weight:500;color:#444;">@label</span>
+                    <span style="font-size:18px;font-weight:800;color:@clr;">@value</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Accès rapide -->
+    <div style="background:white;border-radius:14px;padding:22px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <h4 style="margin:0 0 18px;font-size:14px;font-weight:700;color:#1a1a1a;">Actions rapides</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            @foreach (var (icon, label, sub, ctrl, act, bg, clr) in new (string,string,string,string,string,string,string)[]
+            {
+                ("user-plus",      "Nouveau membre",      "Ajouter à la tontine",    "Membre",     "Create",  "#E6F4EE", "#0F6E56"),
+                ("wallet",         "Enregistrer paiement","Cotisation / versement",  "Cotisation", "Create",  "#E3F2FD", "#1565C0"),
+                ("split",          "Répartir les fonds",  "Versements cycle",        "CycleTontine","Index",  "#F3E5F5", "#7B1FA2"),
+                ("file-bar-chart", "Rapport financier",   "Exporter en PDF",         "Rapport",    "Index",   "#FFF3E0", "#E65100"),
+                ("credit-card",    "Nouveau prêt",        "Enregistrer un emprunt",  "Pret",       "Create",  "#FFEBEE", "#C62828"),
+                ("gavel",          "Amendes",             "Gérer les pénalités",     "Amende",     "Index",   "#F3E5F5", "#7B1FA2"),
+            })
+            {
+                <a asp-controller="@ctrl" asp-action="@act" style="text-decoration:none;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;border:1.5px solid transparent;transition:all .2s;"
+                         onmouseover="this.style.background='@bg';this.style.borderColor='@clr';this.style.transform='translateX(3px)'"
+                         onmouseout="this.style.background='transparent';this.style.borderColor='transparent';this.style.transform='translateX(0)'">
+                        <div style="width:36px;height:36px;background:@bg;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i data-lucide="@icon" style="width:17px;height:17px;color:@clr;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;font-weight:600;color:#1a1a1a;">@label</div>
+                            <div style="font-size:11px;color:#888;">@sub</div>
+                        </div>
+                        <i data-lucide="chevron-right" style="width:14px;height:14px;color:#ccc;margin-left:auto;"></i>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Alertes -->
+    <div style="background:white;border-radius:14px;padding:22px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <h4 style="margin:0 0 18px;font-size:14px;font-weight:700;color:#1a1a1a;">Alertes</h4>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+
+            @if (Model.CotisationsEnRetard > 0)
+            {
+                <a asp-controller="Cotisation" asp-action="Index" style="text-decoration:none;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#FFEBEE;border-radius:10px;border-left:4px solid #C62828;"
+                         onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                        <i data-lucide="alert-circle" style="width:20px;height:20px;color:#C62828;flex-shrink:0;"></i>
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:700;color:#C62828;">@Model.CotisationsEnRetard cotisation(s) en retard</div>
+                            <div style="font-size:11px;color:#B71C1C;margin-top:2px;">Action requise</div>
+                        </div>
+                        <i data-lucide="chevron-right" style="width:14px;height:14px;color:#C62828;"></i>
+                    </div>
+                </a>
+            }
+
+            @if (Model.PretsEnRetard > 0)
+            {
+                <a asp-controller="Pret" asp-action="Index" style="text-decoration:none;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#FFF3E0;border-radius:10px;border-left:4px solid #E65100;"
+                         onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                        <i data-lucide="clock" style="width:20px;height:20px;color:#E65100;flex-shrink:0;"></i>
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:700;color:#E65100;">@Model.PretsEnRetard prêt(s) en retard</div>
+                            <div style="font-size:11px;color:#BF360C;margin-top:2px;">Remboursements dépassés</div>
+                        </div>
+                        <i data-lucide="chevron-right" style="width:14px;height:14px;color:#E65100;"></i>
+                    </div>
+                </a>
+            }
+
+            @if (Model.CotisationsEnAttente > 0)
+            {
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#FFF8E1;border-radius:10px;border-left:4px solid #F9A825;">
+                    <i data-lucide="hourglass" style="width:20px;height:20px;color:#F57F17;flex-shrink:0;"></i>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#F57F17;">@Model.CotisationsEnAttente en attente</div>
+                        <div style="font-size:11px;color:#E65100;margin-top:2px;">Paiements à confirmer</div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.AmendesEnAttente > 0)
+            {
+                <a asp-controller="Amende" asp-action="Index" style="text-decoration:none;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F3E5F5;border-radius:10px;border-left:4px solid #7B1FA2;"
+                         onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                        <i data-lucide="gavel" style="width:20px;height:20px;color:#7B1FA2;flex-shrink:0;"></i>
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:700;color:#7B1FA2;">@Model.AmendesEnAttente amende(s) en attente</div>
+                            <div style="font-size:11px;color:#6A1B9A;margin-top:2px;">@FormatFcfa(Model.MontantAmendesEnAttente) à recouvrer</div>
+                        </div>
+                        <i data-lucide="chevron-right" style="width:14px;height:14px;color:#7B1FA2;"></i>
+                    </div>
+                </a>
+            }
+
+            @if (Model.CotisationsEnRetard == 0 && Model.PretsEnRetard == 0 && Model.CotisationsEnAttente == 0 && Model.AmendesEnAttente == 0)
+            {
+                <div style="text-align:center;padding:24px 0;color:#888;">
+                    <i data-lucide="shield-check" style="width:32px;height:32px;color:#0F6E56;display:block;margin:0 auto 10px;"></i>
+                    <div style="font-size:13px;font-weight:600;color:#0F6E56;">Tout est à jour !</div>
+                    <div style="font-size:12px;margin-top:4px;">Aucune alerte en cours</div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+<!-- ── Journal récent ─────────────────────────────────────────────── -->
+<div style="background:white;border-radius:14px;padding:22px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <h4 style="margin:0;font-size:14px;font-weight:700;color:#1a1a1a;">Activités récentes</h4>
+        <a asp-controller="Journal" asp-action="Index" style="font-size:12px;color:#0F6E56;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px;">
+            Voir tout <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
+        </a>
+    </div>
+
+    @if (!Model.JournalRecents.Any())
+    {
+        <div style="text-align:center;padding:32px 0;color:#888;">
+            <i data-lucide="clipboard-list" style="width:32px;height:32px;opacity:.3;display:block;margin:0 auto 8px;"></i>
+            <span style="font-size:13px;">Aucune activité enregistrée</span>
+        </div>
+    }
+    else
+    {
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;">
+            @foreach (var (j, idx) in Model.JournalRecents.Take(8).Select((j, i) => (j, i)))
+            {
+                var iconBg = j.Action.ToLower() switch {
+                    var a when a.Contains("suppression") => ("#FFEBEE", "#C62828"),
+                    var a when a.Contains("cotisation")  => ("#E6F4EE", "#0F6E56"),
+                    var a when a.Contains("versement")   => ("#E3F2FD", "#1565C0"),
+                    var a when a.Contains("prêt") || a.Contains("pret") => ("#FFF3E0", "#E65100"),
+                    _ => ("#F3E5F5", "#7B1FA2")
+                };
+                <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#FAFAFA;border-radius:10px;">
+                    <div style="width:34px;height:34px;background:@iconBg.Item1;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i data-lucide="@ActionIcon(j.Action.ToLower())" style="width:16px;height:16px;color:@iconBg.Item2;"></i>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@j.Action</div>
+                        @if (!string.IsNullOrEmpty(j.Description))
+                        {
+                            <div style="font-size:11px;color:#666;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@j.Description</div>
+                        }
+                        <div style="font-size:11px;color:#aaa;margin-top:3px;">@TimeAgo(j.DateAction)</div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .kpi-card { transition: transform .2s, box-shadow .2s; }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.13) !important; }
+</style>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+Chart.defaults.font.family = "'Segoe UI', sans-serif";
+Chart.defaults.color = '#888780';
+
+// ── Line chart : Cotisations par mois ──────────────────────────────
+(function() {
+    var el = document.getElementById('chartCotisations');
+    if (!el) return;
+    var labels  = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(chartLabels));
+    var amounts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(chartAmounts));
+    var counts  = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(chartCounts));
+
+    new Chart(el, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Montant (FCFA)',
+                    data: amounts,
+                    borderColor: '#0F6E56',
+                    backgroundColor: 'rgba(15,110,86,0.08)',
+                    borderWidth: 2.5,
+                    pointBackgroundColor: '#0F6E56',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.35,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Nombre',
+                    data: counts,
+                    borderColor: '#1565C0',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 4],
+                    pointBackgroundColor: '#1565C0',
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    fill: false,
+                    tension: 0.35,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1a1a1a',
+                    padding: 10,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => ctx.datasetIndex === 0
+                            ? ' ' + ctx.parsed.y.toLocaleString('fr-FR') + ' FCFA'
+                            : ' ' + ctx.parsed.y + ' cotisation(s)'
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+                y: {
+                    position: 'left',
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    ticks: { font: { size: 11 }, callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v }
+                },
+                y1: { position: 'right', grid: { display: false }, ticks: { font: { size: 11 } } }
+            }
+        }
+    });
+})();
+
+// ── Bar chart : Inscriptions par mois ──────────────────────────────
+(function() {
+    var el = document.getElementById('chartMembres');
+    if (!el) return;
+    var labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(inscLabels));
+    var counts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(inscCounts));
+
+    new Chart(el, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Inscriptions',
+                data: counts,
+                backgroundColor: counts.map((_, i) => i === counts.length - 1 ? '#0F6E56' : 'rgba(15,110,86,0.25)'),
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1a1a1a',
+                    padding: 10,
+                    cornerRadius: 8,
+                    callbacks: { label: ctx => ' ' + ctx.parsed.y + ' membre(s)' }
+                }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+                y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 }, precision: 0 } }
+            }
+        }
+    });
+})();
+
+// ── Stats tontine (inchangé) ───────────────────────────────────────
+function chargerStatsTontine(id) {
+    if (!id) { document.getElementById('panel-tontine').style.display = 'none'; return; }
+    fetch('@Url.Action("TontineStats","Home")/' + id)
+        .then(r => r.json())
+        .then(function(d) {
+            var s = d.value || d;
+            document.getElementById('pt-titre').textContent   = s.libelle || '';
+            document.getElementById('pt-freq').textContent    = 'Fréquence : ' + (s.frequence || '—');
+            document.getElementById('pt-membres').textContent = s.nbMembres ?? '—';
+            document.getElementById('pt-cotis').textContent   = (s.totalCotisations ?? 0).toLocaleString('fr-FR');
+            document.getElementById('pt-vers').textContent    = (s.totalVersements  ?? 0).toLocaleString('fr-FR');
+            document.getElementById('pt-retard').textContent  = s.cotisationsEnRetard ?? '—';
+            document.getElementById('pt-payees').textContent  = s.cotisationsPayees   ?? '—';
+            document.getElementById('pt-attente').textContent = s.cotisationsAttente  ?? '—';
+            document.getElementById('pt-retard2').textContent = s.cotisationsRetard   ?? '—';
+            document.getElementById('panel-tontine').style.display = 'block';
+        })
+        .catch(function() {});
+}
+</script>
+}

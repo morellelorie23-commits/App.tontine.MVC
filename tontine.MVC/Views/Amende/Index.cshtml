@@ -1,0 +1,143 @@
+@model List<tontine.MVC.Models.AmendeViewModel>
+@{ ViewData["Title"] = "Amendes"; string F(decimal v) => v.ToString("N0") + " FCFA"; }
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div>
+        <h2 style="margin:0;font-size:22px;font-weight:700;">Amendes</h2>
+        <p style="margin:4px 0 0;color:#888;font-size:14px;">
+            @Model.Count amende(s) —
+            Total : <strong style="color:#C62828;">@F(Model.Sum(m => m.MontantAmende))</strong>
+        </p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+        <a asp-controller="Cotisation" asp-action="Index"
+           style="background:#F4F6F9;color:#444;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:6px;">
+            <i data-lucide="arrow-left" style="width:15px;height:15px;"></i> Cotisations
+        </a>
+        <form asp-action="Generer" method="post" style="margin:0;">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    style="background:#0F6E56;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                <i data-lucide="refresh-cw" style="width:15px;height:15px;"></i> Générer les amendes
+            </button>
+        </form>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div style="background:#E8F5E9;border-left:4px solid #2E7D32;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#1B5E20;">
+        @TempData["Success"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div style="background:white;border-radius:12px;padding:56px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <i data-lucide="check-circle-2" style="width:48px;height:48px;color:#0F6E56;margin-bottom:16px;"></i>
+        <h3 style="margin:0 0 8px;color:#1a1a1a;">Aucune amende</h3>
+        <p style="color:#888;font-size:14px;margin:0;">Cliquez sur "Générer les amendes" pour calculer les pénalités du cycle en cours.</p>
+    </div>
+}
+else
+{
+    var payees = Model.Count(m => m.EstPayee);
+    var enAttente = Model.Count - payees;
+
+    <!-- Résumé -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+            <div style="font-size:24px;font-weight:800;color:#C62828;">@enAttente</div>
+            <div style="font-size:12px;color:#888;margin-top:4px;">En attente</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+            <div style="font-size:24px;font-weight:800;color:#2E7D32;">@payees</div>
+            <div style="font-size:12px;color:#888;margin-top:4px;">Payées</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+            <div style="font-size:24px;font-weight:800;color:#E65100;">@F(Model.Sum(m => m.MontantCotisation))</div>
+            <div style="font-size:12px;color:#888;margin-top:4px;">Cotisations dues</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.07);border-left:4px solid #C62828;">
+            <div style="font-size:24px;font-weight:800;color:#C62828;">@F(Model.Sum(m => m.MontantAmende))</div>
+            <div style="font-size:12px;color:#888;margin-top:4px;">Total amendes</div>
+        </div>
+    </div>
+
+    <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#0F6E56;color:white;">
+                    <th style="padding:14px 16px;text-align:left;font-size:13px;">Membre</th>
+                    <th style="padding:14px 16px;text-align:left;font-size:13px;">Tontine</th>
+                    <th style="padding:14px 16px;text-align:left;font-size:13px;">Cycle</th>
+                    <th style="padding:14px 16px;text-align:left;font-size:13px;">Date cotisation</th>
+                    <th style="padding:14px 16px;text-align:right;font-size:13px;">Cotisation</th>
+                    <th style="padding:14px 16px;text-align:right;font-size:13px;">Taux</th>
+                    <th style="padding:14px 16px;text-align:right;font-size:13px;color:#FFD54F;">Amende</th>
+                    <th style="padding:14px 16px;text-align:center;font-size:13px;">Statut</th>
+                    <th style="padding:14px 16px;text-align:center;font-size:13px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.OrderByDescending(x => x.DateCotisation))
+                {
+                    <tr style="border-bottom:1px solid #F4F6F9;">
+                        <td style="padding:13px 16px;font-size:13px;font-weight:600;">@a.NomMembre</td>
+                        <td style="padding:13px 16px;font-size:13px;color:#555;">@a.LibelleTontine</td>
+                        <td style="padding:13px 16px;font-size:13px;color:#555;">@a.NomCycle</td>
+                        <td style="padding:13px 16px;font-size:13px;color:#555;">@a.DateCotisation.ToString("dd/MM/yyyy")</td>
+                        <td style="padding:13px 16px;font-size:13px;text-align:right;">@F(a.MontantCotisation)</td>
+                        <td style="padding:13px 16px;font-size:13px;text-align:right;color:#E65100;">@a.TauxApplique.ToString("0.##")%</td>
+                        <td style="padding:13px 16px;font-size:13px;text-align:right;font-weight:700;color:#C62828;">@F(a.MontantAmende)</td>
+                        <td style="padding:13px 16px;text-align:center;">
+                            @if (a.EstPayee)
+                            {
+                                <span style="background:#E8F5E9;color:#2E7D32;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;">
+                                    Payée @(a.DatePaiement.HasValue ? "le " + a.DatePaiement.Value.ToString("dd/MM/yyyy") : "")
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="background:#FFF3F3;color:#C62828;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;">
+                                    En attente
+                                </span>
+                            }
+                        </td>
+                        <td style="padding:13px 16px;text-align:center;">
+                            <div style="display:flex;gap:6px;justify-content:center;">
+                                @if (!a.EstPayee)
+                                {
+                                    <form asp-action="MarquerPayee" method="post" style="margin:0;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@a.IdAmende" />
+                                        <button type="submit" title="Marquer comme payée"
+                                                style="background:#E8F5E9;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;color:#2E7D32;">
+                                            <i data-lucide="check" style="width:14px;height:14px;"></i>
+                                        </button>
+                                    </form>
+                                }
+                                <form asp-action="Delete" method="post" style="margin:0;"
+                                      onsubmit="return confirm('Supprimer cette amende ?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@a.IdAmende" />
+                                    <button type="submit" title="Supprimer"
+                                            style="background:#FFF3F3;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;color:#C62828;">
+                                        <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="background:#FFF3F3;">
+                    <td colspan="6" style="padding:13px 16px;font-size:13px;font-weight:700;text-align:right;color:#C62828;">TOTAL AMENDES :</td>
+                    <td style="padding:13px 16px;font-size:14px;font-weight:800;text-align:right;color:#C62828;">@F(Model.Sum(m => m.MontantAmende))</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
