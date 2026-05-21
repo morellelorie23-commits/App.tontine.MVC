@@ -1,0 +1,93 @@
+@model tontine.MVC.Models.MembreCycleTontineViewModel
+@{
+    ViewData["Title"] = "Nouvelle participation";
+}
+
+<div style="max-width:560px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Nouvelle participation</h2>
+    </div>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div style="background:white; border-radius:12px; padding:28px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+            @if (!ViewData.ModelState.IsValid) {
+                <div style="margin-bottom:16px; padding:12px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#B71C1C;">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors)) {
+                        <p style="margin:2px 0; font-size:13px;">› @error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            {{/* Cycle (lecture seule) */}}
+            <div style="margin-bottom:16px;">
+                <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle</label>
+                <div style="padding:10px 14px; border:1.5px solid #0F6E56; border-radius:8px; font-size:14px; background:#F0FAF6; color:#0F6E56; font-weight:500;">
+                    @ViewData["CycleNom"]
+                </div>
+                <input asp-for="IdCycle" type="hidden" />
+            </div>
+
+            {{/* Membre + Tontine */}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label asp-for="IdMembre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="IdMembre" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="">-- Sélectionner --</option>
+                        @foreach(var m in ViewData["Membres"] as List<MembreViewModel> ?? new()) {
+                            <option value="@m.IdMembre">@m.Nom @m.Prenom</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdMembre" style="color:#C62828; font-size:12px;"></span>
+                </div>
+                <div>
+                    <label asp-for="IdTontine" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="IdTontine" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="">-- Sélectionner --</option>
+                        @foreach(var t in ViewData["Tontines"] as List<TontineViewModel> ?? new()) {
+                            <option value="@t.IdTontine">@t.Libelle</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdTontine" style="color:#C62828; font-size:12px;"></span>
+                </div>
+            </div>
+
+            {{/* Matricule + Numéro d'ordre */}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label asp-for="Matricule" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="Matricule" type="text" placeholder="ex: MCT-001"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                </div>
+                <div>
+                    <label asp-for="NumeroOrdre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="NumeroOrdre" type="number" min="1" placeholder="1, 2, 3…"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                    <span style="font-size:11px; color:#888;">Position dans la rotation de versement</span>
+                </div>
+            </div>
+
+            {{/* Nombre de parts */}}
+            <div style="margin-bottom:20px;">
+                <label asp-for="NombreParts" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                <select asp-for="NombreParts" style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                    <option value="0.5">Demi-part (½) — cotise la moitié, reçoit la moitié du pot</option>
+                    <option value="1" selected>Part entière (×1) — participation standard</option>
+                    <option value="2">Double part (×2) — cotise le double, 2 tours de rotation</option>
+                </select>
+                <span style="font-size:11px; color:#888;">La déduction lors du versement est proportionnelle aux parts</span>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">Annuler</a>
+                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">Enregistrer</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

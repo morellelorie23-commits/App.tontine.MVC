@@ -1,0 +1,76 @@
+@model tontine.MVC.Models.VersementViewModel
+@{
+    ViewData["Title"] = "Nouveau versement";
+}
+
+<div style="max-width:520px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Nouveau versement</h2>
+    </div>
+
+    <form asp-action="Create" method="post"
+          data-confirm="Voulez-vous enregistrer ce versement ?"
+          data-confirm-type="create">
+        @Html.AntiForgeryToken()
+        <div style="background:white; border-radius:12px; padding:28px;
+                    box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label asp-for="IdMembre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="IdMembre" asp-items="ViewBag.Membres"
+                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                    <span asp-validation-for="IdMembre" style="color:#C62828; font-size:12px;"></span>
+                </div>
+                <div>
+                    <label asp-for="IdTontine" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="IdTontine" asp-items="ViewBag.Tontines"
+                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                    <span asp-validation-for="IdTontine" style="color:#C62828; font-size:12px;"></span>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle</label>
+                    <div style="padding:10px 14px; border:1.5px solid #0F6E56; border-radius:8px; font-size:14px; background:#F0FAF6; color:#0F6E56; font-weight:500;">
+                        @ViewData["CycleNom"]
+                    </div>
+                    <input asp-for="IdCycle" type="hidden" />
+                </div>
+                <div>
+                    <label asp-for="Montant" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="Montant" type="number" step="100" min="0"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                    <span asp-validation-for="Montant" style="color:#C62828; font-size:12px;"></span>
+                </div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label asp-for="Notes" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                <textarea asp-for="Notes" rows="3"
+                          style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;"></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
+                   border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px;
+                        padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
