@@ -1,76 +1,300 @@
 @model tontine.MVC.Models.VersementViewModel
 @{
-    ViewData["Title"] = "Nouveau versement";
+    ViewData["Title"] = "Nouvelle seance de versement";
+    var cycleNom = ViewData["CycleNom"] as string ?? "-";
 }
 
-<div style="max-width:520px;">
-    <div style="margin-bottom:24px;">
-        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
-        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Nouveau versement</h2>
+<style>
+.ses-wrap   { max-width:1200px; }
+.ses-top    { display:grid; grid-template-columns:1fr auto auto; gap:16px; align-items:center;
+              background:white; border-radius:12px; padding:16px 22px;
+              box-shadow:0 1px 4px rgba(0,0,0,0.07); margin-bottom:18px; }
+.ses-body   { display:grid; grid-template-columns:220px 1fr; gap:16px; }
+.ses-left   { background:white; border-radius:12px; padding:20px 18px;
+              box-shadow:0 1px 4px rgba(0,0,0,0.07); display:flex; flex-direction:column; gap:14px; }
+.ses-right  { background:white; border-radius:12px; padding:20px;
+              box-shadow:0 1px 4px rgba(0,0,0,0.07); overflow-x:auto; }
+.flabel     { font-size:11px; font-weight:700; color:#555; text-transform:uppercase;
+              letter-spacing:.6px; display:block; margin-bottom:5px; }
+.finput     { width:100%; padding:9px 12px; border:1.5px solid #DDD; border-radius:8px;
+              font-size:13.5px; background:white; box-sizing:border-box; }
+.finput:focus { border-color:#0F6E56; outline:none; }
+.fro        { width:100%; padding:9px 12px; border:1.5px solid #C8E6D8; border-radius:8px;
+              font-size:13.5px; background:#EAF7F0; color:#0B6644; font-weight:600;
+              box-sizing:border-box; }
+.fro-total  { width:100%; padding:11px 12px; border:2px solid #0F6E56; border-radius:8px;
+              font-size:15px; font-weight:800; color:#0F6E56; background:#F0FAF6;
+              box-sizing:border-box; text-align:right; }
+.fro-ret    { width:100%; padding:11px 12px; border:2px solid #E65100; border-radius:8px;
+              font-size:15px; font-weight:800; color:#E65100; background:#FFF3E0;
+              box-sizing:border-box; text-align:right; }
+.ses-tbl    { width:100%; border-collapse:collapse; font-size:13px; min-width:700px; }
+.ses-tbl th { padding:10px 12px; font-weight:700; font-size:11px; text-transform:uppercase;
+              letter-spacing:.5px; white-space:nowrap; }
+.ses-tbl td { padding:10px 12px; border-bottom:1px solid #F1EFE8; }
+.th-main    { background:#073C2A; color:white; }
+.th-sub     { background:#0F6E56; color:white; text-align:center; }
+.th-sub-or  { background:#E65100; color:white; text-align:center; }
+.cash-in    { width:110px; padding:7px 10px; border:1.5px solid #C8E6D8; border-radius:6px;
+              font-size:13px; text-align:right; box-sizing:border-box; background:#F9FFFC; }
+.cash-in:focus { border-color:#0F6E56; outline:none; }
+.btn-save   { background:#0F6E56; color:white; border:none; border-radius:8px;
+              padding:11px 0; font-size:14px; font-weight:700; cursor:pointer; width:100%;
+              margin-top:auto; }
+.btn-cancel { display:block; text-align:center; background:white; color:#5F5E5A;
+              border:1.5px solid #CCC; border-radius:8px; padding:9px 0; font-size:13px;
+              text-decoration:none; font-weight:500; width:100%; box-sizing:border-box; }
+.tag-pret   { display:inline-block; padding:2px 8px; background:#FFEBEE; color:#C62828;
+              border-radius:10px; font-size:11px; font-weight:700; }
+.tag-pen    { display:inline-block; padding:2px 8px; background:#FFF3E0; color:#E65100;
+              border-radius:10px; font-size:11px; font-weight:700; }
+.encours-neg { color:#C62828; font-weight:700; }
+.encours-ok  { color:#0F6E56; font-weight:700; }
+#empty-row td { padding:32px; text-align:center; color:#AAA; }
+</style>
+
+<div class="ses-wrap">
+    <div style="margin-bottom:14px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none;">← Retour aux versements</a>
+        <h2 style="margin:6px 0 0; font-size:21px; font-weight:700;">Nouvelle seance de versement</h2>
     </div>
 
-    <form asp-action="Create" method="post"
-          data-confirm="Voulez-vous enregistrer ce versement ?"
-          data-confirm-type="create">
+    <form asp-action="Create" method="post" id="form-session">
         @Html.AntiForgeryToken()
-        <div style="background:white; border-radius:12px; padding:28px;
-                    box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+        <input type="hidden" asp-for="IdCycle" />
+        <input type="hidden" asp-for="Montant" id="hid-montant" />
+        <input type="hidden" asp-for="DateVersement" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")" />
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <!-- TOP BAR -->
+        <div class="ses-top">
+            <div>
+                <label class="flabel" asp-for="IdTontine"></label>
+                <select asp-for="IdTontine" class="finput" id="sel-tontine" onchange="chargerMembres()">
+                    <option value="">-- Choisir une tontine --</option>
+                    @foreach (var item in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Tontines)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div style="text-align:center; min-width:140px;">
+                <label class="flabel">Solde caisse</label>
+                <div class="fro" id="solde-caisse" style="text-align:center;">-- FCFA</div>
+            </div>
+            <div style="text-align:center; min-width:160px;">
+                <label class="flabel">Reunion / Cycle</label>
+                <div class="fro" style="text-align:center;">@cycleNom</div>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="ses-body">
+
+            <!-- LEFT : Beneficiaire + totaux -->
+            <div class="ses-left">
                 <div>
-                    <label asp-for="IdMembre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <select asp-for="IdMembre" asp-items="ViewBag.Membres"
-                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                    <label class="flabel" asp-for="IdMembre"></label>
+                    <select asp-for="IdMembre" class="finput" id="sel-benef" onchange="calculerTotaux()">
                         <option value="">-- Choisir --</option>
+                        @foreach (var item in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Membres)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
                     </select>
-                    <span asp-validation-for="IdMembre" style="color:#C62828; font-size:12px;"></span>
                 </div>
+
                 <div>
-                    <label asp-for="IdTontine" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <select asp-for="IdTontine" asp-items="ViewBag.Tontines"
-                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                        <option value="">-- Choisir --</option>
+                    <label class="flabel" asp-for="IdMandataire"></label>
+                    <select asp-for="IdMandataire" class="finput">
+                        <option value="">-- Aucun --</option>
+                        @foreach (var item in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Membres)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
                     </select>
-                    <span asp-validation-for="IdTontine" style="color:#C62828; font-size:12px;"></span>
                 </div>
-            </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div style="padding-top:8px; border-top:1px solid #EEE;">
+                    <label class="flabel">Montant beneficiaire</label>
+                    <div class="fro-total" id="disp-benef">-- FCFA</div>
+                </div>
+
                 <div>
-                    <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle</label>
-                    <div style="padding:10px 14px; border:1.5px solid #0F6E56; border-radius:8px; font-size:14px; background:#F0FAF6; color:#0F6E56; font-weight:500;">
-                        @ViewData["CycleNom"]
-                    </div>
-                    <input asp-for="IdCycle" type="hidden" />
+                    <label class="flabel">Retour en caisse</label>
+                    <div class="fro-ret" id="disp-retour">-- FCFA</div>
                 </div>
+
                 <div>
-                    <label asp-for="Montant" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <input asp-for="Montant" type="number" step="100" min="0"
-                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
-                    <span asp-validation-for="Montant" style="color:#C62828; font-size:12px;"></span>
+                    <label class="flabel">Notes</label>
+                    <textarea asp-for="Notes" rows="2" class="finput" style="resize:none;"></textarea>
                 </div>
-            </div>
 
-            <div style="margin-bottom:20px;">
-                <label asp-for="Notes" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                <textarea asp-for="Notes" rows="3"
-                          style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;"></textarea>
-            </div>
-
-            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
-                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
-                   border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">
-                    Annuler
-                </a>
-                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px;
-                        padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">
-                    Enregistrer
+                <button type="submit" class="btn-save" onclick="prepSubmit()">
+                    Enregistrer le versement
                 </button>
+                <a asp-action="Index" class="btn-cancel">Annuler</a>
             </div>
+
+            <!-- RIGHT : Tableau membres -->
+            <div class="ses-right">
+                <div id="no-tontine" style="padding:40px; text-align:center; color:#AAA;">
+                    <div style="font-size:32px; margin-bottom:8px;">&#8595;</div>
+                    <div style="font-weight:500;">Selectionnez une tontine pour afficher les membres</div>
+                </div>
+
+                <table class="ses-tbl" id="tbl-membres" style="display:none;">
+                    <thead>
+                        <tr class="th-main">
+                            <th rowspan="2" style="padding:10px 12px; text-align:left; border-right:1px solid rgba(255,255,255,0.2);">Nom et prenom membre</th>
+                            <th rowspan="2" style="padding:10px 12px; text-align:right; border-right:1px solid rgba(255,255,255,0.2);">Montant attendu</th>
+                            <th rowspan="2" style="padding:10px 12px; text-align:right; border-right:1px solid rgba(255,255,255,0.2);">dont etre garnie</th>
+                            <th colspan="4" style="padding:8px 12px; text-align:center; border-left:1px solid rgba(255,255,255,0.2); background:#0F6E56;">A saisir</th>
+                        </tr>
+                        <tr>
+                            <th class="th-sub">Montant caisse</th>
+                            <th class="th-sub">Prete</th>
+                            <th class="th-sub-or">Penalite</th>
+                            <th class="th-sub">Encours</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-membres">
+                        <tr id="empty-row"><td colspan="7">Aucun membre inscrit pour cette tontine dans le cycle actuel.</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background:#F0FAF6; font-weight:700;">
+                            <td style="padding:12px; color:#073C2A;">TOTAL</td>
+                            <td style="padding:12px; text-align:right; color:#073C2A;" id="tot-attendu">--</td>
+                            <td style="padding:12px; text-align:right; color:#888;" id="tot-garnie">--</td>
+                            <td style="padding:12px; text-align:right; color:#0F6E56;" id="tot-caisse">--</td>
+                            <td style="padding:12px; text-align:right; color:#C62828;" id="tot-pret">--</td>
+                            <td style="padding:12px; text-align:right; color:#E65100;" id="tot-pen">--</td>
+                            <td style="padding:12px; text-align:right;" id="tot-encours">--</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
         </div>
     </form>
 </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<script>
+var inscrits    = @Html.Raw(ViewData["InscritsCycleJson"] ?? "[]");
+var cotisations = @Html.Raw(ViewData["CotisationsCycleJson"] ?? "[]");
+var prets       = @Html.Raw(ViewData["PretsActifsJson"] ?? "[]");
+var tontines    = @Html.Raw(ViewData["TontinesJson"] ?? "[]");
+
+function fmt(n) { return Number(n).toLocaleString('fr-FR') + ' FCFA'; }
+
+function chargerMembres() {
+    var idT = parseInt(document.getElementById('sel-tontine').value || '0');
+    var tbody = document.getElementById('tbody-membres');
+    var tbl   = document.getElementById('tbl-membres');
+    var noT   = document.getElementById('no-tontine');
+
+    if (!idT) {
+        tbl.style.display = 'none';
+        noT.style.display = 'block';
+        reinitTotaux();
+        return;
+    }
+
+    var membres = inscrits.filter(m => m.idTontine === idT);
+    tbody.innerHTML = '';
+
+    if (membres.length === 0) {
+        tbody.innerHTML = '<tr id="empty-row"><td colspan="7" style="padding:32px;text-align:center;color:#AAA;">Aucun membre inscrit pour cette tontine dans le cycle actuel.</td></tr>';
+    } else {
+        membres.forEach(m => {
+            var cotis   = cotisations.filter(c => c.idMembre === m.idMembre && c.idTontine === idT);
+            var dejaPaye = cotis.reduce((s, c) => s + (c.montant || 0), 0);
+            var pretM   = prets.filter(p => p.idMembre === m.idMembre);
+            var montPret = pretM.reduce((s, p) => s + (p.montant || 0), 0);
+            var garnie   = Math.max(0, m.montantAttendu - dejaPaye);
+            var encours  = garnie;
+
+            var row = document.createElement('tr');
+            row.setAttribute('data-id-membre', m.idMembre);
+            row.setAttribute('data-attendu', m.montantAttendu);
+            row.style.cssText = 'border-bottom:1px solid #F1EFE8;';
+            row.innerHTML = `
+                <td style="padding:10px 12px; font-weight:600;">${m.nomMembre}</td>
+                <td style="padding:10px 12px; text-align:right; color:#073C2A;">${fmt(m.montantAttendu)}</td>
+                <td style="padding:10px 12px; text-align:right; color:${garnie > 0 ? '#C62828' : '#0F6E56'};">${garnie > 0 ? fmt(garnie) : '<span style="color:#0F6E56;">&#10003; OK</span>'}</td>
+                <td style="padding:10px 12px; text-align:center;">
+                    <input type="number" class="cash-in" data-membre="${m.idMembre}"
+                           min="0" step="100" placeholder="0"
+                           value="${dejaPaye > 0 ? dejaPaye : ''}"
+                           oninput="calculerTotaux()" />
+                </td>
+                <td style="padding:10px 12px; text-align:center;">
+                    ${montPret > 0 ? `<span class="tag-pret">${fmt(montPret)}</span>` : '<span style="color:#CCC;">-</span>'}
+                </td>
+                <td style="padding:10px 12px; text-align:center;">
+                    <span style="color:#CCC;">-</span>
+                </td>
+                <td style="padding:10px 12px; text-align:right; font-weight:700; color:${encours > 0 ? '#C62828' : '#0F6E56'};">
+                    ${encours > 0 ? fmt(encours) : '0 FCFA'}
+                </td>`;
+            tbody.appendChild(row);
+        });
+    }
+
+    tbl.style.display = '';
+    noT.style.display = 'none';
+    calculerTotaux();
+}
+
+function calculerTotaux() {
+    var inputs = document.querySelectorAll('.cash-in');
+    var totalCaisse = 0;
+    var totalAttendu = 0;
+    var rows = document.querySelectorAll('#tbody-membres tr[data-id-membre]');
+
+    inputs.forEach(inp => {
+        var v = parseFloat(inp.value || '0');
+        totalCaisse += v;
+    });
+
+    rows.forEach(r => {
+        totalAttendu += parseFloat(r.getAttribute('data-attendu') || '0');
+    });
+
+    var totalPret = prets.reduce((s, p) => s + (p.montant || 0), 0);
+    var totalGarnie = Math.max(0, totalAttendu - totalCaisse);
+    var totalEncours = totalGarnie;
+
+    document.getElementById('tot-attendu').textContent = totalAttendu > 0 ? fmt(totalAttendu) : '--';
+    document.getElementById('tot-garnie').textContent  = totalGarnie > 0 ? fmt(totalGarnie) : '0 FCFA';
+    document.getElementById('tot-caisse').textContent  = totalCaisse > 0 ? fmt(totalCaisse) : '--';
+    document.getElementById('tot-pret').textContent    = '--';
+    document.getElementById('tot-pen').textContent     = '--';
+    document.getElementById('tot-encours').textContent = totalEncours > 0 ? fmt(totalEncours) : '0 FCFA';
+
+    var montantBenef = totalCaisse;
+    var retourCaisse = 0;
+
+    document.getElementById('disp-benef').textContent  = totalCaisse > 0 ? fmt(montantBenef) : '-- FCFA';
+    document.getElementById('disp-retour').textContent = fmt(retourCaisse);
+    document.getElementById('hid-montant').value        = totalCaisse;
+
+    document.getElementById('solde-caisse').textContent = totalCaisse > 0 ? fmt(totalCaisse) : '-- FCFA';
+}
+
+function reinitTotaux() {
+    ['tot-attendu','tot-garnie','tot-caisse','tot-pret','tot-pen','tot-encours'].forEach(id => {
+        document.getElementById(id).textContent = '--';
+    });
+    document.getElementById('disp-benef').textContent  = '-- FCFA';
+    document.getElementById('disp-retour').textContent = '-- FCFA';
+    document.getElementById('hid-montant').value = 0;
+    document.getElementById('solde-caisse').textContent = '-- FCFA';
+}
+
+function prepSubmit() {
+    calculerTotaux();
+}
+</script>
 }

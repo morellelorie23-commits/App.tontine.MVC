@@ -1,0 +1,354 @@
+@model tontine.MVC.Models.ReleveMembreViewModel
+
+@{
+
+    ViewData["Title"] = "Relevé de compte";
+
+    string FormatFcfa(decimal v) => v.ToString("N0") + " FCFA";
+
+}
+
+
+
+<style>
+@@media print {
+    .no-print { display: none !important; }
+    body { background: white !important; }
+    .releve-wrapper { max-width: 100% !important; }
+    .releve-print-header { display: block !important; }
+}
+</style>
+
+<!-- En-tête impression -->
+<div class="releve-print-header" style="display:none; margin-bottom:20px;">
+    <div style="font-size:22px; font-weight:700; color:#0F6E56;">TontineApp</div>
+    <div style="font-size:14px; color:#444; margin-top:4px;">Relevé de compte membre</div>
+    <div style="font-size:12px; color:#888; margin-top:2px;">Édité le @DateTime.Now.ToString("dd/MM/yyyy à HH:mm")</div>
+</div>
+
+<!-- Barre d'actions -->
+<div class="no-print" style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:16px; max-width:900px;">
+    <a asp-action="ExportPdf" asp-route-id="@Model.Membre.IdMembre"
+       style="background:#C62828; color:white; border-radius:8px;
+              padding:9px 20px; font-size:13px; font-weight:600;
+              display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
+        <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Télécharger PDF
+    </a>
+    <button onclick="window.print()"
+            style="background:#0F6E56; color:white; border:none; border-radius:8px;
+                   padding:9px 20px; font-size:13px; font-weight:600; cursor:pointer;
+                   display:flex; align-items:center; gap:8px;">
+        <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Imprimer
+    </button>
+</div>
+
+
+
+<div class="releve-wrapper" style="max-width:900px;">
+
+
+
+    <!-- En-tête membre -->
+
+    <div style="background:white; border-radius:12px; padding:24px; margin-bottom:24px;
+
+                box-shadow:0 1px 4px rgba(0,0,0,0.08); display:flex; align-items:center; gap:20px;">
+
+        <div style="width:72px; height:72px; border-radius:50%; background:#0F6E56; color:white;
+
+                    display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; flex-shrink:0;">
+
+            @Model.Membre.Nom.Substring(0,1).ToUpper()@Model.Membre.Prenom.Substring(0,1).ToUpper()
+
+        </div>
+
+        <div style="flex:1;">
+
+            <h2 style="margin:0; font-size:22px; font-weight:700; color:#1a1a1a;">@Model.Membre.Nom @Model.Membre.Prenom</h2>
+
+            <div style="margin-top:6px; font-size:13px; color:#888780; display:flex; gap:20px; flex-wrap:wrap;">
+
+                @if (!string.IsNullOrEmpty(Model.Membre.Telephone)) { <span style="display:flex;align-items:center;gap:5px;"><i data-lucide="phone" style="width:13px;height:13px;"></i> @Model.Membre.Telephone</span> }
+
+                @if (!string.IsNullOrEmpty(Model.Membre.Email))     { <span style="display:flex;align-items:center;gap:5px;"><i data-lucide="mail" style="width:13px;height:13px;"></i> @Model.Membre.Email</span> }
+
+            </div>
+
+        </div>
+
+        <a asp-action="Index" class="no-print" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500; flex-shrink:0;">← Retour</a>
+
+    </div>
+
+
+
+    <!-- Cartes résumé -->
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;">
+
+        <div style="background:linear-gradient(135deg,#4CAF50,#388E3C); border-radius:12px; padding:20px; color:white; box-shadow:0 4px 12px rgba(76,175,80,0.3);">
+
+            <div style="font-size:11px; font-weight:600; text-transform:uppercase; opacity:.8; margin-bottom:8px;">Total Cotisations</div>
+
+            <div style="font-size:22px; font-weight:700;">@FormatFcfa(Model.TotalCotisations)</div>
+
+            <div style="font-size:12px; opacity:.8; margin-top:4px;">@Model.Cotisations.Count opération(s)</div>
+
+        </div>
+
+        <div style="background:linear-gradient(135deg,#9C27B0,#6A1B9A); border-radius:12px; padding:20px; color:white; box-shadow:0 4px 12px rgba(156,39,176,0.3);">
+
+            <div style="font-size:11px; font-weight:600; text-transform:uppercase; opacity:.8; margin-bottom:8px;">Total Versements reçus</div>
+
+            <div style="font-size:22px; font-weight:700;">@FormatFcfa(Model.TotalVersements)</div>
+
+            <div style="font-size:12px; opacity:.8; margin-top:4px;">@Model.Versements.Count versement(s)</div>
+
+        </div>
+
+        <div style="background:linear-gradient(135deg,#F44336,#C62828); border-radius:12px; padding:20px; color:white; box-shadow:0 4px 12px rgba(244,67,54,0.3);">
+
+            <div style="font-size:11px; font-weight:600; text-transform:uppercase; opacity:.8; margin-bottom:8px;">Prêts accordés</div>
+
+            <div style="font-size:22px; font-weight:700;">@FormatFcfa(Model.TotalPrets)</div>
+
+            <div style="font-size:12px; opacity:.8; margin-top:4px;">@Model.Prets.Count prêt(s)</div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Cotisations -->
+
+    <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.08); margin-bottom:24px;">
+
+        <div style="background:linear-gradient(135deg,#0F6E56,#1D9E75); padding:14px 20px; color:white; font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px;">
+
+            <i data-lucide="coins" style="width:16px;height:16px;"></i> Cotisations (@Model.Cotisations.Count)
+
+        </div>
+
+        @if (Model.Cotisations.Any())
+
+        {
+
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+
+                <thead>
+
+                    <tr style="background:#F8FDF9; color:#444;">
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Date</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Tontine</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Cycle</th>
+
+                        <th style="padding:12px 18px; text-align:right; font-weight:500;">Montant</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Statut</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var c in Model.Cotisations)
+
+                    {
+
+                        var (bg, clr) = c.Statut switch { "Paye" or "Payé" => ("#E6F4EE","#0F6E56"), "En retard" => ("#FFEBEE","#C62828"), _ => ("#FFF8E1","#F57F17") };
+
+                        <tr style="border-bottom:1px solid #F1EFE8;">
+
+                            <td style="padding:12px 18px; color:#888780;">@c.DateCotisation.ToString("dd/MM/yyyy")</td>
+
+                            <td style="padding:12px 18px;">@c.LibelleTontine</td>
+
+                            <td style="padding:12px 18px; color:#888780; font-size:12px;">@c.NomCycle</td>
+
+                            <td style="padding:12px 18px; text-align:right; font-weight:600; color:#0F6E56;">@FormatFcfa(c.Montant)</td>
+
+                            <td style="padding:12px 18px;"><span style="background:@bg; color:@clr; padding:3px 10px; border-radius:10px; font-size:11px; font-weight:500;">@c.Statut</span></td>
+
+                        </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        }
+
+        else
+
+        {
+
+            <div style="padding:32px; text-align:center; color:#888780; font-size:13px;">Aucune cotisation</div>
+
+        }
+
+    </div>
+
+
+
+    <!-- Versements -->
+
+    <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.08); margin-bottom:24px;">
+
+        <div style="background:linear-gradient(135deg,#9C27B0,#6A1B9A); padding:14px 20px; color:white; font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px;">
+
+            <i data-lucide="banknote" style="width:16px;height:16px;"></i> Versements reçus (@Model.Versements.Count)
+
+        </div>
+
+        @if (Model.Versements.Any())
+
+        {
+
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+
+                <thead>
+
+                    <tr style="background:#FAF5FF; color:#444;">
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Date</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Tontine</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Cycle</th>
+
+                        <th style="padding:12px 18px; text-align:right; font-weight:500;">Montant</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var v in Model.Versements)
+
+                    {
+
+                        <tr style="border-bottom:1px solid #F1EFE8;">
+
+                            <td style="padding:12px 18px; color:#888780;">@v.DateVersement.ToString("dd/MM/yyyy")</td>
+
+                            <td style="padding:12px 18px;">@v.LibelleTontine</td>
+
+                            <td style="padding:12px 18px; color:#888780; font-size:12px;">@v.NomCycle</td>
+
+                            <td style="padding:12px 18px; text-align:right; font-weight:600; color:#6A1B9A;">@FormatFcfa(v.Montant)</td>
+
+                        </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        }
+
+        else
+
+        {
+
+            <div style="padding:32px; text-align:center; color:#888780; font-size:13px;">Aucun versement</div>
+
+        }
+
+    </div>
+
+
+
+    <!-- Prêts -->
+
+    <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+        <div style="background:linear-gradient(135deg,#F44336,#C62828); padding:14px 20px; color:white; font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px;">
+
+            <i data-lucide="credit-card" style="width:16px;height:16px;"></i> Prêts (@Model.Prets.Count)
+
+        </div>
+
+        @if (Model.Prets.Any())
+
+        {
+
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+
+                <thead>
+
+                    <tr style="background:#FFF5F5; color:#444;">
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Date prêt</th>
+
+                        <th style="padding:12px 18px; text-align:right; font-weight:500;">Montant</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Taux</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Statut</th>
+
+                        <th style="padding:12px 18px; text-align:left; font-weight:500;">Échéance</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var p in Model.Prets)
+
+                    {
+
+                        var (bg, clr) = p.Statut switch { "Remboursé" => ("#E6F4EE","#0F6E56"), "En retard" => ("#FFEBEE","#C62828"), "Approuvé" => ("#E3F2FD","#1565C0"), _ => ("#FFF8E1","#F57F17") };
+
+                        <tr style="border-bottom:1px solid #F1EFE8;">
+
+                            <td style="padding:12px 18px; color:#888780;">@p.DatePret.ToString("dd/MM/yyyy")</td>
+
+                            <td style="padding:12px 18px; text-align:right; font-weight:600; color:#C62828;">@FormatFcfa(p.Montant)</td>
+
+                            <td style="padding:12px 18px; color:#888780;">@p.Taux%</td>
+
+                            <td style="padding:12px 18px;"><span style="background:@bg; color:@clr; padding:3px 10px; border-radius:10px; font-size:11px; font-weight:500;">@p.Statut</span></td>
+
+                            <td style="padding:12px 18px; color:#888780;">@(p.DateRemboursement == DateTime.MinValue ? "-" : p.DateRemboursement.ToString("dd/MM/yyyy"))</td>
+
+                        </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        }
+
+        else
+
+        {
+
+            <div style="padding:32px; text-align:center; color:#888780; font-size:13px;">Aucun prêt</div>
+
+        }
+
+    </div>
+
+
+
+</div>
+

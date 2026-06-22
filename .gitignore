@@ -1,0 +1,31 @@
+# Build outputs
+**/bin/
+**/obj/
+
+# Visual Studio
+**/.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+**/.idea/
+
+# Logs
+*.log
+logs/
+
+# Uploads utilisateurs (photos membres — ne pas versionner)
+**/wwwroot/uploads/
+
+# Secrets locaux
+**/appsettings.Local.json
+**/appsettings.Development.json
+
+# Entity Framework migrations snapshot (garder les migrations mais pas les snapshots binaires)
+# Laisser les Migrations/ versionnées
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,51 @@
+@model tontine.MVC.Models.CotisationViewModel
+@{
+    ViewData["Title"] = "Supprimer la cotisation";
+}
+
+<div style="max-width:480px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Supprimer la cotisation</h2>
+        <p style="margin:0; color:#888780; font-size:14px;">Cette action est irréversible</p>
+    </div>
+
+    <div style="background:white; border-radius:12px; padding:28px;
+                box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+        <div style="display:flex; align-items:flex-start; gap:14px; background:#FFEBEE;
+                    border-left:4px solid #C62828; border-radius:8px; padding:16px; margin-bottom:24px;">
+            <div style="display:flex;justify-content:center;color:#C62828;"><i data-lucide="alert-triangle" style="width:28px;height:28px;"></i></div>
+            <div>
+                <p style="margin:0; font-weight:600; color:#C62828; font-size:14px;">Attention - suppression définitive</p>
+                <p style="margin:6px 0 0; color:#B71C1C; font-size:13px;">Voulez-vous vraiment supprimer cette cotisation ?</p>
+            </div>
+        </div>
+
+        <div style="background:#F8FDF9; border:1.5px solid #E1F5EE; border-radius:10px; padding:18px; margin-bottom:24px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:13px;">
+                <div><span style="color:#888780; display:block;">Membre</span><span style="font-weight:600;">@Model.NomMembre</span></div>
+                <div><span style="color:#888780; display:block;">Tontine</span><span style="font-weight:600;">@Model.LibelleTontine</span></div>
+                <div><span style="color:#888780; display:block;">Montant</span><span style="font-weight:600; color:#0F6E56;">@Model.Montant.ToString("N0") FCFA</span></div>
+                <div><span style="color:#888780; display:block;">Statut</span><span style="font-weight:600;">@Model.Statut</span></div>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post"
+              data-confirm="Voulez-vous vraiment supprimer cette cotisation ?"
+              data-confirm-type="delete">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdCotisation" />
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
+                   border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px;
+                        padding:10px 24px; font-size:14px; font-weight:500; cursor:pointer;">
+                    <i data-lucide="trash-2" style="width:15px;height:15px;margin-right:6px;vertical-align:middle;"></i> Confirmer la suppression
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

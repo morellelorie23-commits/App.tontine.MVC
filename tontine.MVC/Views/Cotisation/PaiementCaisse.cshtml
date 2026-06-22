@@ -1,0 +1,525 @@
+@model tontine.MVC.Models.PaiementCaisseViewModel
+@{
+    ViewData["Title"] = "Paiement en caisse";
+    var tontines = ViewBag.Tontines as List<tontine.MVC.Models.TontineViewModel> ?? new();
+    var reunions = ViewBag.Reunions as List<tontine.MVC.Models.ReunionViewModel> ?? new();
+    var membres  = ViewBag.Membres  as List<tontine.MVC.Models.MembreViewModel>  ?? new();
+}
+
+<style>
+    .panel { background:white;border-radius:14px;padding:26px 28px;box-shadow:0 1px 6px rgba(0,0,0,.08); }
+    .fg { margin-bottom:15px; }
+    .fg label {
+        display:block;font-size:11px;font-weight:700;color:#555;
+        margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;
+    }
+    .fg input, .fg select, .fg textarea {
+        width:100%;padding:9px 13px;border:1.5px solid #E0E0E0;border-radius:8px;
+        font-size:13px;background:white;transition:border-color .2s;
+    }
+    .fg input:focus, .fg select:focus { outline:none;border-color:#0F6E56; }
+    .fg input.grise, .fg input[readonly] {
+        background:#F2F4F7;color:#888;border-color:#E8E8E8;cursor:not-allowed;
+    }
+    .badge-m {
+        display:inline-flex;align-items:center;justify-content:center;
+        width:22px;height:22px;background:#0F6E56;color:white;
+        border-radius:50%;font-size:11px;font-weight:700;margin-left:6px;
+        vertical-align:middle;flex-shrink:0;
+    }
+    .label-row { display:flex;align-items:center;margin-bottom:5px; }
+    .label-row label { margin-bottom:0; }
+    .cb-row { display:flex;align-items:center;gap:10px;margin-bottom:15px; }
+    .cb-row input[type=checkbox] { width:18px;height:18px;accent-color:#0F6E56;cursor:pointer; }
+    .cb-row span { font-size:13px;font-weight:600;color:#333; }
+    .btn-add {
+        width:100%;padding:13px;background:#0F6E56;color:white;border:none;
+        border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;
+    }
+    .btn-add:hover { background:#0B5940; }
+    .section-hdr {
+        font-size:11px;font-weight:700;color:#888;text-transform:uppercase;
+        letter-spacing:.8px;margin-bottom:20px;padding-bottom:10px;
+        border-bottom:2px solid #E8F5E9;display:flex;align-items:center;gap:8px;
+    }
+    .reunion-form {
+        background:#F8FDF9;border:1.5px solid #D4EDDA;border-radius:12px;
+        padding:20px;margin-top:14px;display:none;
+    }
+    .reunion-form.show { display:block; }
+    .grid2 { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+    .solde-box {
+        background:#F2F4F7;border:1.5px solid #E0E0E0;border-radius:8px;
+        padding:9px 13px;font-size:15px;font-weight:700;color:#888;
+        cursor:not-allowed;display:flex;align-items:center;justify-content:space-between;
+    }
+    .toast-ok { background:#E8F5E9;border-left:4px solid #388E3C;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#1B5E20;font-size:13px;font-weight:600; }
+    .toast-err { background:#FFEBEE;border-left:4px solid #C62828;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#B71C1C;font-size:13px;font-weight:600; }
+    .region-btn {
+        padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;
+        border:1.5px solid transparent;transition:all .15s;
+    }
+    .region-btn.sel { border-color:#0F6E56;background:#E8F5E9;color:#0F6E56; }
+    .region-btn:not(.sel) { background:#F0F0F0;color:#666;border-color:#E0E0E0; }
+</style>
+
+<!-- En-tête -->
+<div style="background:linear-gradient(135deg,#1B5E20 0%,#2E7D32 60%,#388E3C 100%);
+            margin:-26px -28px 24px -28px;padding:24px 36px;min-height:80px;
+            display:flex;flex-direction:column;justify-content:flex-end;">
+    <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">Paiement en caisse</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0;">
+        Collecte espèces lors d'une réunion - Enregistrement manuel du trésorier
+    </p>
+</div>
+
+@if (TempData["Success"] != null) { <div class="toast-ok">✓ @TempData["Success"]</div> }
+@if (TempData["Error"]   != null) { <div class="toast-err">⚠ @TempData["Error"]</div> }
+
+<form asp-action="PaiementCaisse" asp-controller="Cotisation" method="post" id="frm-caisse">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdTontine"       id="hid-tontine" />
+    <input type="hidden" asp-for="IdCycle" />
+    <input type="hidden" asp-for="SoldeCaisse"     id="hid-solde" />
+    <input type="hidden" asp-for="MontantAttendu"  id="hid-attendu" />
+    <input type="hidden" asp-for="Reste"           id="hid-reste" />
+    <input type="hidden" asp-for="RegionCaisse"    id="hid-region" />
+
+    <!-- Grille principale : GAUCHE = Règles caisse | DROITE = Formulaire -->
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;">
+
+        <!-- ════════ COLONNE GAUCHE : Règles caisse / Nomenclature ════════ -->
+        <div class="panel">
+            <div class="section-hdr">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+                Règles caisse / Nomenclature
+            </div>
+
+            <!-- Région (Caisse) -->
+            <div class="fg">
+                <label>Région (Caisse)</label>
+                <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:4px;">
+                    <button type="button" class="region-btn sel" data-val="571001 - Caisse" onclick="selRegion(this)">
+                        🏦 571001 - Caisse physique
+                    </button>
+                    <button type="button" class="region-btn" data-val="521100 - MTN MoMo" onclick="selRegion(this)">
+                        📱 521100 - MTN Mobile Money
+                    </button>
+                    <button type="button" class="region-btn" data-val="521200 - Orange Money" onclick="selRegion(this)">
+                        🟠 521200 - Orange Money
+                    </button>
+                </div>
+            </div>
+
+            <!-- [M] Checkbox -->
+            <div class="cb-row">
+                <input type="checkbox" asp-for="MarqueCotisation" id="chk-marque" checked />
+                <span>[M] - Marquer cotisation comme payée</span>
+            </div>
+
+            <!-- Pièce justificatif -->
+            <div class="fg">
+                <label>Pièce justificatif</label>
+                <input asp-for="PieceJustificatif" type="text" placeholder="ex: REC-2025-001" />
+                <span asp-validation-for="PieceJustificatif" class="text-danger" style="font-size:11px;"></span>
+            </div>
+
+            <!-- Montant domicilié -->
+            <div class="fg">
+                <label>Montant domicilié (FCFA)</label>
+                <input asp-for="MontantDomicilie" type="number" id="inp-domicilie"
+                       step="100" min="0" placeholder="Montant officiel attendu"
+                       oninput="syncDomicilie(this.value)" />
+            </div>
+
+            <!-- Paiement en caisse -->
+            <div class="fg">
+                <label>Paiement en caisse (FCFA)</label>
+                <input asp-for="PaiementEnCaisse" type="number" id="inp-caisse"
+                       step="100" min="0" placeholder="Espèces reçues" />
+                <span asp-validation-for="PaiementEnCaisse" class="text-danger" style="font-size:11px;"></span>
+            </div>
+
+            <!-- Notes -->
+            <div class="fg">
+                <label>Notes</label>
+                <textarea asp-for="Notes" rows="2" placeholder="Remarques éventuelles..."
+                          style="resize:vertical;"></textarea>
+            </div>
+
+            <button type="submit" class="btn-add" id="btn-ajouter" disabled
+                    style="opacity:.5;cursor:not-allowed;">
+                + Ajouter le paiement
+            </button>
+        </div>
+
+        <!-- ════════ COLONNE DROITE : Sélection + sous-formulaire membre ════════ -->
+        <div class="panel">
+
+            <!-- Tontine -->
+            <div class="fg">
+                <label>Tontine</label>
+                <select id="sel-tontine" onchange="changerTontine(this.value)"
+                        style="width:100%;padding:9px 13px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;">
+                    @foreach (var t in tontines)
+                    {
+                        <option value="@t.IdTontine" data-montant="@(t.Montant ?? 0)"
+                                selected="@(t.IdTontine == Model.IdTontine ? "selected" : null)">
+                            @t.Libelle
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Solde caisse (grisé) -->
+            <div class="fg">
+                <label>Solde caisse</label>
+                <div class="solde-box">
+                    <span id="disp-solde">@Model.SoldeCaisse.ToString("N0") FCFA</span>
+                    <span style="font-size:11px;color:#aaa;">auto</span>
+                </div>
+            </div>
+
+            <!-- Réunion -->
+            <div class="fg">
+                <label>Réunion</label>
+                <select id="sel-reunion" asp-for="IdReunion"
+                        onchange="ouvrirFormulaireReunion(this.value)"
+                        style="width:100%;padding:9px 13px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;">
+                    <option value="">- Sélectionner une réunion -</option>
+                    @foreach (var r in reunions)
+                    {
+                        <option value="@r.IdReunion">
+                            @r.DateReunion.ToString("dd/MM/yyyy") - @r.Objet
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- ── Sous-formulaire (s'ouvre quand réunion sélectionnée) ── -->
+            <div class="reunion-form @(Model.IdReunion > 0 ? "show" : "")" id="frm-reunion">
+
+                <div style="font-size:12px;font-weight:700;color:#0F6E56;
+                            margin-bottom:16px;display:flex;align-items:center;gap:6px;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Détails du paiement membre
+                </div>
+
+                <!-- Nom et prénom -->
+                <div class="fg">
+                    <label>Nom et prénom</label>
+                    <select asp-for="IdMembre" id="sel-membre"
+                            onchange="chargerMembre(this)"
+                            style="width:100%;padding:9px 13px;border:1.5px solid #D4EDDA;border-radius:8px;font-size:13px;">
+                        <option value="">- Sélectionner un membre du cycle -</option>
+                        @foreach (var m in membres)
+                        {
+                            <option value="@m.IdMembre">@m.Nom @m.Prenom</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdMembre" class="text-danger" style="font-size:11px;"></span>
+                </div>
+
+                <div class="grid2">
+                    <!-- Montant attendu (grisé) [M] -->
+                    <div class="fg">
+                        <div class="label-row">
+                            <label>Montant attendu</label>
+                            <span class="badge-m">M</span>
+                        </div>
+                        <input type="text" id="disp-attendu" class="grise" readonly
+                               placeholder="Auto-rempli"
+                               value="@(Model.MontantAttendu > 0 ? Model.MontantAttendu.ToString("N0") + " FCFA" : "")" />
+                    </div>
+
+                    <!-- Montant à cotisé [à saisir] -->
+                    <div class="fg">
+                        <label>Montant à cotisé (FCFA)</label>
+                        <input asp-for="MontantCotise" type="number" id="inp-cotise"
+                               step="100" min="0" placeholder="à saisir"
+                               oninput="calculerReste()"
+                               style="border-color:#D4EDDA;" />
+                    </div>
+                </div>
+
+                <div class="grid2">
+                    <!-- Reste [auto-calculé] -->
+                    <div class="fg">
+                        <label>Reste (FCFA)</label>
+                        <input type="text" id="disp-reste" class="grise" readonly
+                               placeholder="Calculé automatiquement"
+                               value="@(Model.Reste != 0 ? Model.Reste.ToString("N0") + " FCFA" : "")" />
+                    </div>
+
+                    <!-- Date -->
+                    <div class="fg">
+                        <label>Date</label>
+                        <input asp-for="Date" type="date"
+                               value="@Model.Date.ToString("yyyy-MM-dd")"
+                               style="border-color:#D4EDDA;" />
+                    </div>
+                </div>
+
+                <div class="grid2">
+                    <!-- Pénalité -->
+                    <div class="fg">
+                        <label>Pénalité (FCFA)</label>
+                        <input asp-for="Penalite" type="number" step="100" min="0"
+                               placeholder="à saisir" style="border-color:#D4EDDA;" />
+                    </div>
+
+                    <!-- Enchère -->
+                    <div class="fg">
+                        <label>Enchère (FCFA)</label>
+                        <input asp-for="Enchere" type="number" step="100" min="0"
+                               placeholder="à saisir" style="border-color:#D4EDDA;" />
+                    </div>
+                </div>
+
+            </div>
+            <!-- fin sous-formulaire -->
+
+            <!-- ── Sous-formulaire Bénéficiaire ── -->
+            <div style="margin-top:20px;">
+                <div style="font-size:13px;font-weight:700;color:#6A1B9A;
+                            margin-bottom:12px;display:flex;align-items:center;gap:8px;
+                            cursor:pointer;" onclick="toggleBenef()" id="toggle-benef-btn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Bénéficiaire
+                    <span id="chevron-benef" style="margin-left:auto;transition:transform .2s;">▼</span>
+                </div>
+
+                <div id="frm-benef" style="background:#F9F0FF;border:1.5px solid #CE93D8;
+                                           border-radius:12px;padding:20px;display:none;">
+                    <form asp-action="AjouterBeneficiaire" asp-controller="Cotisation" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="IdTontine" id="benef-idtontine" value="@Model.IdTontine" />
+                        <input type="hidden" name="IdCycle"   value="@Model.IdCycle" />
+                        <input type="hidden" name="IdReunion" id="benef-idreunion"  value="@Model.IdReunion" />
+
+                        <!-- Bénéficiaire (dropdown membres) -->
+                        <div class="fg">
+                            <label>Bénéficiaire</label>
+                            <select name="IdBeneficiaire" required
+                                    onchange="calcMontantBenef()"
+                                    style="width:100%;padding:9px 13px;border:1.5px solid #CE93D8;border-radius:8px;font-size:13px;background:white;">
+                                <option value="">- Sélectionner le bénéficiaire -</option>
+                                @foreach (var m in membres)
+                                {
+                                    <option value="@m.IdMembre">@m.Nom @m.Prenom</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Mandataire checkbox -->
+                        <div class="cb-row" style="margin-bottom:14px;">
+                            <input type="checkbox" name="EstMandataire" id="chk-mandataire"
+                                   style="width:18px;height:18px;accent-color:#6A1B9A;cursor:pointer;" />
+                            <span style="font-size:13px;font-weight:600;color:#6A1B9A;">
+                                Mandataire (quelqu'un reçoit à sa place)
+                            </span>
+                        </div>
+
+                        <div class="grid2">
+                            <!-- Montant du bénéficiaire -->
+                            <div class="fg">
+                                <label>Montant du bénéficiaire (FCFA)</label>
+                                <input type="number" name="MontantBeneficiaire" id="inp-benef-montant"
+                                       step="100" min="0" placeholder="Montant à verser"
+                                       style="border-color:#CE93D8;"
+                                       oninput="calcMontantBenef()" required />
+                            </div>
+
+                            <!-- Retour en caisse -->
+                            <div class="fg">
+                                <label>Retour en caisse (FCFA)</label>
+                                <input type="number" name="RetourEnCaisse" id="inp-retour"
+                                       step="100" min="0" placeholder="Part retenue"
+                                       style="border-color:#CE93D8;"
+                                       oninput="calcMontantBenef()" />
+                            </div>
+                        </div>
+
+                        <!-- Montant net (grisé) -->
+                        <div class="fg">
+                            <label>Montant net versé (FCFA)</label>
+                            <input type="text" id="disp-benef-net" class="grise" readonly
+                                   placeholder="Calculé : Montant − Retour caisse" />
+                        </div>
+
+                        <!-- Date -->
+                        <div class="fg">
+                            <label>Date du versement</label>
+                            <input type="date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")"
+                                   style="border-color:#CE93D8;" />
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="fg">
+                            <label>Notes</label>
+                            <input type="text" name="Notes" placeholder="Remarques..."
+                                   style="border-color:#CE93D8;" />
+                        </div>
+
+                        <button type="submit"
+                                style="width:100%;padding:11px;background:#6A1B9A;color:white;border:none;
+                                       border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;"
+                                onmouseover="this.style.background='#4A148C'"
+                                onmouseout="this.style.background='#6A1B9A'">
+                            + Ajouter le bénéficiaire
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lien retour -->
+            <div style="margin-top:20px;text-align:right;">
+                <a asp-controller="Cotisation" asp-action="Index"
+                   style="color:#0F6E56;font-size:13px;font-weight:500;text-decoration:none;">
+                    ← Retour aux cotisations
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+var _montantTontine = @(ViewBag.MontantDomicilie ?? 0);
+
+// Ouvre le sous-formulaire membre quand une réunion est sélectionnée
+function ouvrirFormulaireReunion(val) {
+    var frm = document.getElementById('frm-reunion');
+    if (val && val !== '') {
+        frm.classList.add('show');
+        activerBouton();
+    } else {
+        frm.classList.remove('show');
+        desactiverBouton();
+    }
+}
+
+// Charge solde + réunions quand la tontine change
+function changerTontine(id) {
+    document.getElementById('hid-tontine').value = id;
+    // Lire montant depuis l'option sélectionnée
+    var opt = document.querySelector('#sel-tontine option[value="'+id+'"]');
+    _montantTontine = opt ? parseFloat(opt.getAttribute('data-montant')) || 0 : 0;
+
+    fetch('@Url.Action("PaiementCaisseData","Cotisation")?idTontine=' + id)
+        .then(r => r.json())
+        .then(d => {
+            document.getElementById('hid-solde').value = d.soldeCaisse;
+            document.getElementById('disp-solde').textContent = Number(d.soldeCaisse).toLocaleString('fr-FR') + ' FCFA';
+            document.getElementById('inp-domicilie').value = d.montantDomicilie;
+            _montantTontine = d.montantDomicilie;
+
+            // Recharger les réunions
+            var sel = document.getElementById('sel-reunion');
+            sel.innerHTML = '<option value="">- Sélectionner une réunion -</option>';
+            (d.reunions || []).forEach(function(r) {
+                var opt = document.createElement('option');
+                opt.value = r.idReunion;
+                opt.textContent = r.label;
+                sel.appendChild(opt);
+            });
+            // Fermer le sous-formulaire
+            document.getElementById('frm-reunion').classList.remove('show');
+            desactiverBouton();
+        });
+}
+
+// Quand un membre est sélectionné, remplir montant attendu
+function chargerMembre(sel) {
+    // Montant attendu = montant fixe de la tontine
+    var attendu = _montantTontine;
+    document.getElementById('hid-attendu').value = attendu;
+    document.getElementById('disp-attendu').value = attendu > 0 ? Number(attendu).toLocaleString('fr-FR') + ' FCFA' : '';
+    document.getElementById('inp-domicilie').value = attendu;
+    calculerReste();
+    activerBouton();
+}
+
+// Calculer le reste = Montant attendu - Montant cotisé
+function calculerReste() {
+    var attendu = parseFloat(document.getElementById('hid-attendu').value) || _montantTontine;
+    var cotise  = parseFloat(document.getElementById('inp-cotise').value) || 0;
+    var reste   = attendu - cotise;
+    document.getElementById('hid-reste').value   = reste;
+    document.getElementById('disp-reste').value  = Number(reste).toLocaleString('fr-FR') + ' FCFA';
+    // Synchroniser paiement en caisse
+    document.getElementById('inp-caisse').value  = cotise;
+    activerBouton();
+}
+
+// Synchroniser montant domicilié avec attendu
+function syncDomicilie(val) {
+    if (!document.getElementById('inp-cotise').value) {
+        _montantTontine = parseFloat(val) || 0;
+        document.getElementById('disp-attendu').value = val ? Number(val).toLocaleString('fr-FR') + ' FCFA' : '';
+        document.getElementById('hid-attendu').value = _montantTontine;
+    }
+}
+
+// Sélection région caisse
+function selRegion(btn) {
+    document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    document.getElementById('hid-region').value = btn.getAttribute('data-val');
+}
+
+function activerBouton() {
+    var btn = document.getElementById('btn-ajouter');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor  = 'pointer';
+}
+function desactiverBouton() {
+    var btn = document.getElementById('btn-ajouter');
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.style.cursor  = 'not-allowed';
+}
+
+// Synchroniser idTontine et idReunion dans le formulaire bénéficiaire
+document.getElementById('sel-tontine').addEventListener('change', function() {
+    document.getElementById('benef-idtontine').value = this.value;
+});
+document.getElementById('sel-reunion').addEventListener('change', function() {
+    document.getElementById('benef-idreunion').value = this.value;
+});
+
+// Toggle bénéficiaire section
+function toggleBenef() {
+    var frm     = document.getElementById('frm-benef');
+    var chevron = document.getElementById('chevron-benef');
+    var visible = frm.style.display !== 'none';
+    frm.style.display    = visible ? 'none' : 'block';
+    chevron.style.transform = visible ? '' : 'rotate(180deg)';
+}
+
+// Calculer montant net bénéficiaire = Montant - Retour en caisse
+function calcMontantBenef() {
+    var montant = parseFloat(document.getElementById('inp-benef-montant').value) || 0;
+    var retour  = parseFloat(document.getElementById('inp-retour').value) || 0;
+    var net     = montant - retour;
+    document.getElementById('disp-benef-net').value =
+        montant > 0 ? Number(net).toLocaleString('fr-FR') + ' FCFA' : '';
+}
+
+// Si réunion déjà sélectionnée au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    var sel = document.getElementById('sel-reunion');
+    if (sel && sel.value) ouvrirFormulaireReunion(sel.value);
+});
+</script>
+}

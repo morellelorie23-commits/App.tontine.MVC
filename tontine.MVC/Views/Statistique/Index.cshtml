@@ -1,0 +1,390 @@
+@model tontine.MVC.Models.StatistiqueViewModel
+
+@{
+
+    ViewData["Title"] = "Statistiques";
+
+
+
+    var sexeLabels   = string.Join(",", Model.ParSexe.Keys.Select(k => $"\"{k}\""));
+
+    var sexeValues   = string.Join(",", Model.ParSexe.Values);
+
+
+
+    var freqLabels   = string.Join(",", Model.ParFrequence.Keys.Select(k => $"\"{k}\""));
+
+    var freqValues   = string.Join(",", Model.ParFrequence.Values);
+
+
+
+    var statutLabels = string.Join(",", Model.ParStatut.Keys.Select(k => $"\"{k}\""));
+
+    var statutValues = string.Join(",", Model.ParStatut.Values);
+
+
+
+    var moisLabels   = string.Join(",", Model.InscriptionsParMois.Select(m => $"\"{m.Mois}\""));
+
+    var moisValues   = string.Join(",", Model.InscriptionsParMois.Select(m => m.Total));
+
+
+
+    var paysLabels   = string.Join(",", Model.ParPays.Keys.Select(k => $"\"{k}\""));
+
+    var paysValues   = string.Join(",", Model.ParPays.Values);
+
+}
+
+
+
+<style>
+
+    .stat-grid    { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:28px; }
+
+    .stat-card    { background:white; border-radius:14px; padding:22px 20px;
+
+                    box-shadow:0 1px 4px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.04);
+
+                    display:flex; align-items:center; gap:16px; }
+
+    .stat-icon    { width:52px; height:52px; border-radius:14px;
+
+                    display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+
+    .stat-value   { font-size:28px; font-weight:700; color:#1a1a1a; line-height:1; }
+
+    .stat-label   { font-size:12px; color:#888780; margin-top:4px; font-weight:500; }
+
+    .stat-sub     { font-size:11px; color:#0F6E56; margin-top:3px; font-weight:600; }
+
+
+
+    .charts-grid  { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+
+    .chart-card   { background:white; border-radius:14px; padding:24px;
+
+                    box-shadow:0 1px 4px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.04); }
+
+    .chart-title  { font-size:14px; font-weight:600; color:#1a1a1a; margin-bottom:18px;
+
+                    display:flex; align-items:center; gap:8px; }
+
+    .chart-title span { width:4px; height:18px; background:#0F6E56; border-radius:2px; display:inline-block; }
+
+    canvas        { max-height:240px; }
+
+
+
+    .chart-full   { background:white; border-radius:14px; padding:24px;
+
+                    box-shadow:0 1px 4px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.04);
+
+                    margin-bottom:18px; }
+
+    .chart-full canvas { max-height:200px; }
+
+</style>
+
+
+
+<!-- KPI cards -->
+
+<div class="stat-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-icon" style="background:#E1F5EE;color:#1976D2;"><i data-lucide="users" style="width:22px;height:22px;"></i></div>
+
+        <div>
+
+            <div class="stat-value">@Model.TotalMembres</div>
+
+            <div class="stat-label">Membres enregistrés</div>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon" style="background:#FFF3E0;color:#E65100;"><i data-lucide="wallet" style="width:22px;height:22px;"></i></div>
+
+        <div>
+
+            <div class="stat-value">@Model.TotalTontines</div>
+
+            <div class="stat-label">Tontines créées</div>
+
+            <div class="stat-sub">@Model.MontantTotal.ToString("N0") FCFA cumulés</div>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon" style="background:#E8F5E9;color:#388E3C;"><i data-lucide="refresh-cw" style="width:22px;height:22px;"></i></div>
+
+        <div>
+
+            <div class="stat-value">@Model.TotalCycles</div>
+
+            <div class="stat-label">Cycles au total</div>
+
+            <div class="stat-sub">@Model.CyclesActifs actif(s)</div>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon" style="background:#FCE4EC;color:#C62828;"><i data-lucide="alert-triangle" style="width:22px;height:22px;"></i></div>
+
+        <div>
+
+            <div class="stat-value">@Model.TotalPenalites</div>
+
+            <div class="stat-label">Types de pénalités</div>
+
+            <div class="stat-sub">@Model.TotalPostes poste(s) défini(s)</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Graphiques ligne 1 -->
+
+<div class="charts-grid">
+
+    <div class="chart-card">
+
+        <div class="chart-title"><span></span> Répartition par sexe</div>
+
+        <canvas id="chartSexe"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+        <div class="chart-title"><span></span> Tontines par fréquence</div>
+
+        <canvas id="chartFrequence"></canvas>
+
+    </div>
+
+</div>
+
+
+
+<!-- Graphique inscriptions -->
+
+<div class="chart-full">
+
+    <div class="chart-title"><span></span> Inscriptions des membres (6 derniers mois)</div>
+
+    <canvas id="chartInscriptions"></canvas>
+
+</div>
+
+
+
+<!-- Graphiques ligne 2 -->
+
+<div class="charts-grid">
+
+    <div class="chart-card">
+
+        <div class="chart-title"><span></span> Cycles par statut</div>
+
+        <canvas id="chartStatut"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+        <div class="chart-title"><span></span> Top pays des membres</div>
+
+        <canvas id="chartPays"></canvas>
+
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+
+    const palette = ['#0F6E56','#1D9E75','#9FE1CB','#F57F17','#FFB300','#C62828','#42A5F5','#AB47BC'];
+
+
+
+    // Sexe - camembert
+
+    new Chart(document.getElementById('chartSexe'), {
+
+        type: 'doughnut',
+
+        data: {
+
+            labels: [@Html.Raw(sexeLabels)],
+
+            datasets: [{ data: [@Html.Raw(sexeValues)], backgroundColor: palette, borderWidth: 2 }]
+
+        },
+
+        options: { plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
+
+    });
+
+
+
+    // Fréquence - barres
+
+    new Chart(document.getElementById('chartFrequence'), {
+
+        type: 'bar',
+
+        data: {
+
+            labels: [@Html.Raw(freqLabels)],
+
+            datasets: [{
+
+                label: 'Tontines',
+
+                data: [@Html.Raw(freqValues)],
+
+                backgroundColor: palette,
+
+                borderRadius: 6
+
+            }]
+
+        },
+
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+
+    });
+
+
+
+    // Inscriptions - courbe
+
+    new Chart(document.getElementById('chartInscriptions'), {
+
+        type: 'line',
+
+        data: {
+
+            labels: [@Html.Raw(moisLabels)],
+
+            datasets: [{
+
+                label: 'Nouveaux membres',
+
+                data: [@Html.Raw(moisValues)],
+
+                borderColor: '#0F6E56',
+
+                backgroundColor: 'rgba(15,110,86,0.1)',
+
+                borderWidth: 2.5,
+
+                fill: true,
+
+                tension: 0.4,
+
+                pointBackgroundColor: '#0F6E56',
+
+                pointRadius: 5
+
+            }]
+
+        },
+
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+
+    });
+
+
+
+    // Statut cycles - barres horizontales
+
+    new Chart(document.getElementById('chartStatut'), {
+
+        type: 'bar',
+
+        data: {
+
+            labels: [@Html.Raw(statutLabels)],
+
+            datasets: [{
+
+                label: 'Cycles',
+
+                data: [@Html.Raw(statutValues)],
+
+                backgroundColor: ['#0F6E56','#F57F17','#C62828','#42A5F5'],
+
+                borderRadius: 6
+
+            }]
+
+        },
+
+        options: {
+
+            indexAxis: 'y',
+
+            plugins: { legend: { display: false } },
+
+            scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+
+        }
+
+    });
+
+
+
+    // Pays - barres
+
+    new Chart(document.getElementById('chartPays'), {
+
+        type: 'bar',
+
+        data: {
+
+            labels: [@Html.Raw(paysLabels)],
+
+            datasets: [{
+
+                label: 'Membres',
+
+                data: [@Html.Raw(paysValues)],
+
+                backgroundColor: palette,
+
+                borderRadius: 6
+
+            }]
+
+        },
+
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+
+    });
+
+</script>
+
+}
+

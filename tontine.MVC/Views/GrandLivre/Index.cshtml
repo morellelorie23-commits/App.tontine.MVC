@@ -1,0 +1,237 @@
+@model tontine.MVC.Models.GrandLivreViewModel
+@{
+    ViewData["Title"] = "Grand Livre";
+    var tontines  = ViewBag.Tontines as List<tontine.MVC.Models.TontineViewModel> ?? new();
+    int idTontine = ViewBag.IdTontine ?? 0;
+    string periode = ViewBag.Periode ?? DateTime.Now.ToString("yyyy-MM");
+}
+<style>
+    .kpi-row  { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+    .kpi-card { background:white; border-radius:12px; padding:18px 20px;
+                box-shadow:0 1px 4px rgba(0,0,0,.07); display:flex; align-items:center; gap:14px; }
+    .kpi-icon { width:46px; height:46px; border-radius:12px; display:flex;
+                align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+    .kpi-val  { font-size:20px; font-weight:700; color:#1a1a1a; line-height:1; }
+    .kpi-lbl  { font-size:12px; color:#888780; margin-top:3px; }
+
+    .tc { background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.07); }
+    table { width:100%; border-collapse:collapse; }
+    thead { background:#F8FDF9; position:sticky; top:0; z-index:1; }
+    th    { padding:11px 14px; font-size:11px; font-weight:700; color:#444;
+            text-align:left; text-transform:uppercase; letter-spacing:.5px;
+            border-bottom:1.5px solid #E1F5EE; }
+    td    { padding:11px 14px; font-size:13px; color:#333; border-bottom:1px solid #F4F4F2; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td      { background:#FAFFF9; }
+
+    .sens-d { color:#C62828; font-weight:700; }
+    .sens-c { color:#0F6E56; font-weight:700; }
+    .badge-journal { padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; }
+</style>
+
+<!-- En-tête page -->
+<div style="background:linear-gradient(135deg,#1A237E 0%,#283593 60%,#3949AB 100%);
+            margin:-26px -28px 24px -28px;padding:24px 36px;min-height:90px;
+            display:flex;flex-direction:column;justify-content:flex-end;">
+    <div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:600;letter-spacing:2px;
+                text-transform:uppercase;margin-bottom:6px;">Comptabilité OHADA</div>
+    <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">Grand Livre</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0;">
+        Compte séquestre <strong>@Model.CompteSequestre</strong> - @Model.NomTontine
+    </p>
+</div>
+
+<!-- Filtres -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <label style="font-size:13px;font-weight:600;color:#444;">Tontine :</label>
+        <select id="sel-tontine" onchange="recharger()"
+                style="padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;">
+            @foreach (var t in tontines)
+            {
+                <option value="@t.IdTontine" selected="@(t.IdTontine == idTontine ? "selected" : null)">@t.Libelle</option>
+            }
+        </select>
+        <label style="font-size:13px;font-weight:600;color:#444;">Période :</label>
+        <input type="month" id="sel-periode" value="@periode" onchange="recharger()"
+               style="padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+    </div>
+    <div style="display:flex;gap:8px;">
+        <a asp-controller="GrandLivre" asp-action="Journal"
+           style="background:#0F6E56;color:white;border:none;border-radius:8px;padding:8px 14px;
+                  font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+            <i data-lucide="book" style="width:14px;height:14px;"></i> Journaux
+        </a>
+        <a asp-controller="GrandLivre" asp-action="Balance"
+           style="background:#1565C0;color:white;border:none;border-radius:8px;padding:8px 14px;
+                  font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+            <i data-lucide="scale" style="width:14px;height:14px;"></i> Balance
+        </a>
+        <a asp-controller="GrandLivre" asp-action="Rapprochement"
+           style="background:#6A1B9A;color:white;border:none;border-radius:8px;padding:8px 14px;
+                  font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+            <i data-lucide="bank" style="width:14px;height:14px;"></i> Rapprochement
+        </a>
+        <button onclick="exportCSV()"
+                style="background:#37474F;color:white;border:none;border-radius:8px;padding:8px 14px;
+                       font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+            <i data-lucide="download" style="width:14px;height:14px;"></i> CSV
+        </button>
+    </div>
+</div>
+
+<!-- Solde banner -->
+<div style="background:linear-gradient(135deg,#0F6E56 0%,#1A8C6E 100%);
+            color:white;border-radius:12px;padding:18px 28px;margin-bottom:20px;
+            display:flex;justify-content:space-between;align-items:center;
+            box-shadow:0 4px 16px rgba(15,110,86,.3);" id="solde-banner">
+    <div>
+        <div style="font-size:12px;opacity:.75;margin-bottom:4px;">
+            Solde séquestre - @Model.CompteSequestre
+        </div>
+        <div style="font-size:30px;font-weight:800;" id="solde-val">
+            @Model.SoldeActuel.ToString("N0") FCFA
+        </div>
+    </div>
+    <div style="text-align:right;font-size:12px;opacity:.8;">
+        <div>Règle OHADA : Σ Débits = Σ Crédits</div>
+        <div style="margin-top:4px;font-weight:700;font-size:15px;">
+            @(Math.Abs(Model.TotalDepots - Model.TotalRetraits) < 1 ? "✓ Équilibré" : "⚠ Déséquilibré")
+        </div>
+    </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row" id="kpis">
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#E8F5E9;color:#388E3C;">↑</div>
+        <div><div class="kpi-val" id="kpi-depots">@Model.TotalDepots.ToString("N0")</div>
+             <div class="kpi-lbl">Total dépôts FCFA (Crédits)</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#FFEBEE;color:#C62828;">↓</div>
+        <div><div class="kpi-val" id="kpi-retraits">@Model.TotalRetraits.ToString("N0")</div>
+             <div class="kpi-lbl">Total retraits FCFA (Débits)</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#E3F2FD;color:#1565C0;">≡</div>
+        <div><div class="kpi-val" id="kpi-ops">@Model.Lignes.Count</div>
+             <div class="kpi-lbl">Lignes d'écriture</div></div>
+    </div>
+</div>
+
+<!-- Tableau grand livre -->
+<div class="tc" id="gl-table">
+    @if (!Model.Lignes.Any())
+    {
+        <div style="text-align:center;padding:60px;color:#888780;font-size:14px;">
+            Aucune écriture comptable pour cette tontine.
+        </div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Jnl</th>
+                    <th>Pièce</th>
+                    <th>Libellé</th>
+                    <th style="text-align:right;">Débit</th>
+                    <th style="text-align:right;">Crédit</th>
+                    <th style="text-align:right;">Solde</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-gl">
+                @foreach (var l in Model.Lignes)
+                {
+                    var jnlColor = l.CodeJournal switch {
+                        "BQ" => ("#E3F2FD","#1565C0"),
+                        "CA" => ("#E8F5E9","#2E7D32"),
+                        "VT" => ("#F3E5F5","#6A1B9A"),
+                        _    => ("#FFF3E0","#E65100")
+                    };
+                    <tr>
+                        <td style="color:#666;white-space:nowrap;">@l.DateEcriture.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <span class="badge-journal" style="background:@jnlColor.Item1;color:@jnlColor.Item2;">
+                                @l.CodeJournal
+                            </span>
+                        </td>
+                        <td style="font-family:monospace;font-size:12px;color:#666;">@l.PieceJustificative</td>
+                        <td>
+                            <div style="font-size:12.5px;font-weight:500;">@l.LibelleEcriture</div>
+                            <div style="font-size:11px;color:#888780;">@l.LibelleLigne</div>
+                        </td>
+                        <td style="text-align:right;" class="@(l.Sens == "D" ? "sens-d" : "")">
+                            @(l.Sens == "D" ? l.Montant.ToString("N0") : "")
+                        </td>
+                        <td style="text-align:right;" class="@(l.Sens == "C" ? "sens-c" : "")">
+                            @(l.Sens == "C" ? l.Montant.ToString("N0") : "")
+                        </td>
+                        <td style="text-align:right;font-weight:700;
+                                   color:@(l.SoldeProgressif >= 0 ? "#0F6E56" : "#C62828");">
+                            @l.SoldeProgressif.ToString("N0")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Scripts {
+<script>
+var _glData = null;
+
+function recharger() {
+    var id  = document.getElementById('sel-tontine').value;
+    var per = document.getElementById('sel-periode').value;
+    fetch('@Url.Action("Data","GrandLivre")?idTontine=' + id + '&periode=' + per)
+        .then(r => r.json()).then(d => { _glData = d; renderGL(d); });
+}
+
+function renderGL(d) {
+    document.getElementById('kpi-depots').textContent   = Number(d.totalDepots   ||0).toLocaleString('fr-FR');
+    document.getElementById('kpi-retraits').textContent = Number(d.totalRetraits ||0).toLocaleString('fr-FR');
+    document.getElementById('kpi-ops').textContent      = (d.lignes||[]).length;
+    document.getElementById('solde-val').textContent    = Number(d.soldeActuel   ||0).toLocaleString('fr-FR') + ' FCFA';
+
+    var colors = { BQ:['#E3F2FD','#1565C0'], CA:['#E8F5E9','#2E7D32'], VT:['#F3E5F5','#6A1B9A'], OD:['#FFF3E0','#E65100'] };
+    var tbody = document.getElementById('tbody-gl');
+    if (!tbody) { document.getElementById('gl-table').innerHTML = '<div style="text-align:center;padding:60px;color:#888;">Aucune écriture.</div>'; return; }
+    tbody.innerHTML = (d.lignes||[]).map(function(l) {
+        var c = colors[l.codeJournal] || colors.OD;
+        var dt = new Date(l.dateEcriture).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+        return '<tr>' +
+            '<td style="color:#666;white-space:nowrap;">' + dt + '</td>' +
+            '<td><span style="background:' + c[0] + ';color:' + c[1] + ';padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">' + l.codeJournal + '</span></td>' +
+            '<td style="font-family:monospace;font-size:12px;color:#666;">' + l.pieceJustificative + '</td>' +
+            '<td><div style="font-size:12.5px;font-weight:500;">' + l.libelleEcriture + '</div><div style="font-size:11px;color:#888780;">' + l.libelleLigne + '</div></td>' +
+            '<td style="text-align:right;' + (l.sens==='D'?'color:#C62828;font-weight:700;':'') + '">' + (l.sens==='D' ? Number(l.montant).toLocaleString('fr-FR') : '') + '</td>' +
+            '<td style="text-align:right;' + (l.sens==='C'?'color:#0F6E56;font-weight:700;':'') + '">' + (l.sens==='C' ? Number(l.montant).toLocaleString('fr-FR') : '') + '</td>' +
+            '<td style="text-align:right;font-weight:700;color:' + (l.soldeProgressif>=0?'#0F6E56':'#C62828') + ';">' + Number(l.soldeProgressif).toLocaleString('fr-FR') + '</td>' +
+            '</tr>';
+    }).join('');
+}
+
+function exportCSV() {
+    var lignes = _glData ? _glData.lignes : @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Lignes));
+    var rows   = [['Date','Journal','Pièce','Libellé','Débit','Crédit','Solde']];
+    (lignes||[]).forEach(function(l) {
+        rows.push([
+            new Date(l.dateEcriture||l.DateEcriture).toLocaleDateString('fr-FR'),
+            l.codeJournal||l.CodeJournal,
+            l.pieceJustificative||l.PieceJustificative,
+            (l.libelleEcriture||l.LibelleEcriture) + ' - ' + (l.libelleLigne||l.LibelleLigne),
+            l.sens==='D'||l.Sens==='D' ? (l.montant||l.Montant) : '',
+            l.sens==='C'||l.Sens==='C' ? (l.montant||l.Montant) : '',
+            l.soldeProgressif||l.SoldeProgressif
+        ]);
+    });
+    var csv = rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+    var a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
+    a.download='grand-livre.csv'; a.click();
+}
+</script>
+}

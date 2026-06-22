@@ -1,0 +1,115 @@
+@model tontine.MVC.Models.ReleveCaisseViewModel
+@{ ViewData["Title"] = "Relevé de caisse"; }
+
+<style>
+    .compta-header { background:linear-gradient(135deg,#1A237E,#3949AB);margin:-26px -28px 24px -28px;
+                     padding:24px 36px;display:flex;flex-direction:column;justify-content:flex-end; }
+    .card { background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:24px; }
+    .tc table { width:100%;border-collapse:collapse; }
+    .tc thead { background:#F8FDF9; }
+    .tc th { padding:10px 12px;font-size:11px;font-weight:700;color:#444;text-transform:uppercase;
+             letter-spacing:.4px;border-bottom:1.5px solid #E1F5EE;text-align:left; }
+    .tc th.r { text-align:right; }
+    .tc td { padding:10px 12px;font-size:13px;color:#333;border-bottom:1px solid #F4F4F2; }
+    .tc td.r { text-align:right; }
+    .tc tr:last-child td { border-bottom:none; }
+    .total-row td { font-weight:700;background:#F0FAF6;border-top:2px solid #0F6E56; }
+    .btn-afficher { background:#1A237E;color:white;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer; }
+    .btn-imprimer { background:#37474F;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer; }
+    .btn-fermer   { background:#757575;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer; }
+</style>
+
+<div class="compta-header">
+    <div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Comptabilité OHADA</div>
+    <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">Relevé de caisse</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0;">Mouvements par compte de trésorerie</p>
+</div>
+
+<!-- Critères -->
+<div class="card" style="margin-bottom:20px;">
+    <form method="get" asp-action="ReleveCaisse" style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Date début</label>
+            <input type="date" name="dateDebut" value="@ViewBag.DateDebut"
+                   style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+        </div>
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Date fin</label>
+            <input type="date" name="dateFin" value="@ViewBag.DateFin"
+                   style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+        </div>
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Caisse</label>
+            <select name="compte" style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;min-width:200px;">
+                <option value="">Toutes les caisses</option>
+                <option value="571001" selected="@(ViewBag.CompteSelectionne=="571001"?"selected":null)">571001 — Caisse espèces</option>
+                <option value="521001" selected="@(ViewBag.CompteSelectionne=="521001"?"selected":null)">521001 — Banque séquestre</option>
+                <option value="521002" selected="@(ViewBag.CompteSelectionne=="521002"?"selected":null)">521002 — Banque propre</option>
+                <option value="521100" selected="@(ViewBag.CompteSelectionne=="521100"?"selected":null)">521100 — Wallet MTN</option>
+                <option value="521200" selected="@(ViewBag.CompteSelectionne=="521200"?"selected":null)">521200 — Wallet Orange Money</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:8px;margin-left:auto;">
+            <button type="submit" class="btn-afficher">Afficher</button>
+            <button type="button" class="btn-imprimer" onclick="window.print()">Imprimer</button>
+            <a href="@Url.Action("Index","GrandLivre")" class="btn-fermer" style="text-decoration:none;display:inline-flex;align-items:center;">Fermer</a>
+        </div>
+    </form>
+</div>
+
+<!-- Tableau relevé -->
+<div class="card tc">
+    @if (!Model.Lignes.Any())
+    {
+        <div style="text-align:center;padding:50px;color:#888;">Aucun mouvement pour les critères sélectionnés.</div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Date op</th>
+                    <th>Compte</th>
+                    <th>Intitulé</th>
+                    <th>Pièce</th>
+                    <th class="r">Débit</th>
+                    <th class="r">Crédit</th>
+                    <th>Motif</th>
+                    <th class="r">Solde</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in Model.Lignes)
+                {
+                    <tr>
+                        <td style="white-space:nowrap;color:#666;">@l.DateEcriture.ToString("dd/MM/yyyy")</td>
+                        <td style="font-family:monospace;font-weight:600;">@l.CompteOhada</td>
+                        <td style="font-size:12px;">@l.Intitule</td>
+                        <td style="font-size:12px;color:#888;font-family:monospace;">@l.Piece</td>
+                        <td class="r" style="color:@(l.Debit>0?"#C62828":"#ccc");font-weight:@(l.Debit>0?"700":"400");">
+                            @(l.Debit > 0 ? l.Debit.ToString("N0") : "")
+                        </td>
+                        <td class="r" style="color:@(l.Credit>0?"#0F6E56":"#ccc");font-weight:@(l.Credit>0?"700":"400");">
+                            @(l.Credit > 0 ? l.Credit.ToString("N0") : "")
+                        </td>
+                        <td style="font-size:12px;color:#666;">@l.Motif</td>
+                        <td class="r" style="font-weight:700;color:@(l.Solde>=0?"#0F6E56":"#C62828");">
+                            @l.Solde.ToString("N0")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="4">TOTAUX</td>
+                    <td class="r" style="color:#C62828;">@Model.TotalDebit.ToString("N0")</td>
+                    <td class="r" style="color:#0F6E56;">@Model.TotalCredit.ToString("N0")</td>
+                    <td></td>
+                    <td class="r" style="color:@(Model.SoldeFinal>=0?"#0F6E56":"#C62828");">
+                        Solde : @Model.SoldeFinal.ToString("N0")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</div>

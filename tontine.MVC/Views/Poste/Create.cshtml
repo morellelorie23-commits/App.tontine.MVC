@@ -1,0 +1,71 @@
+@model tontine.MVC.Models.PosteViewModel
+@{
+    ViewData["Title"] = "Nouveau poste";
+}
+
+<div style="max-width:480px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">
+            ← Retour à la liste
+        </a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600; color:#1a1a1a;">Nouveau poste</h2>
+        <p style="margin:0; color:#888780; font-size:14px;">Définir un nouveau rôle ou fonction</p>
+    </div>
+
+    <form asp-action="Create" method="post"
+          data-confirm="Voulez-vous créer ce poste ?"
+          data-confirm-type="create">
+        @Html.AntiForgeryToken()
+
+        <div style="background:white; border-radius:12px; padding:28px;
+                    box-shadow:0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);">
+
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                <div style="width:4px; height:20px; background:#0F6E56; border-radius:2px;"></div>
+                <span style="font-size:13px; font-weight:600; color:#0F6E56; text-transform:uppercase; letter-spacing:0.5px;">Informations</span>
+            </div>
+
+            <div style="display:grid; gap:16px; margin-bottom:24px;">
+                <div>
+                    <label asp-for="LibellePoste" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="LibellePoste"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0;
+                                  border-radius:8px; font-size:14px; outline:none; box-sizing:border-box;"
+                           onfocus="this.style.borderColor='#0F6E56'"
+                           onblur="this.style.borderColor='#E0E0E0'" />
+                    <span asp-validation-for="LibellePoste" style="color:#C62828; font-size:12px;"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Description" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <textarea asp-for="Description" rows="4"
+                              style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0;
+                                     border-radius:8px; font-size:14px; outline:none; box-sizing:border-box; resize:vertical;"
+                              onfocus="this.style.borderColor='#0F6E56'"
+                              onblur="this.style.borderColor='#E0E0E0'"></textarea>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:20px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index"
+                   style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
+                          border-radius:8px; padding:10px 24px; font-size:14px;
+                          text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit"
+                        style="background:#0F6E56; color:white; border:none; border-radius:8px;
+                               padding:10px 24px; font-size:14px; font-weight:500; cursor:pointer;
+                               box-shadow:0 2px 8px rgba(15,110,86,0.3);">
+                    Créer le poste
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,4 +1,4 @@
-﻿using tontine.MVC.Models;
+using tontine.MVC.Models;
 
 namespace tontine.MVC.Services
 {
@@ -9,5 +9,7 @@ namespace tontine.MVC.Services
         Task<bool> CreateAsync(CycleViewModel cycle);
         Task<bool> UpdateAsync(int id, CycleViewModel cycle);
         Task<bool> DeleteAsync(int id);
+        Task<bool> DemarrerAsync(int id);
+        Task<bool> CloturerAsync(int id);
     }
 }

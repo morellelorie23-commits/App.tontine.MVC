@@ -58,6 +58,31 @@ namespace tontine.MVC.Services
             var response = await _http.DeleteAsync($"api/Membre/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<ReleveMembreViewModel?> GetReleveAsync(int id)
+        {
+            var response = await _http.GetAsync($"api/Membre/{id}/releve");
+            if (!response.IsSuccessStatusCode) return null;
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ReleveMembreViewModel>(json, _json);
+        }
+
+        public async Task<ScoreMembreViewModel?> GetScoreAsync(int id)
+        {
+            var response = await _http.GetAsync($"api/Membre/{id}/score");
+            if (!response.IsSuccessStatusCode) return null;
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ScoreMembreViewModel>(json, _json);
+        }
+
+        public async Task<List<ScoreMembreViewModel>> GetAllScoresAsync()
+        {
+            var response = await _http.GetAsync("api/Membre/scores");
+            if (!response.IsSuccessStatusCode) return new List<ScoreMembreViewModel>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<ScoreMembreViewModel>>(json, _json)
+                   ?? new List<ScoreMembreViewModel>();
+        }
     }
 
     public class DateOnlyJsonConverter : JsonConverter<DateOnly>

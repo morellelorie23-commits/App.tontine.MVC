@@ -1,0 +1,42 @@
+@model tontine.MVC.Models.GarantViewModel
+@{
+    ViewData["Title"] = "Supprimer le garant";
+}
+
+<div style="max-width:520px; margin:40px auto; padding:32px; background:white; border-radius:16px; box-shadow:0 1px 4px rgba(0,0,0,0.08); text-align:center;">
+    <div style="width:60px; height:60px; border-radius:50%; background:#FFEBEE; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+        <i data-lucide="shield-off" style="width:28px;height:28px;color:#C62828;"></i>
+    </div>
+    <h2 style="margin:0 0 8px; font-size:20px; font-weight:600; color:#1a1a1a;">Supprimer le garant ?</h2>
+    <p style="margin:0 0 24px; color:#888780; font-size:14px;">Cette action est irréversible. Le membre n'aura plus de garant et ne pourra plus obtenir de prêt.</p>
+
+    <div style="background:#F8FDF9; border:1px solid #C8E6C9; border-radius:10px; padding:16px 20px; margin-bottom:24px; text-align:left;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#0F6E56; color:white; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:14px; flex-shrink:0;">
+                @(Model.NomMembre?.Substring(0, 1).ToUpper() ?? "?")
+            </div>
+            <div>
+                <div style="font-size:12px; color:#888780;">Membre cautionné</div>
+                <div style="font-weight:600; font-size:15px;">@Model.NomMembre</div>
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
+            <div><span style="color:#888780;">Garant :</span> <strong>@Model.Nom @Model.Prenom</strong></div>
+            <div><span style="color:#888780;">Tél :</span> @Model.Telephone</div>
+            @if (!string.IsNullOrEmpty(Model.Relation))
+            {
+                <div><span style="color:#888780;">Relation :</span> @Model.Relation</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <div><span style="color:#888780;">Email :</span> @Model.Email</div>
+            }
+        </div>
+    </div>
+
+    <form asp-action="Delete" asp-route-id="@Model.IdGarant" method="post" style="display:flex; gap:12px; justify-content:center;">
+        @Html.AntiForgeryToken()
+        <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 28px; text-decoration:none; font-weight:500; font-size:14px;">Annuler</a>
+        <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 28px; font-weight:500; cursor:pointer; font-size:14px;">Oui, supprimer</button>
+    </form>
+</div>

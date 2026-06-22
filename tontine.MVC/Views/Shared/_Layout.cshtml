@@ -1,105 +1,1909 @@
-﻿<!DOCTYPE html>
+!DOCTYPE html>
+
 <html lang="fr">
+
 <head>
+
     <meta charset="utf-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0F6E56" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="TontineApp" />
+    <link rel="manifest" href="/manifest.json" />
+
     <title>@ViewData["Title"] - Tontine</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/css/theme.css" />
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #F8F9FA; display: flex; min-height: 100vh; }
-        .sidebar {
-            width: 250px; min-height: 100vh; background: #0F6E56;
-            display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100;
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
         }
-        .sidebar-brand { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-brand h1 { color: white; font-size: 20px; font-weight: 700; margin: 0; }
-        .sidebar-brand p { color: rgba(255,255,255,0.6); font-size: 12px; margin: 4px 0 0; }
-        .sidebar-menu { padding: 16px 0; flex: 1; }
-        .menu-section { padding: 8px 20px 4px; color: rgba(255,255,255,0.4); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px; transition: all 0.2s; border-left: 3px solid transparent; }
-        .menu-item:hover { background: rgba(255,255,255,0.1); color: white; border-left-color: #9FE1CB; }
-        .menu-item.active { background: rgba(255,255,255,0.15); color: white; border-left-color: white; font-weight: 500; }
-        .menu-icon { width: 18px; height: 18px; opacity: 0.8; }
-        .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 12px; }
-        .main-wrapper { margin-left: 250px; flex: 1; display: flex; flex-direction: column; }
-        .topbar { background: white; border-bottom: 0.5px solid #D3D1C7; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; }
-        .topbar-title { font-size: 16px; font-weight: 500; color: #2C2C2A; }
-        .topbar-badge { background: #E1F5EE; color: #085041; font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 500; }
-        .content-area { padding: 28px; flex: 1; }
-        .main-footer { padding: 14px 28px; border-top: 0.5px solid #D3D1C7; color: #888780; font-size: 12px; background: white; }
+
+
+
+        body {
+
+            font-family: 'Segoe UI', sans-serif;
+
+            background: #F4F6F9;
+
+            display: flex;
+
+            min-height: 100vh;
+
+        }
+
+
+
+        .sidebar {
+
+            width: 260px;
+
+            height: 100vh;
+
+            background: linear-gradient(180deg, #0B5940 0%, #0F6E56 60%, #128060 100%);
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            z-index: 100;
+
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+
+            overflow: hidden;
+
+        }
+
+
+
+        .sidebar-brand {
+
+            padding: 22px 20px 18px;
+
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+
+        .sidebar-brand-icon {
+
+            width: 40px;
+
+            height: 40px;
+
+            background: rgba(255,255,255,0.15);
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 20px;
+
+            flex-shrink: 0;
+
+        }
+
+
+
+        .sidebar-brand h1 {
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            margin: 0;
+
+            letter-spacing: 0.3px;
+
+        }
+
+
+
+        .sidebar-brand p {
+
+            color: rgba(255,255,255,0.55);
+
+            font-size: 11px;
+
+            margin: 2px 0 0;
+
+        }
+
+
+
+        .sidebar-menu {
+
+            padding: 12px 0;
+
+            flex: 1;
+
+            overflow-y: auto;
+
+        }
+
+
+
+        .menu-section-btn {
+
+            width: calc(100% - 20px);
+
+            margin: 5px 10px 2px;
+
+            background: rgba(255,255,255,0.08);
+
+            border: none;
+
+            border-left: 3px solid transparent;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 11px 14px;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.2px;
+
+            text-transform: none;
+
+            transition: background 0.2s, border-left-color 0.2s, transform 0.15s;
+
+        }
+
+            .menu-section-btn:hover {
+
+                background: rgba(255,255,255,0.15);
+
+                transform: translateX(2px);
+
+            }
+
+            .menu-section-btn:not(.collapsed) {
+
+                background: rgba(255,255,255,0.13);
+
+                border-left-color: #9FE1CB;
+
+                box-shadow: inset 0 0 0 1px rgba(159,225,203,0.2);
+
+            }
+
+            .menu-section-btn .chevron {
+
+                margin-left: auto;
+
+                width: 14px;
+
+                height: 14px;
+
+                transition: transform 0.22s ease;
+
+                flex-shrink: 0;
+
+                opacity: 0.7;
+
+            }
+
+            .menu-section-btn.collapsed .chevron {
+
+                transform: rotate(-90deg);
+
+            }
+
+
+
+        .menu-submenu {
+
+            overflow: hidden;
+
+            transition: max-height 0.28s ease, opacity 0.22s ease;
+
+            max-height: 2000px;
+
+            opacity: 1;
+
+        }
+
+
+
+            .menu-submenu.collapsed {
+
+                max-height: 0;
+
+                opacity: 0;
+
+            }
+
+
+
+        .menu-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 9px 16px 9px 20px;
+
+            color: rgba(255,255,255,0.75);
+
+            text-decoration: none;
+
+            font-size: 13.5px;
+
+            transition: all 0.18s;
+
+            border-left: 3px solid transparent;
+
+            margin: 1px 0;
+
+        }
+
+
+
+            .menu-item:hover {
+
+                background: rgba(255,255,255,0.1);
+
+                color: white;
+
+                border-left-color: rgba(255,255,255,0.5);
+
+            }
+
+
+
+            .menu-item.active {
+
+                background: rgba(255,255,255,0.18);
+
+                color: white;
+
+                border-left-color: #9FE1CB;
+
+                font-weight: 600;
+
+            }
+
+
+
+            .menu-item.disabled {
+
+                opacity: 0.4;
+
+                cursor: not-allowed;
+
+                pointer-events: none;
+
+            }
+
+
+
+        /* Sous-liens à l'intérieur d'une section déroulante */
+
+        .menu-submenu .menu-item {
+
+            padding-left: 40px;
+
+            font-size: 13px;
+
+            color: rgba(255,255,255,0.68);
+
+            margin: 1px 8px;
+
+            border-radius: 7px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition: padding-left 0.22s ease, background 0.22s ease,
+                        color 0.22s ease, transform 0.22s ease,
+                        box-shadow 0.22s ease !important;
+
+        }
+
+            /* Shimmer sweep au survol */
+            .menu-submenu .menu-item::before {
+
+                content: '';
+
+                position: absolute;
+
+                inset: 0;
+
+                background: linear-gradient(105deg,
+                    transparent 25%,
+                    rgba(255,255,255,0.07) 50%,
+                    transparent 75%);
+
+                transform: translateX(-120%);
+
+                transition: transform 0.55s ease;
+
+                pointer-events: none;
+
+                border-radius: inherit;
+
+            }
+
+            .menu-submenu .menu-item:hover::before {
+
+                transform: translateX(120%);
+
+            }
+
+            /* Petit point indicateur animé */
+            .menu-submenu .menu-item::after {
+
+                content: '';
+
+                position: absolute;
+
+                left: 22px;
+
+                top: 50%;
+
+                transform: translateY(-50%) scale(0);
+
+                width: 5px;
+
+                height: 5px;
+
+                border-radius: 50%;
+
+                background: #9FE1CB;
+
+                box-shadow: 0 0 6px rgba(159,225,203,0.9);
+
+                transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+
+                pointer-events: none;
+
+            }
+
+            .menu-submenu .menu-item:hover::after,
+            .menu-submenu .menu-item.active::after {
+
+                transform: translateY(-50%) scale(1);
+
+            }
+
+            .menu-submenu .menu-item .menu-icon {
+
+                width: 15px;
+
+                height: 15px;
+
+                transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+                            filter 0.25s ease !important;
+
+                flex-shrink: 0;
+
+            }
+
+            .menu-submenu .menu-item:hover .menu-icon {
+
+                transform: scale(1.25) rotate(-8deg);
+
+                filter: drop-shadow(0 0 4px rgba(159,225,203,0.95));
+
+            }
+
+            .menu-submenu .menu-item.active .menu-icon {
+
+                filter: drop-shadow(0 0 3px rgba(159,225,203,0.7));
+
+            }
+
+            .menu-submenu .menu-item:hover {
+
+                padding-left: 44px;
+
+                background: rgba(255,255,255,0.1);
+
+                color: white;
+
+                transform: translateY(-1px);
+
+                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+
+            }
+
+            @@keyframes activePulse {
+
+                0%, 100% { box-shadow: inset 3px 0 0 #9FE1CB, 0 0 6px rgba(159,225,203,0.08); }
+
+                50%       { box-shadow: inset 3px 0 0 #9FE1CB, 0 0 18px rgba(159,225,203,0.28); }
+
+            }
+
+            .menu-submenu .menu-item.active {
+
+                padding-left: 44px;
+
+                background: linear-gradient(90deg, rgba(159,225,203,0.14) 0%, rgba(255,255,255,0.06) 100%);
+
+                color: white;
+
+                animation: activePulse 2.8s ease-in-out infinite;
+
+            }
+
+
+
+        .menu-icon {
+
+            width: 17px;
+
+            height: 17px;
+
+            flex-shrink: 0;
+
+        }
+
+
+
+        .menu-sublabel {
+
+            padding: 8px 24px 4px;
+
+            margin: 8px 10px 2px;
+
+            color: rgba(255,255,255,0.35);
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1.2px;
+
+            border-top: 1px solid rgba(255,255,255,0.07);
+
+        }
+
+
+
+        .badge-soon {
+
+            margin-left: auto;
+
+            background: rgba(255,255,255,0.15);
+
+            color: rgba(255,255,255,0.6);
+
+            font-size: 9px;
+
+            font-weight: 600;
+
+            padding: 2px 7px;
+
+            border-radius: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+
+        .sidebar-footer {
+
+            padding: 14px 20px;
+
+            border-top: 1px solid rgba(255,255,255,0.1);
+
+            color: rgba(255,255,255,0.4);
+
+            font-size: 11px;
+
+        }
+
+
+
+        .main-wrapper {
+
+            margin-left: 260px;
+
+            flex: 1;
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+
+        .topbar {
+
+            background: white;
+
+            border-bottom: 1px solid #E8EAF0;
+
+            padding: 13px 28px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 50;
+
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+
+        }
+
+
+
+        .topbar-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+
+        .topbar-title {
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            color: #1a1a2e;
+
+        }
+
+
+
+        .topbar-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+
+        .topbar-badge {
+
+            background: #E6F4EE;
+
+            color: #085041;
+
+            font-size: 12px;
+
+            padding: 4px 12px;
+
+            border-radius: 20px;
+
+            font-weight: 600;
+
+        }
+
+
+
+        .topbar-user {
+
+            width: 34px;
+
+            height: 34px;
+
+            background: #0F6E56;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+        }
+
+
+
+        .breadcrumb-container {
+
+            background: var(--color-breadcrumb-bg, #FAFAFA);
+
+            border-bottom: 1px solid var(--color-border);
+
+            padding: 12px 28px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 14px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+
+        .content-area {
+
+            padding: 26px 28px;
+
+            flex: 1;
+
+        }
+
+
+
+        .main-footer {
+
+            padding: 13px 28px;
+
+            border-top: 1px solid #E8EAF0;
+
+            color: #9E9E9E;
+
+            font-size: 12px;
+
+            background: white;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+        /* stylelint-disable-next-line */
+
+        @@media print {
+
+            @@page { size: A4 portrait; margin: 15mm 12mm; }
+
+            .sidebar, .topbar, .main-footer, .breadcrumb,
+            [onclick], button, a.action-btn, a.btn-add,
+            form[asp-action], .btn-login { display: none !important; }
+
+            .main-wrapper { margin-left: 0 !important; }
+
+            .content-area { padding: 8px 0 !important; }
+
+            body { background: white !important; font-size: 11px !important; color: #000 !important; }
+
+            h1 { font-size: 16px !important; margin-bottom: 8px !important; }
+            h2 { font-size: 14px !important; margin-bottom: 6px !important; }
+            h3, h4 { font-size: 12px !important; }
+
+            table { width: 100% !important; border-collapse: collapse !important;
+                    font-size: 10px !important; page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            th { background: #0F6E56 !important; color: white !important;
+                 padding: 5px 8px !important; text-align: left; -webkit-print-color-adjust: exact; }
+            td { padding: 4px 8px !important; border-bottom: 1px solid #ddd !important; }
+
+            .login-card, div[style*="box-shadow"] { box-shadow: none !important;
+                border: 1px solid #ddd !important; }
+
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+            .print-hide { display: none !important; }
+            .print-only { display: block !important; }
+
+        }
+
     </style>
+
+    <script src="~/js/theme.js"></script>
+
+    <script src="~/js/lucide.min.js"></script>
+    <script src="~/js/tableutils.js"></script>
+
+    <style>
+
+        .lc-icon { display:inline-flex; align-items:center; justify-content:center; }
+
+        .lc-icon svg { stroke-width: 1.8; }
+
+    </style>
+
 </head>
+
 <body>
+
+
+
     <div class="sidebar">
+
         <div class="sidebar-brand">
-            <h1>Tontine</h1>
-            <p>Gestion des associations</p>
+
+            <div class="sidebar-brand-icon">
+
+                <img src="/images/logo.svg" alt="Logo" style="width:36px;height:36px;" />
+
+            </div>
+
+            <div>
+
+                <h1>TontineApp</h1>
+
+                <p>Gestion des associations</p>
+
+            </div>
+
         </div>
+
+
+
         <nav class="sidebar-menu">
-            <div class="menu-section">Principal</div>
-            <a class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
-               asp-controller="Home" asp-action="Index">
-                <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+
+
+
+            @{
+
+                var ctrl   = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+                var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+                var isParametres = new[] {
+
+                        "Membre","Tontine","Cycle","Poste","Penalite",
+
+                        "CycleTontine","CycleTontinePenalite","MembreCycleTontine","MembrePosteCycle","Pret","Garant"
+
+                        }.Contains(ctrl);
+
+                var isLiaisons = new[] { "CycleTontine","CycleTontinePenalite","MembreCycleTontine","MembrePosteCycle" }.Contains(ctrl);
+
+                var isStatistique = ctrl == "Statistique" || ctrl == "Rapport";
+
+                var isComptabilite = ctrl == "Cotisation" || ctrl == "Versement" || ctrl == "Amende" || ctrl == "GrandLivre" || action == "Tours" || action == "LivreDeCompte" || action == "PaiementCaisse";
+
+                var isSecurite = ctrl == "Compte" || ctrl == "Journal" || ctrl == "Role";
+
+                var isReunion = ctrl == "Reunion";
+
+            }
+
+
+
+            <!-- Tableau de bord -->
+
+            <div style="padding:8px 0 4px;">
+
+                <a class="menu-item @(ctrl == "Home" ? "active" : "")"
+
+                   asp-controller="Home" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+
+                    </svg>
+
+                    <span data-i18n="nav.dashboard">Tableau de bord</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Paramètres (inclut Liaisons) -->
+
+            <button class="menu-section-btn @(!isParametres ? "collapsed" : "")" data-target="sub-parametres">
+
+                <svg style="width:16px;height:16px;flex-shrink:0;opacity:0.9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
                 </svg>
-                Tableau de bord
-            </a>
-            <div class="menu-section" style="margin-top:8px;">Gestion</div>
-            <a class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Membre" ? "active" : "")"
-               asp-controller="Membre" asp-action="Index">
-                <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                <span data-i18n="nav.settings">Paramètres</span>
+
+                <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+
                 </svg>
-                Membres
-            </a>
-            <a class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tontine" ? "active" : "")"
-               asp-controller="Tontine" asp-action="Index">
-                <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+            </button>
+
+            <div class="menu-submenu @(!isParametres ? "collapsed" : "")" id="sub-parametres">
+
+
+
+                <!-- Données de base -->
+
+                <div class="menu-sublabel" data-i18n="nav.data-base">Données de base</div>
+
+                <a class="menu-item @(ctrl == "Membre" ? "active" : "")" asp-controller="Membre" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.members">Membres</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Tontine" ? "active" : "")" asp-controller="Tontine" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.tontines">Tontines</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Cycle" ? "active" : "")" asp-controller="Cycle" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+
+                    </svg>
+
+                    <span data-i18n="nav.cycles">Cycles</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Poste" ? "active" : "")" asp-controller="Poste" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.postes">Postes</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Penalite" ? "active" : "")" asp-controller="Penalite" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.penalties">Pénalités</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Pret" ? "active" : "")" asp-controller="Pret" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.loans">Prêts</span>
+
+                    <span id="badge-prets-retard"
+
+                          style="display:none; margin-left:auto; background:#C62828; color:white;
+
+                                 font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px;
+
+                                 min-width:18px; text-align:center;"></span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Garant" ? "active" : "")" asp-controller="Garant" asp-action="Index">
+
+                    <i data-lucide="shield-check" style="width:16px;height:16px;flex-shrink:0;"></i>
+
+                    <span>Garants / Répondants</span>
+
+                </a>
+
+
+
+                <!-- Liaisons -->
+
+                <button class="menu-section-btn @(!isLiaisons ? "collapsed" : "")" data-target="sub-liaisons" style="padding: 8px 14px 8px; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); font-size:12px;">
+
+                    <svg style="width:14px;height:14px;flex-shrink:0;opacity:0.9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+
+                    </svg>
+
+                    <span data-i18n="nav.liaisons">Liaisons</span>
+
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+
+                    </svg>
+
+                </button>
+
+                <div class="menu-submenu @(!isLiaisons ? "collapsed" : "")" id="sub-liaisons" style="padding-left: 0;">
+
+                    <a class="menu-item @(ctrl == "CycleTontine" ? "active" : "")" asp-controller="CycleTontine" asp-action="Index">
+
+                        <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+
+                        </svg>
+
+                        <span data-i18n="nav.cycles-tontines">Cycles - Tontines</span>
+
+                    </a>
+
+                    <a class="menu-item @(ctrl == "CycleTontinePenalite" ? "active" : "")" asp-controller="CycleTontinePenalite" asp-action="Index">
+
+                        <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+
+                        </svg>
+
+                        <span data-i18n="nav.penalties-cycles">Pénalités - Cycles</span>
+
+                    </a>
+
+                    <a class="menu-item @(ctrl == "MembreCycleTontine" && action != "SaisieSeance" ? "active" : "")" asp-controller="MembreCycleTontine" asp-action="Index">
+
+                        <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+
+                        </svg>
+
+                        <span data-i18n="nav.participations">Participations</span>
+
+                    </a>
+
+                    <a class="menu-item @(ctrl == "MembreCycleTontine" && action == "SaisieSeance" ? "active" : "")" asp-controller="MembreCycleTontine" asp-action="SaisieSeance">
+
+                        <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+
+                        <span>Saisie Séance</span>
+
+                    </a>
+
+                    <a class="menu-item @(ctrl == "MembrePosteCycle" ? "active" : "")" asp-controller="MembrePosteCycle" asp-action="Index">
+
+                        <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+
+                        </svg>
+
+                        <span data-i18n="nav.role-assignments">Attributions de rôles</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Réunions -->
+
+            <div style="padding:4px 0;">
+
+                <a class="menu-item @(isReunion ? "active" : "")"
+                   asp-controller="Reunion" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+
+                    <span>Réunions</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Statistique -->
+
+            <button class="menu-section-btn @(!isStatistique ? "collapsed" : "")" data-target="sub-statistique">
+
+                <svg style="width:16px;height:16px;flex-shrink:0;opacity:0.9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+
                 </svg>
-                Tontines
-            </a>
-            <a class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Cycle" ? "active" : "")"
-               asp-controller="Cycle" asp-action="Index">
-                <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+
+                <span data-i18n="nav.statistics">Statistique</span>
+
+                <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+
                 </svg>
-                Cycles
-            </a>
-            <a class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Poste" ? "active" : "")"
-               asp-controller="Poste" asp-action="Index">
-                <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+
+            </button>
+
+            <div class="menu-submenu @(!isStatistique ? "collapsed" : "")" id="sub-statistique">
+
+                <a class="menu-item @(ctrl == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.dashboard">Tableau de bord</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Statistique" ? "active" : "")" asp-controller="Statistique" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+
+                    </svg>
+
+                    <span>Statistiques</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Rapport" ? "active" : "")" asp-controller="Rapport" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.detailed-reports">Rapports détaillés</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Comptabilité -->
+
+            <button class="menu-section-btn @(!isComptabilite ? "collapsed" : "")" data-target="sub-comptabilite">
+
+                <svg style="width:16px;height:16px;flex-shrink:0;opacity:0.9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+
                 </svg>
-                Postes
-            </a>
-            <a class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Penalite" ? "active" : "")"
-               asp-controller="Penalite" asp-action="Index">
-                <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+
+                <span data-i18n="nav.accounting">Comptabilité</span>
+
+                <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+
                 </svg>
-                Pénalités
-            </a>
+
+            </button>
+
+            <div class="menu-submenu @(!isComptabilite ? "collapsed" : "")" id="sub-comptabilite">
+
+                <a class="menu-item @(ctrl == "Cotisation" && action != "PaiementCaisse" && action != "Tours" && action != "LivreDeCompte" ? "active" : "")" asp-controller="Cotisation" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.cotisations">Cotisations</span>
+
+                </a>
+
+                <a class="menu-item @(action == "PaiementCaisse" ? "active" : "")" asp-controller="Cotisation" asp-action="PaiementCaisse">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span>Paiement en caisse</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "Versement" ? "active" : "")" asp-controller="Versement" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.versements">Versements</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Amende" ? "active" : "")" asp-controller="Amende" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.applied-fines">Amendes appliquées</span>
+
+                </a>
+
+                <a class="menu-item @(action == "Tours" ? "active" : "")" asp-controller="Cotisation" asp-action="Tours">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <span>Tableau des tours</span>
+                </a>
+
+                <a class="menu-item @(action == "LivreDeCompte" ? "active" : "")" asp-controller="Cotisation" asp-action="LivreDeCompte">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span>Livre de compte</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "Index" ? "active" : "")" asp-controller="GrandLivre" asp-action="Index">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Grand Livre</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "Journal" ? "active" : "")" asp-controller="GrandLivre" asp-action="Journal">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span>Journaux</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "Balance" ? "active" : "")" asp-controller="GrandLivre" asp-action="Balance">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                    </svg>
+                    <span>Balance</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "Rapprochement" ? "active" : "")" asp-controller="GrandLivre" asp-action="Rapprochement">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                    <span>Rapprochement</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "Journee" ? "active" : "")" asp-controller="GrandLivre" asp-action="Journee">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Journée comptable</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "OperationComptable" ? "active" : "")" asp-controller="GrandLivre" asp-action="OperationComptable">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>Saisie écriture</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "TransfertCaisse" ? "active" : "")" asp-controller="GrandLivre" asp-action="TransfertCaisse">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span>Transfert de caisse</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "ReleveCaisse" ? "active" : "")" asp-controller="GrandLivre" asp-action="ReleveCaisse">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Relevé de caisse</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "BalanceGenerale" ? "active" : "")" asp-controller="GrandLivre" asp-action="BalanceGenerale">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span>Balance générale</span>
+                </a>
+
+                <a class="menu-item @(ctrl == "GrandLivre" && action == "BalanceClient" ? "active" : "")" asp-controller="GrandLivre" asp-action="BalanceClient">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Balance client</span>
+                </a>
+
+            </div>
+
+
+
+            <!-- Sécurité -->
+
+            <button class="menu-section-btn @(!isSecurite ? "collapsed" : "")" data-target="sub-securite">
+
+                <svg style="width:16px;height:16px;flex-shrink:0;opacity:0.9;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+
+                </svg>
+
+                <span data-i18n="nav.security">Sécurité</span>
+
+                <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+
+                </svg>
+
+            </button>
+
+            <div class="menu-submenu @(!isSecurite ? "collapsed" : "")" id="sub-securite">
+
+                <a class="menu-item @(ctrl == "Compte" ? "active" : "")" asp-controller="Compte" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.accounts">Comptes utilisateurs</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Role" ? "active" : "")" asp-controller="Role" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.roles-permissions">Rôles &amp; Permissions</span>
+
+                </a>
+
+                <a class="menu-item @(ctrl == "Journal" ? "active" : "")" asp-controller="Journal" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+
+                    </svg>
+
+                    <span data-i18n="nav.journal">Journal d'activité</span>
+
+                </a>
+
+            </div>
+
+
+
         </nav>
-        <div class="sidebar-footer">&copy; 2026 Tontine App</div>
+
+
+
+        <div style="padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+
+            <a asp-controller="Compte" asp-action="ChangePassword" style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.55);font-size:12px;text-decoration:none;padding:6px 4px;margin-bottom:8px;border-radius:6px;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+                <i data-lucide="key-round" style="width:14px;height:14px;"></i> Changer le mot de passe
+            </a>
+
+            <button onclick="confirmerDeconnexion()" style="width: 100%; background: rgba(198,40,40,0.1); border: 1px solid rgba(198,40,40,0.3); color: #FF6B6B; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px;">
+
+                <i data-lucide="log-out" style="width:15px;height:15px;"></i> <span data-i18n="btn.logout">Se déconnecter</span>
+
+            </button>
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            &copy; 2026 TontineApp &mdash; v1.0
+
+        </div>
+
     </div>
+
+
 
     <div class="main-wrapper">
+
         <div class="topbar">
-            <span class="topbar-title">@ViewData["Title"]</span>
-            <span class="topbar-badge">Tontine v1.0</span>
+
+            <div class="topbar-left">
+
+                <span class="topbar-title">@ViewData["Title"]</span>
+
+            </div>
+
+            <div class="topbar-right">
+                @{
+                    var cycleNomTopbar = Context.Session.GetString("cycle_nom");
+                }
+                @if (!string.IsNullOrEmpty(cycleNomTopbar))
+                {
+                    <div class="topbar-badge" title="Cycle actif">
+                        <i data-lucide="repeat" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>@cycleNomTopbar
+                    </div>
+                }
+
+                <!-- Sélecteur de langue -->
+
+                <select id="language-selector" onchange="window.onLanguageChange(this)" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #0F6E56; background: #F0F0F0; font-size: 12px; cursor: pointer;">
+
+                    <option value="fr">Français</option>
+
+                    <option value="en">English</option>
+
+                </select>
+
+
+
+                <!-- Toggle thème -->
+
+                <button id="theme-toggle" onclick="toggleTheme()" style="background: none; border: none; font-size: 18px; cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s;" title="Mode sombre">
+
+                    <i data-lucide="moon" style="width:16px;height:16px;"></i>
+
+                </button>
+
+
+
+                <button onclick="window.print()"
+
+                        style="background:#E1F5EE; color:#085041; border:1px solid #0F6E56;
+
+                           border-radius:8px; padding:6px 14px; font-size:13px;
+
+                           font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px;">
+
+                    <i data-lucide="printer" style="width:15px;height:15px;"></i>
+
+                    <span data-i18n="btn.print">Imprimer</span>
+
+                </button>
+
+
+                <div class="topbar-user" title="@Context.Session.GetString("user_nom") - @Context.Session.GetString("user_role")"
+                     style="overflow:hidden; padding:0;">
+                    @{
+                        var userPhoto = Context.Session.GetString("user_photo");
+                    }
+                    @if (!string.IsNullOrEmpty(userPhoto))
+                    {
+                        <img src="/uploads/@userPhoto" style="width:100%; height:100%; object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <span style="font-size:14px; font-weight:700; color:white;">@(Context.Session.GetString("user_nom")?.Substring(0, 1).ToUpper() ?? "?")</span>
+                    }
+
+                </div>
+
+            </div>
+
         </div>
+
+
+
+        <!-- Breadcrumb Navigation -->
+
+        @await Html.PartialAsync("_Breadcrumb")
+
+
+
         <div class="content-area">
+
             @RenderBody()
+
         </div>
+
+
+
         <div class="main-footer">
-            &copy; 2026 - Tontine.MVC — Système de gestion des associations
+
+            <span>&copy; 2026 &mdash; Système de gestion des tontines</span>
+
+            <span>TontineApp v1.0</span>
+
         </div>
+
     </div>
 
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/i18n.js"></script>
+
+    <script src="~/js/lucide.min.js"></script>
+    <script src="~/js/tableutils.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+
+
+    <!-- Modale de confirmation globale -->
+
+    <div id="global-confirm-modal"
+
+         style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+
+            z-index:9999; align-items:center; justify-content:center;">
+
+        <div style="background:white; border-radius:16px; max-width:400px; width:90%;
+
+                padding:32px; box-shadow:0 8px 40px rgba(0,0,0,0.25); text-align:center;">
+
+            <div id="gcm-icon" style="font-size:44px; margin-bottom:12px;"></div>
+
+            <h3 id="gcm-title" style="margin:0 0 8px; font-size:17px; font-weight:700; color:#1a1a1a;"></h3>
+
+            <p id="gcm-message" style="margin:0 0 24px; font-size:14px; color:#666; line-height:1.5;"></p>
+
+            <div style="display:flex; gap:12px; justify-content:center;">
+
+                <button id="gcm-cancel"
+
+                        style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
+
+                           border-radius:8px; padding:10px 28px; font-size:14px;
+
+                           font-weight:500; cursor:pointer;">
+
+                    Annuler
+
+                </button>
+
+                <button id="gcm-confirm"
+
+                        style="border:none; border-radius:8px; padding:10px 28px;
+
+                           font-size:14px; font-weight:600; cursor:pointer; color:white;">
+
+                    Confirmer
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        document.querySelectorAll('.menu-section-btn').forEach(function(btn) {
+
+            btn.addEventListener('click', function() {
+
+                var targetId = btn.getAttribute('data-target');
+
+                var submenu  = document.getElementById(targetId);
+
+                var isOpen   = !btn.classList.contains('collapsed');
+
+                if (isOpen) {
+
+                    btn.classList.add('collapsed');
+
+                    submenu.classList.add('collapsed');
+
+                } else {
+
+                    btn.classList.remove('collapsed');
+
+                    submenu.classList.remove('collapsed');
+
+                }
+
+            });
+
+        });
+
+
+
+        function _setLucideIcon(el, name, size, color) {
+
+            el.innerHTML = '<i data-lucide="' + name + '" style="width:' + size + 'px;height:' + size + 'px;' + (color ? 'color:' + color + ';' : '') + '"></i>';
+
+            lucide.createIcons({ el: el });
+
+        }
+
+
+
+        function confirmerDeconnexion() {
+
+            const modal   = document.getElementById('global-confirm-modal');
+
+            const icon    = document.getElementById('gcm-icon');
+
+            const title   = document.getElementById('gcm-title');
+
+            const message = document.getElementById('gcm-message');
+
+            const btnOk   = document.getElementById('gcm-confirm');
+
+            const btnNo   = document.getElementById('gcm-cancel');
+
+
+
+            _setLucideIcon(icon, 'log-out', 44, '#C62828');
+
+            title.textContent   = 'Se déconnecter';
+
+            message.textContent = 'Voulez-vous vraiment vous déconnecter de TontineApp ?';
+
+            btnOk.textContent   = 'Se déconnecter';
+
+            btnOk.style.background = '#C62828';
+
+            btnOk.style.boxShadow  = '0 2px 8px rgba(198,40,40,0.35)';
+
+            modal.style.display = 'flex';
+
+            document.body.style.overflow = 'hidden';
+
+
+
+            btnOk.onclick = function() {
+
+                window.location.href = '@Url.Action("Logout", "Auth")';
+
+            };
+
+            btnNo.onclick = function() {
+
+                modal.style.display = 'none';
+
+                document.body.style.overflow = 'auto';
+
+            };
+
+        }
+
+
+
+        // Badge alertes menu
+
+        (function() {
+
+            fetch('@Url.Action("AlerteCount", "Home")')
+
+                .then(function(r) { return r.ok ? r.json() : null; })
+
+                .then(function(data) {
+
+                    if (!data) return;
+
+                    var badge = document.getElementById('badge-prets-retard');
+
+                    if (badge && data.pretsEnRetard > 0) {
+
+                        badge.textContent = data.pretsEnRetard;
+
+                        badge.style.display = 'inline-block';
+
+                    }
+
+                })
+
+                .catch(function() {});
+
+        })();
+
+
+
+        (function () {
+
+            let _pendingForm = null;
+
+            let _pendingAction = null;
+
+            const modal   = document.getElementById('global-confirm-modal');
+
+            const icon    = document.getElementById('gcm-icon');
+
+            const title   = document.getElementById('gcm-title');
+
+            const message = document.getElementById('gcm-message');
+
+            const btnOk   = document.getElementById('gcm-confirm');
+
+            const btnNo   = document.getElementById('gcm-cancel');
+
+
+
+            function showConfirm(opts) {
+
+                _setLucideIcon(icon, opts.icon || 'help-circle', 44, opts.iconColor || '#888780');
+
+                title.textContent   = opts.title   || 'Confirmation';
+
+                message.textContent = opts.message || 'Voulez-vous continuer ?';
+
+                btnOk.textContent   = opts.okLabel || 'Confirmer';
+
+                btnOk.style.background = opts.danger ? '#C62828' : '#0F6E56';
+
+                btnOk.style.boxShadow  = opts.danger ? '0 2px 8px rgba(198,40,40,0.35)' : '0 2px 8px rgba(15,110,86,0.3)';
+
+                modal.style.display = 'flex';
+
+                document.body.style.overflow = 'hidden';
+
+            }
+
+
+
+            function closeModal() {
+
+                modal.style.display = 'none';
+
+                document.body.style.overflow = 'auto';
+
+                _pendingForm = null;
+
+                _pendingAction = null;
+
+            }
+
+
+
+            btnNo.addEventListener('click', closeModal);
+
+            modal.addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+
+
+
+            btnOk.addEventListener('click', function () {
+
+                modal.style.display = 'none';
+
+                document.body.style.overflow = 'auto';
+
+                if (_pendingForm) {
+
+                    _pendingForm._confirmed = true;
+
+                    if (_pendingAction) _pendingForm.action = _pendingAction;
+
+                    _pendingForm.submit();
+
+                }
+
+            });
+
+
+
+            document.addEventListener('submit', function (e) {
+
+                const form = e.target;
+
+                if (!form.dataset.confirm) return;
+
+                if (form._confirmed) return;
+
+                e.preventDefault();
+
+                const type = form.dataset.confirmType || 'default';
+
+                _pendingForm   = form;
+
+                _pendingAction = form.dataset.confirmAction || null;
+
+                if (type === 'delete') {
+
+                    showConfirm({ icon: 'trash-2', iconColor: '#C62828', title: 'Confirmer la suppression', message: form.dataset.confirm, okLabel: 'Supprimer', danger: true });
+
+                } else if (type === 'edit') {
+
+                    showConfirm({ icon: 'save', iconColor: '#0F6E56', title: 'Enregistrer les modifications', message: form.dataset.confirm, okLabel: 'Enregistrer', danger: false });
+
+                } else if (type === 'create') {
+
+                    showConfirm({ icon: 'plus-circle', iconColor: '#0F6E56', title: 'Créer un nouvel enregistrement', message: form.dataset.confirm, okLabel: 'Enregistrer', danger: false });
+
+                } else {
+
+                    showConfirm({ icon: 'help-circle', iconColor: '#888780', title: 'Confirmation', message: form.dataset.confirm, okLabel: 'Confirmer', danger: false });
+
+                }
+
+            }, true);
+
+        })();
+
+    </script>
+
+    <script>lucide.createIcons();</script>
+
+    <!-- ── Bannière hors-ligne ─────────────────────────────────────── -->
+    <div id="offline-banner"
+         style="display:none;position:fixed;bottom:0;left:0;right:0;background:#E65100;color:white;
+                text-align:center;padding:10px 16px;z-index:9998;font-size:13px;font-weight:500;">
+        ⚠ Mode hors-ligne - vos actions seront synchronisées au retour de la connexion
+    </div>
+
+    <!-- ── PWA Service Worker ──────────────────────────────────────── -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(function() {});
+        }
+        window.addEventListener('offline', function() {
+            document.getElementById('offline-banner').style.display = 'block';
+        });
+        window.addEventListener('online', function() {
+            document.getElementById('offline-banner').style.display = 'none';
+            showToast('Connexion rétablie !', 'success');
+        });
+    </script>
+
+
+    @{
+        var successMsg = TempData["Success"] as string;
+        var errorMsg   = TempData["Error"]   as string;
+        var infoMsg    = TempData["Info"]     as string;
+    }
+    @if (!string.IsNullOrEmpty(successMsg) || !string.IsNullOrEmpty(errorMsg) || !string.IsNullOrEmpty(infoMsg))
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                @if (!string.IsNullOrEmpty(successMsg)) {
+                    <text>showToast(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMsg)), 'success');</text>
+                }
+                @if (!string.IsNullOrEmpty(errorMsg)) {
+                    <text>showToast(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(errorMsg)), 'error');</text>
+                }
+                @if (!string.IsNullOrEmpty(infoMsg)) {
+                    <text>showToast(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(infoMsg)), 'info');</text>
+                }
+            });
+        </script>
+    }
+
 </body>
+
 </html>

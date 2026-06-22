@@ -1,0 +1,98 @@
+@model tontine.MVC.Models.CycleTontineViewModel
+
+@{
+
+    ViewData["Title"] = "Modifier la liaison Cycle-Tontine";
+
+}
+
+
+
+<div style="max-width:480px; margin:30px auto; padding:24px; background:white; border-radius:16px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+    <h2 style="margin:0 0 24px; font-size:20px; font-weight:600;">Modifier la liaison</h2>
+
+
+
+    <form asp-action="Edit" method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+
+
+
+        @if (!ViewData.ModelState.IsValid) {
+
+            <div style="margin-bottom:12px; padding:12px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#B71C1C;">
+
+                <div style="font-weight:500;">Erreur</div>
+
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors)) {
+
+                    <p style="margin:4px 0 0; font-size:13px;">› @error.ErrorMessage</p>
+
+                }
+
+            </div>
+
+        }
+
+
+
+        <div style="display:grid; gap:12px;">
+
+            <div>
+
+                <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle *</label>
+
+                <select asp-for="IdCycle" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;">
+
+                    <option value="">-- Sélectionner un cycle --</option>
+
+                    @foreach(var cycle in ViewData["Cycles"] as List<CycleViewModel> ?? new()) {
+
+                        <option value="@cycle.IdCycle" selected="@(cycle.IdCycle == Model.IdCycle)">@cycle.NomCycle</option>
+
+                    }
+
+                </select>
+
+            </div>
+
+
+
+            <div>
+
+                <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Tontine *</label>
+
+                <select asp-for="IdTontine" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;">
+
+                    <option value="">-- Sélectionner une tontine --</option>
+
+                    @foreach(var tontine in ViewData["Tontines"] as List<TontineViewModel> ?? new()) {
+
+                        <option value="@tontine.IdTontine" selected="@(tontine.IdTontine == Model.IdTontine)">@tontine.Libelle</option>
+
+                    }
+
+                </select>
+
+            </div>
+
+
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:12px;">
+
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; text-decoration:none;">Annuler</a>
+
+                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 24px;">Enregistrer</button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+

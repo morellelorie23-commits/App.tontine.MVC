@@ -1,89 +1,195 @@
 @model tontine.MVC.Models.MembreCycleTontineViewModel
 @{
     ViewData["Title"] = "Modifier la participation";
+    var membres  = ViewData["Membres"]  as List<MembreViewModel>  ?? new();
+    var tontines = ViewData["Tontines"] as List<TontineViewModel> ?? new();
+    var cycles   = ViewData["Cycles"]   as List<CycleViewModel>   ?? new();
 }
 
-<div style="max-width:560px;">
-    <div style="margin-bottom:24px;">
-        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
-        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Modifier la participation</h2>
-    </div>
+<style>
+.pf-grid   { display:grid; grid-template-columns:210px 1fr 190px; gap:0; max-width:960px;
+             background:white; border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,0.09); overflow:hidden; }
+.pf-left   { background:#F8FDF9; border-right:1px solid #E8F0EC; padding:24px 18px; display:flex; flex-direction:column; align-items:center; gap:16px; }
+.pf-avatar { width:90px; height:90px; border-radius:50%; background:#E1F5EE; display:flex; align-items:center; justify-content:center; border:3px solid #0F6E56; overflow:hidden; }
+.pf-field  { width:100%; }
+.pf-center { padding:24px 22px; }
+.pf-nom    { margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #F0F0EC; }
+.m-line    { display:grid; grid-template-columns:36px 1fr 1fr; align-items:center; gap:12px; margin-bottom:14px; }
+.m-badge   { width:34px; height:34px; border-radius:50%; background:#0F6E56; color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+.m-calc    { background:#F0FAF6; border:1.5px dashed #0F6E56; border-radius:8px; padding:9px 12px; font-size:14px; font-weight:700; color:#0F6E56; text-align:right; }
+.m-lbl     { font-size:11px; color:#888; margin-bottom:3px; text-align:right; }
+.pf-row2   { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; padding-top:16px; border-top:1px solid #F0F0EC; }
+.pf-right  { background:#F5FAF7; border-left:1px solid #E8F0EC; padding:24px 18px; display:flex; flex-direction:column; gap:16px; }
+.flabel    { font-size:11px; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:.6px; display:block; margin-bottom:5px; }
+.finput    { width:100%; padding:9px 12px; border:1.5px solid #DDD; border-radius:8px; font-size:13.5px; background:white; box-sizing:border-box; }
+.finput:focus { border-color:#0F6E56; outline:none; }
+.finput-ro { width:100%; padding:9px 12px; border:1.5px solid #C8E6D8; border-radius:8px; font-size:13.5px; background:#EAF7F0; color:#0B6644; font-weight:600; box-sizing:border-box; }
+.badge-ok  { display:inline-block; padding:4px 12px; background:#E1F5EE; color:#0F6E56; border-radius:20px; font-size:12px; font-weight:700; }
+.btn-save  { background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 22px; font-size:14px; font-weight:600; cursor:pointer; }
+.btn-aj    { background:#0F6E56; color:white; border:none; border-radius:8px; padding:8px 0; font-size:13px; font-weight:600; cursor:pointer; width:100%; }
+.btn-cancel{ background:white; color:#5F5E5A; border:1.5px solid #CCC; border-radius:8px; padding:9px 18px; font-size:13px; text-decoration:none; font-weight:500; }
+</style>
 
-    <form asp-action="Edit" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="Id" />
-        <div style="background:white; border-radius:12px; padding:28px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+<div style="margin-bottom:18px; max-width:960px;">
+    <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none;">← Retour à la liste</a>
+    <h2 style="margin:6px 0 0; font-size:21px; font-weight:700;">Modifier la participation</h2>
+</div>
 
-            @if (!ViewData.ModelState.IsValid) {
-                <div style="margin-bottom:16px; padding:12px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#B71C1C;">
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors)) {
-                        <p style="margin:2px 0; font-size:13px;">› @error.ErrorMessage</p>
-                    }
-                </div>
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    @if (!ViewData.ModelState.IsValid) {
+        <div style="max-width:960px; margin-bottom:14px; padding:10px 14px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#B71C1C; font-size:13px;">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors)) {
+                <div>› @e.ErrorMessage</div>
             }
+        </div>
+    }
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
-                <div>
-                    <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Membre *</label>
-                    <select asp-for="IdMembre" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                        <option value="">-- Sélectionner --</option>
-                        @foreach(var m in ViewData["Membres"] as List<MembreViewModel> ?? new()) {
-                            <option value="@m.IdMembre">@m.Nom @m.Prenom</option>
-                        }
-                    </select>
-                </div>
-                <div>
-                    <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle *</label>
-                    <select asp-for="IdCycle" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                        <option value="">-- Sélectionner --</option>
-                        @foreach(var c in ViewData["Cycles"] as List<CycleViewModel> ?? new()) {
-                            <option value="@c.IdCycle">@c.NomCycle</option>
-                        }
-                    </select>
+    <div class="pf-grid">
+
+        <!-- ══════ COLONNE GAUCHE ══════ -->
+        <div class="pf-left">
+
+            <div class="pf-avatar">
+                <i data-lucide="user" style="width:44px;height:44px;color:#0F6E56;opacity:.6;"></i>
+            </div>
+
+            <div class="pf-field">
+                <label class="flabel" asp-for="NumeroOrdre"></label>
+                <input asp-for="NumeroOrdre" type="number" min="1" class="finput"
+                       oninput="majRang(this.value)" />
+            </div>
+
+            <div class="pf-field">
+                <label class="flabel" asp-for="Matricule"></label>
+                <input asp-for="Matricule" class="finput" placeholder="Ex: MCT-001" />
+            </div>
+
+            <div class="pf-field" style="margin-top:auto;">
+                <label class="flabel">Paiement en caisse</label>
+                <div style="padding:8px 10px; background:#FFF8E1; border:1.5px solid #FFE082; border-radius:8px; font-size:12px; color:#7A6000; text-align:center; font-weight:600;">
+                    Cotisation enregistrée séparément
                 </div>
             </div>
 
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Tontine *</label>
-                <select asp-for="IdTontine" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                    <option value="">-- Sélectionner --</option>
-                    @foreach(var t in ViewData["Tontines"] as List<TontineViewModel> ?? new()) {
-                        <option value="@t.IdTontine">@t.Libelle</option>
+            <button type="submit" class="btn-aj">A jour ✓</button>
+        </div>
+
+        <!-- ══════ COLONNE CENTRE ══════ -->
+        <div class="pf-center">
+
+            <div class="pf-nom">
+                <label class="flabel" asp-for="IdMembre"></label>
+                <select asp-for="IdMembre" class="finput" style="font-size:15px; padding:11px 14px;">
+                    <option value="">-- Sélectionner un membre --</option>
+                    @foreach (var m in membres) {
+                        <option value="@m.IdMembre">@m.Nom @m.Prenom</option>
                     }
                 </select>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <!-- Nbre de parts -->
+            <div class="m-line">
+                <div class="m-badge">M</div>
                 <div>
-                    <label asp-for="Matricule" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <input asp-for="Matricule" type="text" placeholder="ex: MCT-001"
-                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                    <label class="flabel" asp-for="NombreParts"></label>
+                    <select asp-for="NombreParts" class="finput" id="sel-parts" onchange="calculer()">
+                        <option value="0.5">Demi-part (½)</option>
+                        <option value="1">Part entière (×1)</option>
+                        <option value="2">Double part (×2)</option>
+                    </select>
                 </div>
                 <div>
-                    <label asp-for="NumeroOrdre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <input asp-for="NumeroOrdre" type="number" min="1"
-                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                    <div class="m-lbl">Cotisation attendue</div>
+                    <div class="m-calc" id="calc-cotis">-- FCFA</div>
                 </div>
             </div>
 
-            <div style="margin-bottom:20px;">
-                <label asp-for="NombreParts" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                <select asp-for="NombreParts" style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                    <option value="0.5">Demi-part (½) — cotise la moitié, reçoit la moitié du pot</option>
-                    <option value="1">Part entière (×1) — participation standard</option>
-                    <option value="2">Double part (×2) — cotise le double, 2 tours de rotation</option>
-                </select>
-                <span style="font-size:11px; color:#888;">La déduction lors du versement est proportionnelle aux parts</span>
+            <!-- N° actuel -->
+            <div class="m-line">
+                <div class="m-badge">M</div>
+                <div>
+                    <label class="flabel">N° actuel (ordre de bénéfice)</label>
+                    <div class="finput-ro" id="display-nc">@(Model.NumeroOrdre.HasValue ? "N° " + Model.NumeroOrdre : "--")</div>
+                </div>
+                <div>
+                    <div class="m-lbl">a saisir</div>
+                    <div class="m-calc" id="display-rang" style="font-size:20px; font-weight:800;">@(Model.NumeroOrdre.HasValue ? "#" + Model.NumeroOrdre : "--")</div>
+                </div>
             </div>
 
-            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
-                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">Annuler</a>
-                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">Enregistrer</button>
+            <!-- Nbre + Montant brut -->
+            <div class="pf-row2">
+                <div>
+                    <label class="flabel">Nbre de membres inscrits</label>
+                    <div class="finput-ro" id="display-nbre">--</div>
+                </div>
+                <div>
+                    <label class="flabel">Montant brut du pot</label>
+                    <div class="m-calc" id="calc-brut" style="border:1.5px solid #0F6E56;">-- FCFA</div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid #F0F0EC;">
+                <a asp-action="Index" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-save">Enregistrer</button>
             </div>
         </div>
-    </form>
-</div>
+
+        <!-- ══════ COLONNE DROITE ══════ -->
+        <div class="pf-right">
+
+            <div>
+                <label class="flabel" asp-for="IdTontine"></label>
+                <select asp-for="IdTontine" class="finput" id="sel-tontine" onchange="calculer()">
+                    <option value="">-- Sélectionner --</option>
+                    @foreach (var t in tontines) {
+                        <option value="@t.IdTontine" data-montant="@t.Montant">@t.Libelle</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="flabel">Statut actuel</label>
+                <span class="badge-ok">✓ Cycle actif</span>
+            </div>
+
+            <div>
+                <label class="flabel">Réunion / Cycle</label>
+                <select asp-for="IdCycle" class="finput">
+                    <option value="">-- Sélectionner --</option>
+                    @foreach (var c in cycles) {
+                        <option value="@c.IdCycle">@c.NomCycle</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+    </div>
+</form>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<script>
+function calculer() {
+    var selT = document.getElementById('sel-tontine');
+    var selP = document.getElementById('sel-parts');
+    var opt  = selT ? selT.options[selT.selectedIndex] : null;
+    var base  = opt ? parseFloat(opt.getAttribute('data-montant') || '0') : 0;
+    var parts = parseFloat(selP ? selP.value : '1');
+    var cotis = base * parts;
+
+    document.getElementById('calc-cotis').textContent = cotis > 0 ? cotis.toLocaleString('fr-FR') + ' FCFA' : '-- FCFA';
+    document.getElementById('calc-brut').textContent  = base > 0  ? base.toLocaleString('fr-FR')  + ' FCFA' : '-- FCFA';
+}
+
+function majRang(val) {
+    document.getElementById('display-rang').textContent = val ? '#' + val : '--';
+    document.getElementById('display-nc').textContent   = val ? 'N° ' + val : '--';
+}
+
+calculer();
+</script>
 }

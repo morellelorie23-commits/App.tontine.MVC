@@ -1,0 +1,453 @@
+@model List<tontine.MVC.Models.CotisationViewModel>
+
+@{
+
+    ViewData["Title"] = "Cotisations";
+
+    var total     = Model.Sum(c => c.Montant);
+
+    var paye      = Model.Where(c => c.Statut == "Payé").Sum(c => c.Montant);
+
+    var enAttente = Model.Count(c => c.Statut == "En attente");
+
+    var enRetard  = Model.Count(c => c.Statut == "En retard");
+
+}
+
+
+
+<style>
+
+    .kpi-row   { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+
+    .kpi-card  { background:white; border-radius:12px; padding:18px 20px;
+
+                 box-shadow:0 1px 4px rgba(0,0,0,0.07); display:flex; align-items:center; gap:14px; }
+
+    .kpi-icon  { width:46px; height:46px; border-radius:12px;
+
+                 display:flex; align-items:center; justify-content:center; font-size:22px; }
+
+    .kpi-val   { font-size:22px; font-weight:700; color:#1a1a1a; line-height:1; }
+
+    .kpi-lbl   { font-size:12px; color:#888780; margin-top:3px; }
+
+
+
+    .toolbar   { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+
+    .btn-add   { background:#0F6E56; color:white; border:none; border-radius:8px;
+
+                 padding:9px 20px; font-size:13px; font-weight:600; cursor:pointer;
+
+                 text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+
+    .btn-add:hover { background:#0B5940; color:white; }
+
+
+
+    .table-card { background:white; border-radius:12px; overflow:hidden;
+
+                  box-shadow:0 1px 4px rgba(0,0,0,0.07); }
+
+    table  { width:100%; border-collapse:collapse; }
+
+    thead  { background:#F8FDF9; }
+
+    th     { padding:12px 16px; font-size:12px; font-weight:600; color:#444;
+
+             text-align:left; text-transform:uppercase; letter-spacing:0.5px;
+
+             border-bottom:1.5px solid #E1F5EE; }
+
+    td     { padding:13px 16px; font-size:13.5px; color:#333; border-bottom:1px solid #F4F4F2; }
+
+    tr:last-child td { border-bottom:none; }
+
+    tr:hover td { background:#FAFFF9; }
+
+
+
+    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+
+    .badge-paye    { background:#E1F5EE; color:#0F6E56; }
+
+    .badge-attente { background:#FFF8E1; color:#F57F17; }
+
+    .badge-retard  { background:#FFEBEE; color:#C62828; }
+
+
+
+    .action-btn { border:none; background:none; cursor:pointer; padding:4px 8px;
+
+                  border-radius:6px; font-size:12px; font-weight:500; text-decoration:none; }
+
+    .btn-edit   { color:#0F6E56; background:#F0FAF6; }
+
+    .btn-del    { color:#C62828; background:#FFF5F5; }
+
+    .empty-msg  { text-align:center; padding:40px; color:#888780; font-size:14px; }
+
+</style>
+
+
+
+<div style="background-image:url('/photo/cotisations.png');background-size:cover;background-position:center;margin:-26px -28px 24px -28px;position:relative;overflow:hidden;min-height:90px;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,60,42,0.88) 0%,rgba(11,89,64,0.82) 60%,rgba(15,110,86,0.70) 100%);"></div>
+    <div style="position:absolute;inset:0;padding:20px 36px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;">Finance</div>
+        <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px 0;">Cotisations</h2>
+        <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">@Model.Count enregistrement(s)</p>
+    </div>
+</div>
+<!-- KPIs -->
+
+<div class="kpi-row">
+
+    <div class="kpi-card">
+
+        <div class="kpi-icon" style="background:#E1F5EE; color:#0F6E56;"><i data-lucide="clipboard-list" style="width:22px;height:22px;"></i></div>
+
+        <div><div class="kpi-val">@Model.Count</div><div class="kpi-lbl">Total cotisations</div></div>
+
+    </div>
+
+    <div class="kpi-card">
+
+        <div class="kpi-icon" style="background:#E8F5E9; color:#388E3C;"><i data-lucide="coins" style="width:22px;height:22px;"></i></div>
+
+        <div><div class="kpi-val">@total.ToString("N0")</div><div class="kpi-lbl">Montant total (FCFA)</div></div>
+
+    </div>
+
+    <div class="kpi-card">
+
+        <div class="kpi-icon" style="background:#FFF8E1; color:#F57F17;"><i data-lucide="clock" style="width:22px;height:22px;"></i></div>
+
+        <div><div class="kpi-val">@enAttente</div><div class="kpi-lbl">En attente</div></div>
+
+    </div>
+
+    <div class="kpi-card">
+
+        <div class="kpi-icon" style="background:#FFEBEE; color:#C62828;"><i data-lucide="alert-circle" style="width:22px;height:22px;"></i></div>
+
+        <div><div class="kpi-val">@enRetard</div><div class="kpi-lbl">En retard</div></div>
+
+    </div>
+
+</div>
+
+
+
+@if (TempData["Success"] != null)
+{
+    <div style="background:#E8F5E9;border-left:4px solid #388E3C;border-radius:8px;padding:12px 18px;margin-bottom:18px;font-size:13px;color:#1B5E20;display:flex;align-items:center;gap:8px;">
+        <i data-lucide="check-circle" style="width:16px;height:16px;"></i>@TempData["Success"]
+    </div>
+}
+
+<div class="toolbar">
+
+    <h2 style="font-size:16px; font-weight:600; color:#1a1a1a; margin:0;">Liste des cotisations</h2>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+
+        <input id="search-cotisation" type="text" placeholder="Rechercher par membre, tontine, statut..."
+
+               oninput="filtrerCotisations(this.value)"
+
+               style="padding:9px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:13px; outline:none; min-width:280px;"
+
+               onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
+
+        <button type="button" onclick="pagerCot.csv(['Membre','Tontine','Cycle','Montant','Date','Statut'],function(r){var c=r.querySelectorAll('td');return[c[0].textContent.trim(),c[1].textContent.trim(),c[2].textContent.trim(),c[3].textContent.trim(),c[4].textContent.trim(),c[5].textContent.trim()]},'cotisations')" style="background:#1565C0;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" title="Exporter en CSV"><i data-lucide="download" style="width:14px;height:14px;"></i> CSV</button>
+
+        <form asp-action="AppliquerPenalites" method="post" style="margin:0;">
+            @Html.AntiForgeryToken()
+            <button type="submit" style="background:#E65100;color:white;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" title="Marquer automatiquement les cotisations en retard">
+                <i data-lucide="alert-triangle" style="width:14px;height:14px;"></i> Appliquer pénalités
+            </button>
+        </form>
+
+        <form asp-action="EnvoyerAlertes" method="post" style="margin:0;">
+            @Html.AntiForgeryToken()
+            <button type="submit" style="background:#6A1B9A;color:white;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" title="Envoyer un email de rappel aux membres en retard">
+                <i data-lucide="mail" style="width:14px;height:14px;"></i> Envoyer alertes
+            </button>
+        </form>
+
+        <a asp-action="Tours" style="background:#1A237E;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="list-ordered" style="width:14px;height:14px;"></i> Tableau des tours
+        </a>
+        <a asp-action="LivreDeCompte" style="background:#4A148C;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="book-open" style="width:14px;height:14px;"></i> Livre de compte
+        </a>
+        <a asp-action="Create" class="btn-add">+ Nouvelle cotisation</a>
+
+    </div>
+
+</div>
+
+
+
+<div class="table-card" id="tc-cotisation">
+
+    @if (!Model.Any())
+
+    {
+
+        <div class="empty-msg">Aucune cotisation enregistrée pour le moment.</div>
+
+    }
+
+    else
+
+    {
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Membre</th>
+                    <th>Tontine</th>
+                    <th>Cycle</th>
+                    <th>Montant</th>
+                    <th>Date</th>
+                    <th>Mode</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tbody-cotisations">
+
+                @foreach (var c in Model)
+
+                {
+
+                    <tr class="cotisation-row" data-search="@c.NomMembre @c.LibelleTontine @c.NomCycle @c.Statut @c.ModePaiement">
+                        <td style="font-weight:500;">@c.NomMembre</td>
+                        <td>@c.LibelleTontine</td>
+                        <td>@c.NomCycle</td>
+                        <td style="font-weight:600;">@c.Montant.ToString("N0") FCFA</td>
+                        <td>@c.DateCotisation.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @{
+                                var modeIcon = c.ModePaiement switch {
+                                    "Cash"         => ("💵", "#E8F5E9", "#2E7D32"),
+                                    "MTN"          => ("📱", "#FFFDE7", "#F57F17"),
+                                    "Orange Money" => ("🟠", "#FFF3E0", "#E65100"),
+                                    _              => ("💳", "#F3E5F5", "#6A1B9A")
+                                };
+                            }
+                            <span style="background:@modeIcon.Item2;color:@modeIcon.Item3;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
+                                @modeIcon.Item1 @(c.ModePaiement ?? "Cash")
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge @(c.Statut == "Payé" ? "badge-paye" : c.Statut == "En retard" ? "badge-retard" : "badge-attente")">
+                                @c.Statut
+                            </span>
+                        </td>
+                        <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <a asp-action="Edit" asp-route-id="@c.IdCotisation" class="action-btn btn-edit" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="pencil" style="width:13px;height:13px;"></i> Modifier</a>
+                            <a asp-action="RecuPdf" asp-route-id="@c.IdCotisation" target="_blank" style="background:#E3F2FD;color:#1565C0;border:none;border-radius:6px;padding:4px 8px;font-size:12px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><i data-lucide="file-text" style="width:13px;height:13px;"></i> Reçu</a>
+                            @if (c.Statut != "Payé")
+                            {
+                                <form asp-action="PayerCash" method="post" style="margin:0;" onsubmit="return confirm('Confirmer le paiement en espèces de @c.NomMembre ?')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@c.IdCotisation" />
+                                    <button type="submit" style="background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;border-radius:6px;padding:4px 8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                                        💵 Cash
+                                    </button>
+                                </form>
+                                <button type="button" onclick="ouvrirModalPaiement(@c.IdCotisation, @c.Montant)"
+                                        style="background:#FFFDE7;color:#F57F17;border:1px solid #FFD600;border-radius:6px;padding:4px 8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                                    <i data-lucide="smartphone" style="width:13px;height:13px;"></i> MoMo
+                                </button>
+                            }
+                            <a asp-action="Delete" asp-route-id="@c.IdCotisation" class="action-btn btn-del" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="trash-2" style="width:13px;height:13px;"></i> Supprimer</a>
+                        </td>
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    }
+
+</div>
+
+<!-- ── Modale Mobile Money ──────────────────────────────────────────── -->
+<div id="modal-paiement" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9990;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:16px;max-width:420px;width:92%;padding:28px;box-shadow:0 8px 40px rgba(0,0,0,0.25);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:#E8F5E9;display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="smartphone" style="width:22px;height:22px;color:#2E7D32;"></i>
+            </div>
+            <div>
+                <h3 style="margin:0;font-size:17px;font-weight:700;">Paiement Mobile Money</h3>
+                <p id="pm-montant-label" style="margin:0;font-size:13px;color:#666;"></p>
+            </div>
+            <button onclick="fermerModalPaiement()" style="margin-left:auto;background:none;border:none;font-size:22px;color:#888;cursor:pointer;">×</button>
+        </div>
+
+        <!-- Sélecteur opérateur -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+            <button id="btn-mtn" onclick="selectOperateur('MTN')"
+                    style="border:2px solid #FFD600;border-radius:10px;padding:10px;background:#FFFDE7;cursor:pointer;font-weight:700;color:#F57F17;font-size:14px;transition:all 0.2s;">
+                📱 MTN MoMo
+            </button>
+            <button id="btn-orange" onclick="selectOperateur('Orange')"
+                    style="border:2px solid #E0E0E0;border-radius:10px;padding:10px;background:white;cursor:pointer;font-weight:700;color:#E65100;font-size:14px;transition:all 0.2s;">
+                🟠 Orange Money
+            </button>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:6px;">Numéro de téléphone *</label>
+            <input id="pm-telephone" type="tel" placeholder="ex: 6XXXXXXXX"
+                   style="width:100%;padding:10px 14px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box;"
+                   onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
+        </div>
+
+        <!-- État en attente -->
+        <div id="pm-waiting" style="display:none;text-align:center;padding:16px;">
+            <div style="font-size:32px;margin-bottom:8px;">⏳</div>
+            <p style="font-size:14px;font-weight:600;color:#333;">Demande envoyée !</p>
+            <p style="font-size:13px;color:#666;">Confirmez le paiement sur votre téléphone.</p>
+            <p id="pm-ref-display" style="font-size:11px;color:#999;margin-top:4px;"></p>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
+                <button onclick="simulerConfirmation(true)"
+                        style="background:#0F6E56;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;">
+                    ✓ Simuler succès
+                </button>
+                <button onclick="simulerConfirmation(false)"
+                        style="background:#C62828;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;">
+                    ✕ Simuler échec
+                </button>
+            </div>
+        </div>
+
+        <!-- Résultat -->
+        <div id="pm-result" style="display:none;text-align:center;padding:12px;"></div>
+
+        <div id="pm-actions" style="display:flex;gap:10px;margin-top:8px;">
+            <button onclick="fermerModalPaiement()"
+                    style="flex:1;background:white;color:#555;border:1.5px solid #D3D1C7;border-radius:8px;padding:10px;font-size:14px;cursor:pointer;">
+                Annuler
+            </button>
+            <button id="btn-payer" onclick="initierPaiement()"
+                    style="flex:2;background:#0F6E56;color:white;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <i data-lucide="send" style="width:15px;height:15px;"></i> Envoyer la demande
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+<script>
+
+var pagerCot = new TablePager({ rowClass: 'cotisation-row', pageSize: 15, barParent: 'tc-cotisation' });
+function filtrerCotisations(q) { pagerCot.search(q); }
+
+var _pmIdCotisation = null;
+var _pmMontant      = 0;
+var _pmOperateur    = 'MTN';
+var _pmReference    = null;
+
+function ouvrirModalPaiement(idCotisation, montant) {
+    _pmIdCotisation = idCotisation;
+    _pmMontant      = montant;
+    _pmReference    = null;
+    document.getElementById('pm-montant-label').textContent = 'Montant : ' + montant.toLocaleString('fr-FR') + ' FCFA';
+    document.getElementById('pm-telephone').value = '';
+    document.getElementById('pm-waiting').style.display = 'none';
+    document.getElementById('pm-result').style.display  = 'none';
+    document.getElementById('pm-actions').style.display = 'flex';
+    selectOperateur('MTN');
+    var modal = document.getElementById('modal-paiement');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+}
+
+function fermerModalPaiement() {
+    document.getElementById('modal-paiement').style.display = 'none';
+    document.body.style.overflow = '';
+    if (_pmReference) location.reload();
+}
+
+function selectOperateur(op) {
+    _pmOperateur = op;
+    var mtn    = document.getElementById('btn-mtn');
+    var orange = document.getElementById('btn-orange');
+    mtn.style.borderColor    = op === 'MTN'    ? '#FFD600' : '#E0E0E0';
+    mtn.style.background     = op === 'MTN'    ? '#FFFDE7' : 'white';
+    orange.style.borderColor = op === 'Orange' ? '#FF6D00' : '#E0E0E0';
+    orange.style.background  = op === 'Orange' ? '#FFF3E0' : 'white';
+}
+
+function initierPaiement() {
+    var tel = document.getElementById('pm-telephone').value.trim();
+    if (!tel) { showToast('Veuillez saisir un numéro de téléphone.', 'warning'); return; }
+
+    document.getElementById('btn-payer').disabled = true;
+    fetch('@Url.Action("InitierPaiement", "Cotisation")', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '' },
+        body: JSON.stringify({ idCotisation: _pmIdCotisation, telephone: tel, operateur: _pmOperateur, montant: _pmMontant })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.succes) {
+            _pmReference = data.reference;
+            document.getElementById('pm-ref-display').textContent = 'Référence : ' + data.reference;
+            document.getElementById('pm-waiting').style.display = 'block';
+            document.getElementById('pm-actions').style.display = 'none';
+        } else {
+            showToast(data.message || 'Erreur lors de l\'initiation.', 'error');
+            document.getElementById('btn-payer').disabled = false;
+        }
+    })
+    .catch(() => {
+        showToast('Erreur réseau.', 'error');
+        document.getElementById('btn-payer').disabled = false;
+    });
+}
+
+function simulerConfirmation(succes) {
+    if (!_pmReference) return;
+    fetch('@Url.Action("SimulerPaiement", "Cotisation")/' + _pmReference + '?succes=' + succes, { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('pm-waiting').style.display = 'none';
+        var resultEl = document.getElementById('pm-result');
+        resultEl.style.display = 'block';
+        if (succes) {
+            resultEl.innerHTML = '<div style="font-size:36px">✅</div><p style="font-size:15px;font-weight:700;color:#0F6E56;margin:8px 0 4px;">Paiement confirmé !</p><p style="font-size:13px;color:#666;">La cotisation est marquée comme Payée.</p>';
+            showToast('Paiement Mobile Money confirmé avec succès !', 'success');
+        } else {
+            resultEl.innerHTML = '<div style="font-size:36px">❌</div><p style="font-size:15px;font-weight:700;color:#C62828;margin:8px 0 4px;">Paiement échoué</p><p style="font-size:13px;color:#666;">Veuillez réessayer ou contacter votre opérateur.</p>';
+            showToast('Paiement échoué.', 'error');
+        }
+        setTimeout(() => fermerModalPaiement(), 2500);
+    });
+}
+
+document.getElementById('modal-paiement').addEventListener('click', function(e) {
+    if (e.target === this) fermerModalPaiement();
+});
+
+</script>
+
+}
+

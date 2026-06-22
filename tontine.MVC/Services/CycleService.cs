@@ -58,5 +58,17 @@ namespace tontine.MVC.Services
             var response = await _http.DeleteAsync($"api/Cycle/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> DemarrerAsync(int id)
+        {
+            var response = await _http.PostAsync($"api/Cycle/{id}/demarrer", null);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CloturerAsync(int id)
+        {
+            var response = await _http.PostAsync($"api/Cycle/{id}/cloture", null);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

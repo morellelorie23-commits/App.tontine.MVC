@@ -1,0 +1,232 @@
+@model List<tontine.MVC.Models.CompteUtilisateurViewModel>
+@{
+    ViewData["Title"] = "Rôles & Permissions";
+    var admins       = Model.Where(c => c.Role == "Administrateur").ToList();
+    var gestionnaires = Model.Where(c => c.Role == "Gestionnaire").ToList();
+    var lecteurs     = Model.Where(c => c.Role == "Lecteur").ToList();
+}
+
+
+<div style="background-image:url('/photo/dashboard.jfif');background-size:cover;background-position:center;margin:-26px -28px 24px -28px;position:relative;overflow:hidden;min-height:90px;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,60,42,0.88) 0%,rgba(11,89,64,0.82) 60%,rgba(15,110,86,0.70) 100%);"></div>
+    <div style="position:absolute;inset:0;padding:20px 36px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;">Sécurité</div>
+        <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px 0;">Rôles et Permissions</h2>
+        <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">Gestion des accès et droits par profil utilisateur</p>
+    </div>
+</div>
+<div style="padding:8px 0;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div>
+            <h2 style="margin:0; font-size:22px; font-weight:600; color:#1a1a1a;">Rôles &amp; Permissions</h2>
+            <p style="margin:4px 0 0; color:#888780; font-size:14px;">
+                @Model.Count compte(s) - gestion des accès par rôle
+            </p>
+        </div>
+        <a asp-controller="Compte" asp-action="Index" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 20px; font-size:14px; font-weight:500; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            <i data-lucide="users" style="width:16px;height:16px;"></i> Gérer les comptes
+        </a>
+    </div>
+
+    <!-- Cartes rôles -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;">
+
+        <!-- Administrateur -->
+        <div style="background:white; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.08); border-top:4px solid #0F6E56;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:#E6F4EE; display:flex; align-items:center; justify-content:center;">
+                    <i data-lucide="shield-check" style="width:20px;height:20px;color:#0F6E56;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; font-size:15px;">Administrateur</div>
+                    <div style="font-size:12px; color:#888780;">Accès complet</div>
+                </div>
+            </div>
+            <div style="font-size:13px; color:#5F5E5A; margin-bottom:14px;">
+                Accès total à toutes les fonctionnalités : membres, tontines, prêts, comptes, journal, statistiques et configuration.
+            </div>
+            <div style="border-top:1px solid #F1EFE8; padding-top:12px;">
+                <div style="font-size:11px; font-weight:600; color:#888780; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Utilisateurs (@admins.Count)</div>
+                @if (admins.Any())
+                {
+                    @foreach (var c in admins)
+                    {
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <div style="width:26px; height:26px; border-radius:50%; background:#0F6E56; color:white; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0;">
+                                @(c.Nom.Substring(0,1).ToUpper())
+                            </div>
+                            <span style="font-size:13px;">@c.Nom @c.Prenom</span>
+                            @if (c.Statut != "Actif")
+                            {
+                                <span style="background:#FFF8E1; color:#F57C00; font-size:10px; padding:1px 6px; border-radius:8px;">@c.Statut</span>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="font-size:12px; color:#888780; font-style:italic;">Aucun administrateur</div>
+                }
+            </div>
+        </div>
+
+        <!-- Gestionnaire -->
+        <div style="background:white; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.08); border-top:4px solid #1976D2;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:#EBF5FF; display:flex; align-items:center; justify-content:center;">
+                    <i data-lucide="user-cog" style="width:20px;height:20px;color:#1976D2;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; font-size:15px;">Gestionnaire</div>
+                    <div style="font-size:12px; color:#888780;">Accès opérationnel</div>
+                </div>
+            </div>
+            <div style="font-size:13px; color:#5F5E5A; margin-bottom:14px;">
+                Peut gérer membres, cotisations, versements, prêts et cycles. Ne peut pas gérer les comptes utilisateurs ni la sécurité.
+            </div>
+            <div style="border-top:1px solid #F1EFE8; padding-top:12px;">
+                <div style="font-size:11px; font-weight:600; color:#888780; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Utilisateurs (@gestionnaires.Count)</div>
+                @if (gestionnaires.Any())
+                {
+                    @foreach (var c in gestionnaires)
+                    {
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <div style="width:26px; height:26px; border-radius:50%; background:#1976D2; color:white; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0;">
+                                @(c.Nom.Substring(0,1).ToUpper())
+                            </div>
+                            <span style="font-size:13px;">@c.Nom @c.Prenom</span>
+                            @if (c.Statut != "Actif")
+                            {
+                                <span style="background:#FFF8E1; color:#F57C00; font-size:10px; padding:1px 6px; border-radius:8px;">@c.Statut</span>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="font-size:12px; color:#888780; font-style:italic;">Aucun gestionnaire</div>
+                }
+            </div>
+        </div>
+
+        <!-- Lecteur -->
+        <div style="background:white; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.08); border-top:4px solid #888780;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:#F5F5F5; display:flex; align-items:center; justify-content:center;">
+                    <i data-lucide="eye" style="width:20px;height:20px;color:#888780;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; font-size:15px;">Lecteur</div>
+                    <div style="font-size:12px; color:#888780;">Lecture seule</div>
+                </div>
+            </div>
+            <div style="font-size:13px; color:#5F5E5A; margin-bottom:14px;">
+                Accès en consultation uniquement. Peut voir les données mais ne peut pas créer, modifier ou supprimer.
+            </div>
+            <div style="border-top:1px solid #F1EFE8; padding-top:12px;">
+                <div style="font-size:11px; font-weight:600; color:#888780; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Utilisateurs (@lecteurs.Count)</div>
+                @if (lecteurs.Any())
+                {
+                    @foreach (var c in lecteurs)
+                    {
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <div style="width:26px; height:26px; border-radius:50%; background:#888780; color:white; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0;">
+                                @(c.Nom.Substring(0,1).ToUpper())
+                            </div>
+                            <span style="font-size:13px;">@c.Nom @c.Prenom</span>
+                            @if (c.Statut != "Actif")
+                            {
+                                <span style="background:#FFF8E1; color:#F57C00; font-size:10px; padding:1px 6px; border-radius:8px;">@c.Statut</span>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="font-size:12px; color:#888780; font-style:italic;">Aucun lecteur</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Matrice de permissions -->
+    <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+        <div style="padding:16px 20px; border-bottom:1px solid #F1EFE8;">
+            <h3 style="margin:0; font-size:16px; font-weight:600;">Matrice des permissions</h3>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead>
+                    <tr style="background:#F8FDF9;">
+                        <th style="padding:12px 18px; text-align:left; font-weight:600; color:#444; border-bottom:2px solid #E8F5E9; min-width:200px;">Fonctionnalité</th>
+                        <th style="padding:12px 18px; text-align:center; font-weight:600; color:#0F6E56; border-bottom:2px solid #E8F5E9; width:120px;">Administrateur</th>
+                        <th style="padding:12px 18px; text-align:center; font-weight:600; color:#1976D2; border-bottom:2px solid #E8F5E9; width:120px;">Gestionnaire</th>
+                        <th style="padding:12px 18px; text-align:center; font-weight:600; color:#888780; border-bottom:2px solid #E8F5E9; width:120px;">Lecteur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var rows = new[]
+                        {
+                            new { Section = true,  Label = "MEMBRES & PARTICIPATION",    Admin = "",     Gest = "",     Lect = "" },
+                            new { Section = false, Label = "Voir les membres",            Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = false, Label = "Ajouter / modifier membres",  Admin = "full", Gest = "full", Lect = "none" },
+                            new { Section = false, Label = "Supprimer des membres",       Admin = "full", Gest = "none", Lect = "none" },
+                            new { Section = false, Label = "Garants / Répondants",        Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = true,  Label = "TONTINES & CYCLES",           Admin = "",     Gest = "",     Lect = "" },
+                            new { Section = false, Label = "Gérer les tontines",          Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = false, Label = "Gérer les cycles",            Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = false, Label = "Cotisations & Versements",    Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = true,  Label = "PRÊTS",                       Admin = "",     Gest = "",     Lect = "" },
+                            new { Section = false, Label = "Voir les prêts",              Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = false, Label = "Créer / approuver prêts",     Admin = "full", Gest = "full", Lect = "none" },
+                            new { Section = false, Label = "Supprimer des prêts",         Admin = "full", Gest = "none", Lect = "none" },
+                            new { Section = true,  Label = "STATISTIQUES & RAPPORTS",     Admin = "",     Gest = "",     Lect = "" },
+                            new { Section = false, Label = "Voir les statistiques",       Admin = "full", Gest = "full", Lect = "view" },
+                            new { Section = false, Label = "Journal d'activité",          Admin = "full", Gest = "view", Lect = "none" },
+                            new { Section = true,  Label = "SÉCURITÉ",                    Admin = "",     Gest = "",     Lect = "" },
+                            new { Section = false, Label = "Gérer les comptes",           Admin = "full", Gest = "none", Lect = "none" },
+                            new { Section = false, Label = "Gérer les rôles",             Admin = "full", Gest = "none", Lect = "none" },
+                        };
+                        int rowIdx = 0;
+                    }
+                    @foreach (var row in rows)
+                    {
+                        if (row.Section)
+                        {
+                            <tr style="background:#F8F7F4;">
+                                <td colspan="4" style="padding:10px 18px; font-size:11px; font-weight:700; color:#888780; letter-spacing:.8px;">@row.Label</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            string bg = rowIdx % 2 == 0 ? "white" : "#FAFAF8";
+                            rowIdx++;
+                            <tr style="background:@bg; border-bottom:1px solid #F5F3ED;">
+                                <td style="padding:11px 18px; color:#333;">@row.Label</td>
+                                <td style="padding:11px 18px; text-align:center;">@Html.Raw(PermBadge(row.Admin))</td>
+                                <td style="padding:11px 18px; text-align:center;">@Html.Raw(PermBadge(row.Gest))</td>
+                                <td style="padding:11px 18px; text-align:center;">@Html.Raw(PermBadge(row.Lect))</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div style="padding:12px 18px; background:#F8FDF9; border-top:1px solid #E8F5E9; display:flex; gap:20px; font-size:12px; color:#5F5E5A;">
+            <span>@Html.Raw(PermBadge("full")) Accès complet (lecture + écriture)</span>
+            <span>@Html.Raw(PermBadge("view")) Lecture seule</span>
+            <span>@Html.Raw(PermBadge("none")) Accès refusé</span>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string PermBadge(string level) => level switch
+    {
+        "full" => "<span style='display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#E6F4EE;border-radius:50%;'><svg width='13' height='13' fill='none' stroke='#0F6E56' stroke-width='2.5' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7'/></svg></span>",
+        "view" => "<span style='display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#EBF5FF;border-radius:50%;'><svg width='13' height='13' fill='none' stroke='#1976D2' stroke-width='2' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/><path stroke-linecap='round' stroke-linejoin='round' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/></svg></span>",
+        "none" => "<span style='display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#FFEBEE;border-radius:50%;'><svg width='13' height='13' fill='none' stroke='#C62828' stroke-width='2.5' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M6 18L18 6M6 6l12 12'/></svg></span>",
+        _ => ""
+    };
+}

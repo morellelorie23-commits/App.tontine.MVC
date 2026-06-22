@@ -1,0 +1,153 @@
+@model tontine.MVC.Models.JournalViewModel
+@{
+    ViewData["Title"] = "Journal comptable";
+    var codes = new[] { "BQ", "CA", "VT", "OD" };
+    var labels = new Dictionary<string,string> {
+        ["BQ"] = "Banque",
+        ["CA"] = "Caisse",
+        ["VT"] = "Virements internes",
+        ["OD"] = "Opérations diverses"
+    };
+    var codeActif = ViewBag.CodeJournal as string ?? "BQ";
+}
+
+<style>
+    .tc { background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07); }
+    table { width:100%;border-collapse:collapse; }
+    thead { background:#F8FDF9; }
+    th { padding:11px 14px;font-size:11px;font-weight:700;color:#444;text-align:left;
+         text-transform:uppercase;letter-spacing:.5px;border-bottom:1.5px solid #E1F5EE; }
+    th.r { text-align:right; }
+    td { padding:11px 14px;font-size:13px;color:#333;border-bottom:1px solid #F4F4F2; }
+    td.r { text-align:right; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#FAFFF9; }
+    .ecriture-header { background:#EEF6FF;font-weight:700;font-size:12px;color:#1565C0; }
+    .ligne-d { color:#C62828;font-weight:700; }
+    .ligne-c { color:#0F6E56;font-weight:700; }
+    .compte { font-family:monospace;font-weight:700;color:#444; }
+    .tab-btn { padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;
+               text-decoration:none;border:none;cursor:pointer;transition:all .2s; }
+    .tab-btn.active { background:#1565C0;color:white; }
+    .tab-btn:not(.active) { background:#F0F4F8;color:#555; }
+    .tab-btn:not(.active):hover { background:#E0E8F0; }
+</style>
+
+<div style="background:linear-gradient(135deg,#0F6E56 0%,#1A8C6E 100%);
+            margin:-26px -28px 24px -28px;padding:24px 36px;min-height:80px;
+            display:flex;flex-direction:column;justify-content:flex-end;">
+    <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">Journaux comptables OHADA</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0;">
+        Double entrée - Σ Débits = Σ Crédits pour chaque écriture
+    </p>
+</div>
+
+<!-- Onglets journaux + filtres -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;gap:8px;">
+        @foreach (var code in codes)
+        {
+            <a href="@Url.Action("Journal","GrandLivre")?code=@code&periode=@ViewBag.Periode"
+               class="tab-btn @(code == codeActif ? "active" : "")">
+                @code - @labels[code]
+            </a>
+        }
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <input type="month" id="sel-periode" value="@ViewBag.Periode"
+               onchange="window.location.href='@Url.Action("Journal","GrandLivre")?code=@codeActif&periode='+this.value"
+               style="padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+        <a href="@Url.Action("Journal","GrandLivre")?code=@codeActif"
+           style="padding:8px 12px;background:#888;color:white;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;">
+            Toutes périodes
+        </a>
+        <a asp-controller="GrandLivre" asp-action="Index"
+           style="color:#0F6E56;font-size:13px;font-weight:500;text-decoration:none;margin-left:8px;">← Grand Livre</a>
+    </div>
+</div>
+
+<!-- KPIs -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+    <div style="background:white;border-radius:12px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07);">
+        <div style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">Écritures</div>
+        <div style="font-size:22px;font-weight:800;color:#1a1a1a;margin-top:4px;">@Model.NombreEcritures</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07);">
+        <div style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">Total débits</div>
+        <div style="font-size:22px;font-weight:800;color:#C62828;margin-top:4px;">@Model.TotalDebits.ToString("N0")</div>
+        <div style="font-size:11px;color:#aaa;">FCFA</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07);">
+        <div style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">Total crédits</div>
+        <div style="font-size:22px;font-weight:800;color:#0F6E56;margin-top:4px;">@Model.TotalCredits.ToString("N0")</div>
+        <div style="font-size:11px;color:#aaa;">FCFA</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07);
+                border-left:4px solid @(Math.Abs(Model.TotalDebits - Model.TotalCredits) < 1 ? "#388E3C" : "#C62828");">
+        <div style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">Équilibre</div>
+        <div style="font-size:16px;font-weight:800;margin-top:4px;
+                    color:@(Math.Abs(Model.TotalDebits - Model.TotalCredits) < 1 ? "#1B5E20" : "#B71C1C");">
+            @(Math.Abs(Model.TotalDebits - Model.TotalCredits) < 1 ? "✓ Équilibré" : "⚠ Déséquilibre")
+        </div>
+    </div>
+</div>
+
+@if (!Model.Ecritures.Any())
+{
+    <div class="tc" style="text-align:center;padding:60px;color:#888780;font-size:14px;">
+        Aucune écriture pour le journal <strong>@Model.CodeJournal</strong> sur cette période.
+    </div>
+}
+else
+{
+    <div class="tc">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Pièce</th>
+                    <th>Libellé</th>
+                    <th>Compte</th>
+                    <th>Libellé compte</th>
+                    <th class="r">Débit</th>
+                    <th class="r">Crédit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Ecritures)
+                {
+                    <tr class="ecriture-header">
+                        <td>@e.DateEcriture.ToString("dd/MM/yyyy")</td>
+                        <td style="font-family:monospace;">@e.PieceJustificative</td>
+                        <td colspan="3">@e.Libelle</td>
+                        <td class="r" style="color:#C62828;">@e.TotalDebit.ToString("N0")</td>
+                        <td class="r" style="color:#0F6E56;">@e.TotalCredit.ToString("N0")</td>
+                    </tr>
+                    @foreach (var l in e.Lignes)
+                    {
+                        <tr>
+                            <td style="color:#888;font-size:12px;padding-left:28px;">└</td>
+                            <td style="font-size:12px;color:#666;">
+                                @(l.Sens == "D" ? "Débit" : "Crédit")
+                            </td>
+                            <td style="font-size:12px;color:#555;">@l.LibelleLigne</td>
+                            <td class="compte">@l.CompteOhada</td>
+                            <td style="font-size:12px;color:#666;">@l.LibelleCompte</td>
+                            <td class="r @(l.Sens == "D" ? "ligne-d" : "")">
+                                @(l.Sens == "D" ? l.Montant.ToString("N0") : "")
+                            </td>
+                            <td class="r @(l.Sens == "C" ? "ligne-c" : "")">
+                                @(l.Sens == "C" ? l.Montant.ToString("N0") : "")
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr style="background:#F0FAF6;font-weight:700;border-top:2px solid #0F6E56;">
+                    <td colspan="5">TOTAL JOURNAL @Model.CodeJournal</td>
+                    <td class="r" style="color:#C62828;">@Model.TotalDebits.ToString("N0")</td>
+                    <td class="r" style="color:#0F6E56;">@Model.TotalCredits.ToString("N0")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

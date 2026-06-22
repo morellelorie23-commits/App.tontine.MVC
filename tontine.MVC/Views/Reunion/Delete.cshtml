@@ -1,0 +1,35 @@
+@model tontine.MVC.Models.ReunionViewModel
+@{
+    ViewData["Title"] = "Supprimer la réunion";
+}
+
+<div style="max-width:480px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600; color:#C62828;">Supprimer la réunion</h2>
+    </div>
+
+    <div style="background:white; border-radius:12px; padding:28px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+        <div style="background:#FFF3F3; border:1px solid #F5C6CB; border-radius:8px; padding:16px; margin-bottom:20px;">
+            <p style="margin:0; font-size:14px; color:#C62828;">Confirmez-vous la suppression de cette réunion ?</p>
+        </div>
+
+        <div style="margin-bottom:16px; font-size:14px; color:#444;">
+            <p><strong>Date :</strong> @Model.DateReunion.ToString("dd/MM/yyyy HH:mm")</p>
+            <p><strong>Objet :</strong> @Model.Objet</p>
+            <p><strong>Tontine :</strong> @Model.LibelleTontine</p>
+            @if (!string.IsNullOrEmpty(Model.Lieu)) {
+                <p><strong>Lieu :</strong> @Model.Lieu</p>
+            }
+        </div>
+
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdReunion" />
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">Annuler</a>
+                <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">Supprimer</button>
+            </div>
+        </form>
+    </div>
+</div>

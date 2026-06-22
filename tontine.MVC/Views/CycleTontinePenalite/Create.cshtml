@@ -1,0 +1,140 @@
+@model tontine.MVC.Models.CycleTontinePenaliteViewModel
+
+@{
+
+    ViewData["Title"] = "Nouvelle pénalité";
+
+}
+
+
+
+<div style="max-width:600px; margin:30px auto; padding:24px; background:white; border-radius:16px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+    <h2 style="margin:0 0 24px; font-size:20px; font-weight:600;">Nouvelle pénalité</h2>
+
+
+
+    <form asp-action="Create" method="post">
+
+        @Html.AntiForgeryToken()
+
+
+
+        @if (!ViewData.ModelState.IsValid) {
+
+            <div style="margin-bottom:12px; padding:12px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#B71C1C;">
+
+                <div style="font-weight:500;">Erreur</div>
+
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors)) {
+
+                    <p style="margin:4px 0 0; font-size:13px;">› @error.ErrorMessage</p>
+
+                }
+
+            </div>
+
+        }
+
+
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+
+            <div>
+
+                <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle *</label>
+
+                <select asp-for="IdCycle" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;">
+
+                    <option value="">-- Sélectionner --</option>
+
+                    @foreach(var c in ViewData["Cycles"] as List<CycleViewModel> ?? new()) {
+
+                        <option value="@c.IdCycle">@c.NomCycle</option>
+
+                    }
+
+                </select>
+
+            </div>
+
+
+
+            <div>
+
+                <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Tontine *</label>
+
+                <select asp-for="IdTontine" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;">
+
+                    <option value="">-- Sélectionner --</option>
+
+                    @foreach(var t in ViewData["Tontines"] as List<TontineViewModel> ?? new()) {
+
+                        <option value="@t.IdTontine">@t.Libelle</option>
+
+                    }
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <div style="margin-top:12px;">
+
+            <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Pénalité *</label>
+
+            <select asp-for="IdPenalite" required style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;">
+
+                <option value="">-- Sélectionner --</option>
+
+                @foreach(var p in ViewData["Penalites"] as List<PenaliteViewModel> ?? new()) {
+
+                    <option value="@p.IdPenalite">@p.Libelle</option>
+
+                }
+
+            </select>
+
+        </div>
+
+
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+
+            <div>
+
+                <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Taux Avant (%)</label>
+
+                <input asp-for="TauxAvant" type="number" step="0.01" style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;" />
+
+            </div>
+
+
+
+            <div>
+
+                <label style="font-size:12px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Taux Après (%)</label>
+
+                <input asp-for="TauxApres" type="number" step="0.01" style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;" />
+
+            </div>
+
+        </div>
+
+
+
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+
+            <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; text-decoration:none;">Annuler</a>
+
+            <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 24px; cursor:pointer;">Enregistrer</button>
+
+        </div>
+
+    </form>
+
+</div>
+

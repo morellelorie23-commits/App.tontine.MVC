@@ -40,31 +40,31 @@ namespace tontine.MVC.Controllers
         {
             SetBreadcrumbs(
                 BreadcrumbItem("Tableau de bord", "Home", "Index"),
-                BreadcrumbItem("Paramètres"),
-                BreadcrumbItem("Liaisons"),
                 BreadcrumbItem("Participations", "MembreCycleTontine", "Index"),
-                BreadcrumbItem("Ajouter", isActive: true)
+                BreadcrumbItem("Nouvelle participation", isActive: true)
             );
-            var model = new MembreCycleTontineViewModel { IdCycle = CycleId };
-            await LoadDropdowns();
-            return View(model);
-        }
 
-        [RoleAuthorize("Administrateur", "Gestionnaire")]
+            var tontines = await _tontineService.GetAllAsync();
+            var membres  = await _membreService.GetAllAsync();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MembreCycleTontineViewModel data)
-        {
-            if (!ModelState.IsValid)
+            var vm = new SaisieSeancePageViewModel
             {
-                await LoadDropdowns();
-                return View(data);
-            }
+                IdCycle   = CycleId,
+                IdTontine = 0,
+                IdReunion = 0,
+                Tontines  = tontines.Select(t => new TontineSelectDto
+                {
+                    IdTontine = t.IdTontine,
+                    Libelle   = t.Libelle ?? ""
+                }).ToList(),
+                Membres   = membres.Select(m => new MembreSelectDto
+                {
+                    IdMembre  = m.IdMembre,
+                    NomPrenom = m.Nom + " " + m.Prenom
+                }).ToList()
+            };
 
-            var ok = await _service.CreateAsync(data);
-            if (!ok) ModelState.AddModelError("", "Erreur lors de la création.");
-            return ok ? RedirectToAction(nameof(Index)) : View(data);
+            return View(vm);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -120,6 +120,39 @@ namespace tontine.MVC.Controllers
         {
             await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // ── Saisie Séance — accessible depuis le module Participation ──
+        public async Task<IActionResult> SaisieSeance(int? idTontine = null, int? idReunion = null)
+        {
+            SetBreadcrumbs(
+                BreadcrumbItem("Tableau de bord", "Home", "Index"),
+                BreadcrumbItem("Participations", "MembreCycleTontine", "Index"),
+                BreadcrumbItem("Saisie Séance", isActive: true)
+            );
+
+            var tontines = await _tontineService.GetAllAsync();
+            var membres  = await _membreService.GetAllAsync();
+
+            var vm = new SaisieSeancePageViewModel
+            {
+                IdCycle   = CycleId,
+                IdTontine = idTontine ?? 0,
+                IdReunion = idReunion ?? 0,
+                Tontines  = tontines.Select(t => new TontineSelectDto
+                {
+                    IdTontine = t.IdTontine,
+                    Libelle   = t.Libelle ?? ""
+                }).ToList(),
+                Membres   = membres.Select(m => new MembreSelectDto
+                {
+                    IdMembre  = m.IdMembre,
+                    NomPrenom = m.Nom + " " + m.Prenom
+                }).ToList()
+            };
+
+            // Réutilise la vue premium existante
+            return View("~/Views/SaisieSeance/Index.cshtml", vm);
         }
 
         private async Task LoadDropdowns()

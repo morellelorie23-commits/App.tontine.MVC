@@ -1,34 +1,34 @@
-﻿@model tontine.MVC.Models.PenaliteViewModel
-@{
-    ViewData["Title"] = "Supprimer la pénalité";
-}
-<div style="max-width:600px;">
-    <div style="margin-bottom:24px;">
-        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
-        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Supprimer la pénalité</h2>
-        <p style="margin:0; color:#888780; font-size:14px;">Cette action est irréversible</p>
-    </div>
-
-    <div style="background:white; border-radius:12px; padding:28px;">
-        <div style="display:flex; gap:14px; margin-bottom:16px;">
-            <div style="width:48px; height:48px; border-radius:50%; background:#0F6E56; color:white; display:flex; align-items:center; justify-content:center;">⚖️</div>
-            <div>
-                <p style="margin:0; font-size:16px; font-weight:600;">@Model.Libelle</p>
-                <p style="margin:6px 0 0; color:#888780;">@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</p>
-            </div>
-        </div>
-
-        <form asp-action="Delete" method="post" data-confirm-message="Confirmer la suppression de la pénalité ?">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="IdPenalite" />
-            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:20px; border-top:1px solid #F1EFE8;">
-                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; text-decoration:none; font-weight:500;">
-                    Annuler
-                </a>
-                <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 24px; font-weight:500;">
-                    🗑️ Confirmer la suppression
-                </button>
-            </div>
-        </form>
-    </div>
+@model tontine.MVC.Models.PenaliteViewModel
+@{
+    ViewData["Title"] = "Supprimer la pénalité";
+}
+<div style="max-width:600px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Supprimer la pénalité</h2>
+        <p style="margin:0; color:#888780; font-size:14px;">Cette action est irréversible</p>
+    </div>
+
+    <div style="background:white; border-radius:12px; padding:28px;">
+        <div style="display:flex; gap:14px; margin-bottom:16px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:#0F6E56; color:white; display:flex; align-items:center; justify-content:center;"><i data-lucide="scale" style="width:22px;height:22px;"></i></div>
+            <div>
+                <p style="margin:0; font-size:16px; font-weight:600;">@Model.Libelle</p>
+                <p style="margin:6px 0 0; color:#888780;">@(string.IsNullOrWhiteSpace(Model.Description) ? "-" : Model.Description)</p>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post" data-confirm-message="Confirmer la suppression de la pénalité ?">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdPenalite" />
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:20px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 24px; font-weight:500;">
+                    <i data-lucide="trash-2" style="width:15px;height:15px;margin-right:6px;vertical-align:middle;"></i> Confirmer la suppression
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

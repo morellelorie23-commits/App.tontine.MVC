@@ -1,93 +1,447 @@
-@model tontine.MVC.Models.MembreCycleTontineViewModel
+@model tontine.MVC.Models.SaisieSeancePageViewModel
 @{
     ViewData["Title"] = "Nouvelle participation";
+    var cycleNom = ViewBag.CycleNom as string ?? "Session en cours";
 }
 
-<div style="max-width:560px;">
-    <div style="margin-bottom:24px;">
-        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
-        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Nouvelle participation</h2>
-    </div>
+<meta name="cycle-id" content="@Model.IdCycle" />
 
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        <div style="background:white; border-radius:12px; padding:28px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+@* ── STYLES ──────────────────────────────────────────────────────────── *@
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+    .seance-root, .seance-root * { font-family: 'Poppins', sans-serif; }
 
-            @if (!ViewData.ModelState.IsValid) {
-                <div style="margin-bottom:16px; padding:12px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#B71C1C;">
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors)) {
-                        <p style="margin:2px 0; font-size:13px;">› @error.ErrorMessage</p>
-                    }
-                </div>
-            }
+    .seance-card {
+        max-width: 1200px; margin: 0 auto;
+        border-radius: 24px !important;
+        border: none !important;
+        background: linear-gradient(160deg, #f0fff8 0%, #ffffff 25%) !important;
+        box-shadow: 0 20px 60px rgba(25,135,84,.12), 0 4px 20px rgba(0,0,0,.06) !important;
+        overflow: hidden;
+    }
+    .seance-hero {
+        background: linear-gradient(135deg, #0F6E56 0%, #198754 50%, #1aad6b 100%);
+        padding: 32px 40px 28px; position: relative; overflow: hidden;
+    }
+    .seance-hero::before {
+        content:''; position:absolute; top:-40px; right:-40px;
+        width:200px; height:200px; border-radius:50%;
+        background:rgba(255,255,255,.06);
+    }
+    .seance-hero h1 { color:white; font-size:26px; font-weight:800; margin:0; }
+    .seance-hero p  { color:rgba(255,255,255,.75); font-size:14px; margin:4px 0 0; }
 
-            {{/* Cycle (lecture seule) */}}
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle</label>
-                <div style="padding:10px 14px; border:1.5px solid #0F6E56; border-radius:8px; font-size:14px; background:#F0FAF6; color:#0F6E56; font-weight:500;">
-                    @ViewData["CycleNom"]
-                </div>
-                <input asp-for="IdCycle" type="hidden" />
-            </div>
+    .ss-progress-bar {
+        display:flex; align-items:center; justify-content:center; gap:0;
+        padding:14px 32px; background:white; border-bottom:1px solid #eee;
+        position:sticky; top:0; z-index:100;
+        box-shadow:0 2px 12px rgba(0,0,0,.06);
+    }
+    .ss-step {
+        display:flex; align-items:center; gap:10px; padding:8px 20px;
+        border-radius:30px; font-size:13px; font-weight:600;
+        transition:all .3s ease; color:#aaa;
+    }
+    .ss-step .ss-num {
+        width:28px; height:28px; border-radius:50%;
+        display:flex; align-items:center; justify-content:center;
+        font-size:12px; font-weight:700;
+        background:#eee; color:#aaa; transition:all .3s ease; flex-shrink:0;
+    }
+    .ss-step.active { color:#0F6E56; }
+    .ss-step.active .ss-num { background:#0F6E56; color:white; box-shadow:0 0 0 4px rgba(15,110,86,.15); }
+    .ss-step.done   { color:#198754; }
+    .ss-step.done .ss-num { background:#198754; color:white; }
+    .ss-connector { width:60px; height:2px; background:#e0e0e0; flex-shrink:0; }
+    .ss-connector.done { background:#198754; }
 
-            {{/* Membre + Tontine */}}
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
-                <div>
-                    <label asp-for="IdMembre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <select asp-for="IdMembre" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                        <option value="">-- Sélectionner --</option>
-                        @foreach(var m in ViewData["Membres"] as List<MembreViewModel> ?? new()) {
-                            <option value="@m.IdMembre">@m.Nom @m.Prenom</option>
-                        }
-                    </select>
-                    <span asp-validation-for="IdMembre" style="color:#C62828; font-size:12px;"></span>
-                </div>
-                <div>
-                    <label asp-for="IdTontine" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <select asp-for="IdTontine" required style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                        <option value="">-- Sélectionner --</option>
-                        @foreach(var t in ViewData["Tontines"] as List<TontineViewModel> ?? new()) {
-                            <option value="@t.IdTontine">@t.Libelle</option>
-                        }
-                    </select>
-                    <span asp-validation-for="IdTontine" style="color:#C62828; font-size:12px;"></span>
-                </div>
-            </div>
+    .accordion-button {
+        font-weight:700; font-size:15px; padding:18px 28px;
+        background:white !important; color:#1a1a1a !important;
+        box-shadow:none !important; border-radius:0 !important;
+    }
+    .accordion-button:not(.collapsed) {
+        border-left:4px solid #0F6E56 !important;
+        background:#f0fff8 !important; color:#0F6E56 !important;
+    }
+    .accordion-item { border:none; border-bottom:1px solid #f0f0f0 !important; }
+    .accordion-body { padding:32px 36px; }
 
-            {{/* Matricule + Numéro d'ordre */}}
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
-                <div>
-                    <label asp-for="Matricule" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <input asp-for="Matricule" type="text" placeholder="ex: MCT-001"
-                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
-                </div>
-                <div>
-                    <label asp-for="NumeroOrdre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                    <input asp-for="NumeroOrdre" type="number" min="1" placeholder="1, 2, 3…"
-                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
-                    <span style="font-size:11px; color:#888;">Position dans la rotation de versement</span>
-                </div>
-            </div>
+    .ss-input {
+        border-radius:12px !important; border:1.5px solid #e0e0e0 !important;
+        padding:10px 14px !important; font-size:14px !important;
+        transition:border-color .2s, box-shadow .2s !important;
+    }
+    .ss-input:focus {
+        border-color:#0F6E56 !important;
+        box-shadow:0 0 0 3px rgba(15,110,86,.12) !important; outline:none !important;
+    }
+    .ss-select {
+        border-radius:12px !important; border:1.5px solid #e0e0e0 !important;
+        padding:10px 14px !important;
+    }
+    .ss-select:focus { border-color:#0F6E56 !important; box-shadow:0 0 0 3px rgba(15,110,86,.12) !important; }
 
-            {{/* Nombre de parts */}}
-            <div style="margin-bottom:20px;">
-                <label asp-for="NombreParts" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                <select asp-for="NombreParts" style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
-                    <option value="0.5">Demi-part (½) — cotise la moitié, reçoit la moitié du pot</option>
-                    <option value="1" selected>Part entière (×1) — participation standard</option>
-                    <option value="2">Double part (×2) — cotise le double, 2 tours de rotation</option>
-                </select>
-                <span style="font-size:11px; color:#888;">La déduction lors du versement est proportionnelle aux parts</span>
-            </div>
+    .ss-table th {
+        background:#F8FDF9; font-size:12px; font-weight:700;
+        text-transform:uppercase; letter-spacing:.04em; color:#666;
+        padding:14px 14px; border-bottom:2px solid #E8F5EF !important; white-space:nowrap;
+    }
+    .ss-table td { padding:10px 12px; vertical-align:middle; border-bottom:1px solid #F5F3EE !important; }
+    .ss-table tbody tr { transition:background .2s; }
+    .ss-table tbody tr:hover { background:#fafffe; }
+    .ss-table tbody tr.gagnant-row { background:#fffde7 !important; }
+    .ss-input-paye    { border-color:#198754 !important; }
+    .ss-input-paye:focus { box-shadow:0 0 0 3px rgba(25,135,84,.15) !important; }
+    .ss-input-penalite { border-color:#fd7e14 !important; }
+    .ss-input-enchere  { border-color:#0d6efd !important; }
 
-            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
-                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">Annuler</a>
-                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">Enregistrer</button>
+    .membre-avatar {
+        width:34px; height:34px; border-radius:50%;
+        background:linear-gradient(135deg,#0F6E56,#1aad6b);
+        color:white; font-size:12px; font-weight:700;
+        display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .solde-display { font-size:26px; font-weight:800; color:#0F6E56; display:flex; align-items:center; gap:10px; }
+    .card-gagnant {
+        background:linear-gradient(135deg,#f0fff8,#e8f5e9);
+        border:2px solid #198754; border-radius:16px; padding:28px;
+    }
+    .gagnant-nom  { font-size:28px; font-weight:800; color:#0F6E56; }
+    .montant-verse { font-size:36px; font-weight:900; color:#198754; }
+    .btn-confirmer { border-radius:10px !important; padding:10px 22px !important; font-weight:600 !important; font-size:13px !important; }
+    .ss-footer {
+        position:sticky; bottom:0; z-index:99; background:white;
+        border-top:1px solid #e0e0e0; padding:14px 36px;
+        display:flex; align-items:center; justify-content:space-between;
+        box-shadow:0 -4px 20px rgba(0,0,0,.07);
+    }
+    .btn-valider-final {
+        background:linear-gradient(135deg,#0F6E56,#198754) !important;
+        border:none !important; color:white !important;
+        font-size:15px !important; font-weight:700 !important;
+        padding:13px 36px !important; border-radius:12px !important;
+        transition:all .25s !important; letter-spacing:.03em;
+    }
+    .btn-valider-final:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 24px rgba(15,110,86,.35) !important; }
+    .btn-valider-final:disabled { opacity:.55; cursor:not-allowed; }
+    #toastContainer { position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
+    @@media (max-width:768px) {
+        .accordion-body { padding:18px 16px; }
+        .seance-hero { padding:20px; } .seance-hero h1 { font-size:20px; }
+        .ss-table { font-size:12px; } .montant-verse { font-size:26px; }
+        .ss-footer { flex-direction:column; gap:10px; }
+    }
+</style>
+
+<div id="toastContainer"></div>
+
+<div id="alerteSucces" class="alert alert-success alert-dismissible fade show mb-3"
+     style="display:none; max-width:1200px; margin:0 auto 16px;">
+    <i class="fa-solid fa-circle-check me-2"></i>
+    <strong>Succès !</strong> <span id="alerteSuccesMsg"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<div class="seance-root seance-card mb-5">
+
+    @* ── EN-TÊTE ── *@
+    <div class="seance-hero">
+        <div class="d-flex align-items-center gap-3">
+            <div style="font-size:48px; line-height:1;">💰</div>
+            <div>
+                <h1>Nouvelle participation</h1>
+                <p><i class="fa-regular fa-calendar me-1"></i>@cycleNom — @DateTime.Now.ToString("dd MMMM yyyy")</p>
             </div>
         </div>
-    </form>
+    </div>
+
+    @* ── BARRE DE PROGRESSION ── *@
+    <div class="ss-progress-bar">
+        <div class="ss-step active" id="stepEl1">
+            <div class="ss-num">1</div>
+            <span class="d-none d-sm-inline">Infos séance</span>
+        </div>
+        <div class="ss-connector" id="conn12"></div>
+        <div class="ss-step pending" id="stepEl2">
+            <div class="ss-num">2</div>
+            <span class="d-none d-sm-inline">Paiements membres</span>
+        </div>
+        <div class="ss-connector" id="conn23"></div>
+        <div class="ss-step pending" id="stepEl3">
+            <div class="ss-num">3</div>
+            <span class="d-none d-sm-inline">Résultat</span>
+        </div>
+    </div>
+
+    <div class="accordion accordion-flush" id="mainAccordion">
+
+        @* ── ACCORDION 1 : INFOS SÉANCE ── *@
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse1"
+                        aria-expanded="true" aria-controls="collapse1">
+                    <span class="me-3" style="font-size:20px;">🗓️</span>
+                    1. Informations de la séance
+                </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#mainAccordion">
+                <div class="accordion-body">
+                    <div class="row g-4 align-items-end">
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold mb-2">
+                                <i class="fa-solid fa-building-columns me-2 text-success"></i>Tontine
+                            </label>
+                            <select id="selTontine" class="form-select ss-select">
+                                <option value="">— Sélectionner une tontine —</option>
+                                @foreach (var t in Model.Tontines)
+                                {
+                                    <option value="@t.IdTontine">@t.Libelle</option>
+                                }
+                            </select>
+                            <button id="btnConfirmerTontine" class="btn btn-outline-success btn-confirmer mt-2 w-100"
+                                    onclick="confirmerTontine()">
+                                <i class="fa-solid fa-check me-2"></i>Confirmer la tontine
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold mb-2">
+                                <i class="fa-solid fa-vault me-2 text-success"></i>Solde caisse avant séance
+                            </label>
+                            <div class="bg-light border rounded-3 p-3">
+                                <div class="solde-display">
+                                    <i class="fa-solid fa-coins text-success" style="font-size:22px;"></i>
+                                    <span id="soldeCaisse">— F</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" id="sectionReunion" style="display:none;">
+                            <label class="form-label fw-bold mb-2">
+                                <i class="fa-solid fa-calendar-day me-2 text-primary"></i>Réunion
+                            </label>
+                            <select id="selReunion" class="form-select ss-select">
+                                <option value="">— Confirmer la tontine d'abord —</option>
+                            </select>
+                            <button id="btnChargerSeance" class="btn btn-outline-primary btn-confirmer mt-2 w-100"
+                                    onclick="chargerSeance()">
+                                <i class="fa-solid fa-rotate me-2"></i>Charger la séance
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ── ACCORDION 2 : PAIEMENTS ── *@
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse2"
+                        aria-expanded="false" aria-controls="collapse2">
+                    <span class="me-3" style="font-size:20px;">👥</span>
+                    2. Paiements des membres
+                    <span class="badge bg-success ms-3" id="badgeTotalPaye" style="font-size:11px;">0 F</span>
+                </button>
+            </h2>
+            <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#mainAccordion">
+                <div class="accordion-body p-0">
+                    <div id="tableVideMsg" class="text-center py-5" style="color:#bbb;">
+                        <i class="fa-solid fa-table fa-2x mb-3 d-block"></i>
+                        Chargez une séance pour afficher le tableau des membres.
+                    </div>
+                    <div class="table-responsive" id="tableWrapper" style="display:none;">
+                        <table class="table ss-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:44px;">#</th>
+                                    <th>Nom et prénom</th>
+                                    <th class="text-end" title="Montant attendu selon le nombre de parts">Mt attendu</th>
+                                    <th class="text-end" style="color:#198754;">Montant cotisé</th>
+                                    <th class="text-end" style="color:#fd7e14;" title="Amende pour retard">Pénalité</th>
+                                    <th class="text-end" style="color:#0d6efd;" title="Montant abandonné si tu veux toucher la caisse ce tour">Enchère</th>
+                                    <th style="color:#6f42c1;" title="Cash / MTN / Orange Money">Mode paiement</th>
+                                    <th class="text-center">Reste à payer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membresTableBody"></tbody>
+                        </table>
+                        <div class="d-flex justify-content-end gap-4 px-4 py-3 border-top"
+                             style="background:#f8fdf9; font-size:13px; font-weight:600; color:#444;">
+                            <input type="hidden" id="totalCollecte" value="0">
+                            Total collecté : <span id="totalCollecteDisplay" class="text-success ms-1">0 F</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end p-4 pt-2" id="btnSuivantWrapper" style="display:none;">
+                        <button class="btn btn-success px-5 py-2 fw-bold" onclick="passerAResultat()"
+                                style="border-radius:12px;">
+                            Suivant — Voir le résultat
+                            <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ── ACCORDION 3 : RÉSULTAT ── *@
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse3"
+                        aria-expanded="false" aria-controls="collapse3">
+                    <span class="me-3" style="font-size:20px;">🏆</span>
+                    3. Résultat du tour
+                    <span class="badge bg-warning text-dark ms-3" id="badgeGagnant"
+                          style="font-size:11px; display:none;">Gagnant détecté</span>
+                </button>
+            </h2>
+            <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#mainAccordion">
+                <div class="accordion-body">
+
+                    <div id="carteSucces" class="text-center py-5" style="display:none;">
+                        <div style="font-size:72px; margin-bottom:16px;">🎉</div>
+                        <h3 class="text-success fw-bold">Participation enregistrée !</h3>
+                        <p class="text-muted">La caisse et les cotisations ont été mises à jour.</p>
+                        <a href="/MembreCycleTontine/Create" class="btn btn-outline-success px-5 mt-2"
+                           style="border-radius:12px;">
+                            <i class="fa-solid fa-plus me-2"></i>Nouvelle participation
+                        </a>
+                    </div>
+
+                    <div id="formResultat">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="card-gagnant">
+                                    <p class="text-muted fw-bold mb-2" style="font-size:12px; text-transform:uppercase;">
+                                        <i class="fa-solid fa-trophy text-warning me-2"></i>Gagnant de l'enchère
+                                    </p>
+                                    <div class="gagnant-nom mb-3" id="gagnantNom">— Aucun —</div>
+                                    <span class="badge mb-4" style="background:#0d6efd; font-size:13px; padding:8px 16px;"
+                                          id="gagnantEnchere">
+                                        <i class="fa-solid fa-gavel me-2"></i>Enchère : 0 F
+                                    </span>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-2">
+                                            <i class="fa-solid fa-user me-2 text-muted"></i>Bénéficiaire
+                                        </label>
+                                        <select id="selBeneficiaire" class="form-select ss-select">
+                                            <option value="">— Aucun bénéficiaire —</option>
+                                            @foreach (var m in Model.Membres)
+                                            {
+                                                <option value="@m.IdMembre">@m.NomPrenom</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label fw-bold mb-2">
+                                            <i class="fa-solid fa-user-friends me-2 text-muted"></i>Mandataire
+                                            <span class="text-muted fw-normal" style="font-size:12px;">(vide si présent)</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-user-tie"></i></span>
+                                            <input type="text" id="mandataires" class="form-control ss-input"
+                                                   placeholder="Nom du mandataire si absent" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <label class="form-label fw-bold mb-2" style="font-size:12px; color:#888;">
+                                        <i class="fa-solid fa-clock-rotate-left me-2"></i>Déjà bénéficiaires ce cycle
+                                    </label>
+                                    <textarea id="historiqueBox" class="form-control ss-input" rows="4"
+                                              readonly style="font-size:12px; background:#f8f9fa; resize:none;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="bg-light rounded-4 p-4 h-100">
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold mb-1"
+                                               style="font-size:12px; text-transform:uppercase; color:#888; letter-spacing:.05em;">
+                                            Total collecté ce tour
+                                        </label>
+                                        <div class="d-flex align-items-center gap-3 bg-white rounded-3 px-4 py-3 border">
+                                            <i class="fa-solid fa-coins text-success" style="font-size:20px;"></i>
+                                            <span id="totalCollecteDisplay2" class="fw-bold" style="font-size:20px; color:#444;">0 F CFA</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold mb-1"
+                                               style="font-size:12px; text-transform:uppercase; color:#888; letter-spacing:.05em;">
+                                            Montant que le gagnant touche
+                                        </label>
+                                        <div class="bg-success rounded-3 px-4 py-4 text-center">
+                                            <div class="montant-verse text-white" id="montantVerse">0 F CFA</div>
+                                            <p class="mb-0 mt-1 text-white opacity-75" style="font-size:12px;">
+                                                = Σ Cotisations − Enchère
+                                            </p>
+                                        </div>
+                                        <input type="hidden" id="montantVerseVal" value="0">
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label fw-bold mb-2">
+                                            <i class="fa-solid fa-arrow-rotate-left me-2 text-muted"></i>Retour en caisse
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="number" id="retourCaisse" class="form-control ss-input"
+                                                   min="0" placeholder="0" />
+                                            <span class="input-group-text bg-light fw-bold">F CFA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @* ── FOOTER STICKY ── *@
+    <div class="ss-footer">
+        <div class="d-flex align-items-center gap-3">
+            <a asp-action="Index" class="btn btn-outline-secondary px-4" style="border-radius:12px;">
+                <i class="fa-solid fa-xmark me-2"></i>Annuler
+            </a>
+        </div>
+        <button id="btnValider" class="btn btn-valider-final" disabled onclick="validerSeance()">
+            <i class="fa-solid fa-check-double me-2"></i>A JOUR ✓
+        </button>
+    </div>
+
 </div>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="~/js/saisie-seance.js"></script>
+    <script>
+    // Synchronise total collecté vers la colonne droite de l'accordion 3
+    const obs = new MutationObserver(() => {
+        const src = document.getElementById('totalCollecteDisplay');
+        const dst = document.getElementById('totalCollecteDisplay2');
+        if (src && dst) dst.textContent = src.textContent;
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const src = document.getElementById('totalCollecteDisplay');
+        if (src) obs.observe(src, { childList: true, characterData: true, subtree: true });
+
+        const acc2 = document.getElementById('collapse2');
+        acc2?.addEventListener('shown.bs.collapse', () => {
+            const w = document.getElementById('btnSuivantWrapper');
+            if (w) w.style.removeProperty('display');
+        });
+
+        document.getElementById('selBeneficiaire')
+            ?.addEventListener('change', mettreAJourMontantBeneficie);
+    });
+    </script>
 }

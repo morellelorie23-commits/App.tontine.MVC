@@ -1,0 +1,72 @@
+@model tontine.MVC.Models.PretViewModel
+
+@{
+
+    ViewData["Title"] = "Supprimer le prêt";
+
+}
+
+
+
+<div style="max-width:480px; margin:60px auto; padding:32px; background:white; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.12); text-align:center;">
+
+    <div style="margin-bottom:16px; display:flex; justify-content:center; color:#C62828;"><i data-lucide="alert-triangle" style="width:48px;height:48px;"></i></div>
+
+    <h2 style="margin:0 0 8px; font-size:20px; font-weight:600; color:#1a1a1a;">Confirmer la suppression</h2>
+
+    <p style="margin:0 0 24px; font-size:14px; color:#888780;">Êtes-vous sûr de vouloir supprimer ce prêt ?</p>
+
+
+
+    <div style="background:#F8FDF9; border-radius:12px; padding:16px; margin-bottom:24px; text-align:left;">
+
+        <div style="font-size:13px; color:#666;">
+
+            <div style="margin-bottom:8px;">
+
+                <strong>Membre :</strong> @Model.NomMembre
+
+            </div>
+
+            <div style="margin-bottom:8px;">
+
+                <strong>Montant :</strong> @Model.Montant.ToString("N0") FCFA
+
+            </div>
+
+            <div style="margin-bottom:8px;">
+
+                <strong>Date de prêt :</strong> @Model.DatePret.ToString("dd/MM/yyyy")
+
+            </div>
+
+            <div>
+
+                <strong>Statut :</strong> @Model.Statut
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <form asp-action="Delete" method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="IdPret" />
+
+        <div style="display:flex; gap:12px; justify-content:center;">
+
+            <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 28px; text-decoration:none; font-weight:500;">Annuler</a>
+
+            <button type="submit" style="background:#C62828; color:white; border:none; border-radius:8px; padding:10px 28px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i data-lucide="trash-2" style="width:15px;height:15px;"></i> Supprimer</button>
+
+        </div>
+
+    </form>
+
+</div>
+

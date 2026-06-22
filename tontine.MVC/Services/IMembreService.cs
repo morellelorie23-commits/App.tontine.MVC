@@ -1,4 +1,4 @@
-﻿using tontine.MVC.Models;
+using tontine.MVC.Models;
 
 namespace tontine.MVC.Services
 {
@@ -9,5 +9,8 @@ namespace tontine.MVC.Services
         Task<bool> CreateAsync(MembreViewModel membre);
         Task<bool> UpdateAsync(int id, MembreViewModel membre);
         Task<bool> DeleteAsync(int id);
+        Task<ReleveMembreViewModel?> GetReleveAsync(int id);
+        Task<ScoreMembreViewModel?> GetScoreAsync(int id);
+        Task<List<ScoreMembreViewModel>> GetAllScoresAsync();
     }
 }

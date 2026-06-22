@@ -1,0 +1,37 @@
+@model tontine.MVC.Models.CycleViewModel
+@{
+    ViewData["Title"] = "Supprimer le cycle";
+}
+
+<div style="max-width:480px;margin:60px auto;">
+    <div style="background:white;border-radius:16px;padding:32px;box-shadow:0 2px 12px rgba(0,0,0,0.08);text-align:center;">
+
+        <div style="display:flex;justify-content:center;color:#C62828;margin-bottom:16px;">
+            <i data-lucide="alert-triangle" style="width:48px;height:48px;"></i>
+        </div>
+
+        <h3 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#1a1a1a;">Confirmer la suppression</h3>
+        <p style="margin:0 0 24px;color:#888780;font-size:14px;">
+            Voulez-vous supprimer le cycle <strong style="color:#1a1a1a;">@Model.NomCycle</strong> ?
+        </p>
+
+        <div style="background:#FFF3E0;border-left:4px solid #E65100;border-radius:8px;padding:12px 16px;margin-bottom:24px;text-align:left;font-size:13px;color:#BF360C;">
+            <strong>Attention :</strong> Cette action supprimera également toutes les liaisons et cotisations associées à ce cycle.
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <a asp-action="Index"
+               style="background:white;color:#5F5E5A;border:1.5px solid #D3D1C7;border-radius:8px;padding:12px;font-size:14px;font-weight:500;text-decoration:none;display:flex;align-items:center;justify-content:center;">
+                Annuler
+            </a>
+            <form asp-action="Delete" asp-route-id="@Model.IdCycle" method="post" style="margin:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit"
+                        style="width:100%;background:#C62828;color:white;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <i data-lucide="trash-2" style="width:15px;height:15px;"></i> Supprimer
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>

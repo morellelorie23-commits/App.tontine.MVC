@@ -1,0 +1,64 @@
+@{
+    var breadcrumbs = ViewData["Breadcrumbs"] as List<(string Label, string Controller, string Action, bool IsActive)>
+                      ?? new List<(string, string, string, bool)>();
+}
+
+@if (breadcrumbs.Count > 0)
+{
+    <div style="background:white; border-bottom:1px solid #EEECEA; padding:10px 28px;
+                display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <a asp-controller="Home" asp-action="Index"
+           style="display:inline-flex; align-items:center; justify-content:center;
+                  width:26px; height:26px; background:#F0FAF6; border-radius:6px;
+                  color:#0F6E56; transition:background 0.2s; flex-shrink:0; text-decoration:none;"
+           title="Tableau de bord"
+           onmouseover="this.style.background='#D4F0E6'"
+           onmouseout="this.style.background='#F0FAF6'">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+
+        @for (int i = 0; i < breadcrumbs.Count; i++)
+        {
+            var (label, controller, action, isActive) = breadcrumbs[i];
+            <svg width="14" height="14" fill="none" stroke="#C8C6BF" viewBox="0 0 24 24" style="flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+
+            @if (isActive)
+            {
+                <span style="display:inline-flex; align-items:center; gap:5px;
+                             background:#0F6E56; color:white;
+                             font-size:12px; font-weight:600;
+                             padding:4px 12px; border-radius:20px;
+                             box-shadow:0 2px 8px rgba(15,110,86,0.3);">
+                    @label
+                </span>
+            }
+            else if (!string.IsNullOrEmpty(controller) && !string.IsNullOrEmpty(action))
+            {
+                <a href="@Url.Action(action, controller)"
+                   style="display:inline-flex; align-items:center; gap:5px;
+                          background:#F4F2EB; color:#5F5E5A;
+                          font-size:12px; font-weight:500;
+                          padding:4px 12px; border-radius:20px;
+                          text-decoration:none; transition:all 0.2s;"
+                   onmouseover="this.style.background='#E8E5DB'; this.style.color='#0F6E56';"
+                   onmouseout="this.style.background='#F4F2EB'; this.style.color='#5F5E5A';">
+                    @label
+                </a>
+            }
+            else
+            {
+                <span style="display:inline-flex; align-items:center;
+                             background:#F4F2EB; color:#888780;
+                             font-size:12px; font-weight:500;
+                             padding:4px 12px; border-radius:20px;">
+                    @label
+                </span>
+            }
+        }
+    </div>
+}

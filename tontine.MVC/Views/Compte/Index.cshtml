@@ -1,0 +1,167 @@
+@model List<tontine.MVC.Models.CompteUtilisateurViewModel>
+@{
+    ViewData["Title"] = "Comptes utilisateurs";
+    var actifs    = Model.Count(c => c.Statut == "Actif");
+    var admins    = Model.Count(c => c.Role == "Administrateur");
+    var inactifs  = Model.Count(c => c.Statut != "Actif");
+}
+
+
+<div style="background-image:url('/photo/dashboard.jfif');background-size:cover;background-position:center;margin:-26px -28px 24px -28px;position:relative;overflow:hidden;min-height:90px;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,60,42,0.88) 0%,rgba(11,89,64,0.82) 60%,rgba(15,110,86,0.70) 100%);"></div>
+    <div style="position:absolute;inset:0;padding:20px 36px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;">Sécurité</div>
+        <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px 0;">Comptes utilisateurs</h2>
+        <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">Gestion des accès à l'application</p>
+    </div>
+</div>
+<style>
+    .kpi-row  { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+    .kpi-card { background:white; border-radius:12px; padding:18px 20px;
+                box-shadow:0 1px 4px rgba(0,0,0,0.07); display:flex; align-items:center; gap:14px; }
+    .kpi-icon { width:46px; height:46px; border-radius:12px;
+                display:flex; align-items:center; justify-content:center; font-size:22px; }
+    .kpi-val  { font-size:22px; font-weight:700; color:#1a1a1a; line-height:1; }
+    .kpi-lbl  { font-size:12px; color:#888780; margin-top:3px; }
+
+    .toolbar  { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .btn-add  { background:#0F6E56; color:white; border:none; border-radius:8px;
+                padding:9px 20px; font-size:13px; font-weight:600; cursor:pointer;
+                text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+    .btn-add:hover { background:#0B5940; color:white; }
+
+    .table-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.07); }
+    table  { width:100%; border-collapse:collapse; }
+    thead  { background:#F8FDF9; }
+    th     { padding:12px 16px; font-size:12px; font-weight:600; color:#444;
+             text-align:left; text-transform:uppercase; letter-spacing:0.5px;
+             border-bottom:1.5px solid #E1F5EE; }
+    td     { padding:13px 16px; font-size:13.5px; color:#333; border-bottom:1px solid #F4F4F2; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#FAFFF9; }
+
+    .action-btn { border:none; background:none; cursor:pointer; padding:4px 8px;
+                  border-radius:6px; font-size:12px; font-weight:500; text-decoration:none; display:inline-block; }
+    .btn-edit   { color:#0F6E56; background:#E8F5E9; margin-right:4px; }
+    .btn-del    { color:#C62828; background:#FFF5F5; }
+    .empty-msg  { text-align:center; padding:40px; color:#888780; font-size:14px; }
+
+    .badge-role   { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+    .role-admin   { background:#EDE7F6; color:#4527A0; }
+    .role-gest    { background:#E3F2FD; color:#0D47A1; }
+    .role-lect    { background:#F3F4F6; color:#555; }
+
+    .badge-statut { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+    .st-actif     { background:#E8F5E9; color:#1B5E20; }
+    .st-inactif   { background:#FAFAFA; color:#777; }
+    .st-suspendu  { background:#FFF3E0; color:#E65100; }
+
+    .avatar { width:34px; height:34px; border-radius:50%; background:#0F6E56;
+              display:inline-flex; align-items:center; justify-content:center;
+              color:white; font-size:13px; font-weight:700; flex-shrink:0; }
+</style>
+
+<!-- KPIs -->
+<div class="kpi-row">
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#E8F5E9;color:#0F6E56;"><i data-lucide="user" style="width:22px;height:22px;"></i></div>
+        <div><div class="kpi-val">@Model.Count</div><div class="kpi-lbl">Total comptes</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#E1F5EE;color:#0F6E56;"><i data-lucide="check-circle" style="width:22px;height:22px;"></i></div>
+        <div><div class="kpi-val">@actifs</div><div class="kpi-lbl">Comptes actifs</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#EDE7F6;color:#6A1B9A;"><i data-lucide="shield" style="width:22px;height:22px;"></i></div>
+        <div><div class="kpi-val">@admins</div><div class="kpi-lbl">Administrateurs</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#FFF3E0;color:#E65100;"><i data-lucide="user-x" style="width:22px;height:22px;"></i></div>
+        <div><div class="kpi-val">@inactifs</div><div class="kpi-lbl">Inactifs / Suspendus</div></div>
+    </div>
+</div>
+
+<div class="toolbar">
+    <h2 style="font-size:16px; font-weight:600; color:#1a1a1a; margin:0;">Liste des comptes</h2>
+    <a asp-action="Create" class="btn-add">+ Nouveau compte</a>
+</div>
+
+<div class="table-card">
+    @if (!Model.Any())
+    {
+        <div class="empty-msg">Aucun compte utilisateur enregistré.</div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                    <th>Créé le</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    var initiale = (c.Prenom.Length > 0 ? c.Prenom[0].ToString() : "?").ToUpper();
+                    <tr class="compte-row" data-search="@c.Nom @c.Prenom @c.Email @c.Role @c.Statut">
+                        <td>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div class="avatar">@initiale</div>
+                                <div>
+                                    <div style="font-weight:600;">@c.Nom @c.Prenom</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="color:#555;">@c.Email</td>
+                        <td>
+                            @if (c.Role == "Administrateur")
+                            {
+                                <span class="badge-role role-admin">@c.Role</span>
+                            }
+                            else if (c.Role == "Gestionnaire")
+                            {
+                                <span class="badge-role role-gest">@c.Role</span>
+                            }
+                            else
+                            {
+                                <span class="badge-role role-lect">@c.Role</span>
+                            }
+                        </td>
+                        <td>
+                            @if (c.Statut == "Actif")
+                            {
+                                <span class="badge-statut st-actif">● Actif</span>
+                            }
+                            else if (c.Statut == "Suspendu")
+                            {
+                                <span class="badge-statut st-suspendu"><i data-lucide="alert-triangle" style="width:12px;height:12px;vertical-align:middle;margin-right:3px;"></i>Suspendu</span>
+                            }
+                            else
+                            {
+                                <span class="badge-statut st-inactif">○ Inactif</span>
+                            }
+                        </td>
+                        <td>@c.DateCreation.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@c.IdCompte" class="action-btn btn-edit"><i data-lucide="pencil" style="width:13px;height:13px;"></i> Modifier</a>
+                            <a asp-action="Delete" asp-route-id="@c.IdCompte" class="action-btn btn-del"><i data-lucide="trash-2" style="width:13px;height:13px;"></i> Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+@section Scripts {
+<script>
+function filtrerComptes(q) {
+    q = q.toLowerCase().trim();
+    document.querySelectorAll('.compte-row').forEach(r => r.style.display = !q || r.dataset.search.toLowerCase().includes(q) ? '' : 'none');
+}
+</script>
+}

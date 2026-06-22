@@ -29,6 +29,11 @@ namespace tontine.MVC.Models
         [Display(Name = "Notes")]
         public string? Notes { get; set; }
 
+        [Display(Name = "Mandataire (si absent)")]
+        public int? IdMandataire { get; set; }
+
+        public string? NomMandataire { get; set; }
+
         [Display(Name = "Déduction (part du bénéficiaire)")]
         public decimal MontantDeduction { get; set; }
 

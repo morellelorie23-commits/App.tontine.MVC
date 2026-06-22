@@ -1,0 +1,131 @@
+@model tontine.MVC.Models.BalanceViewModel
+@{ ViewData["Title"] = "Balance des comptes"; }
+
+<style>
+    .tc { background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07); }
+    table { width:100%;border-collapse:collapse; }
+    thead { background:#F8FDF9; }
+    th { padding:11px 14px;font-size:11px;font-weight:700;color:#444;text-align:right;
+         text-transform:uppercase;letter-spacing:.5px;border-bottom:1.5px solid #E1F5EE; }
+    th:first-child,th:nth-child(2) { text-align:left; }
+    td { padding:11px 14px;font-size:13px;color:#333;border-bottom:1px solid #F4F4F2;text-align:right; }
+    td:first-child,td:nth-child(2) { text-align:left; }
+    tr:last-child td { border-bottom:none; }
+    .total-row td { font-weight:700;background:#F0FAF6;border-top:2px solid #0F6E56; }
+    .classe-header td { background:#1A237E;color:white;font-weight:700;font-size:12px; }
+</style>
+
+<div style="background:linear-gradient(135deg,#1565C0 0%,#1976D2 100%);
+            margin:-26px -28px 24px -28px;padding:24px 36px;min-height:80px;
+            display:flex;flex-direction:column;justify-content:flex-end;">
+    <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">Balance des comptes OHADA</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0;">
+        Période : @Model.Periode - Règle : Σ Débits = Σ Crédits
+    </p>
+</div>
+
+<!-- Filtres -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <label style="font-size:13px;font-weight:600;color:#444;">Période :</label>
+        <input type="month" id="sel-periode" value="@ViewBag.Periode"
+               onchange="window.location.href='@Url.Action("Balance","GrandLivre")?periode='+this.value"
+               style="padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+        <a asp-action="Balance" style="padding:8px 14px;background:#888;color:white;border-radius:8px;
+           font-size:13px;font-weight:600;text-decoration:none;">Toutes périodes</a>
+    </div>
+    <a asp-action="Index" asp-controller="GrandLivre"
+       style="color:#0F6E56;font-size:13px;font-weight:500;text-decoration:none;">← Grand Livre</a>
+</div>
+
+<!-- Vérification équilibre -->
+@{
+    var equilibre = Math.Abs(Model.TotalDebits - Model.TotalCredits) < 1;
+}
+<div style="border-radius:10px;padding:14px 20px;margin-bottom:20px;
+            background:@(equilibre ? "#E8F5E9" : "#FFEBEE");
+            border-left:4px solid @(equilibre ? "#388E3C" : "#C62828");">
+    <div style="font-size:14px;font-weight:700;color:@(equilibre ? "#1B5E20" : "#B71C1C");">
+        @(equilibre ? "✓ Balance équilibrée - Σ Débits = Σ Crédits" : "⚠ Déséquilibre détecté - Vérification requise")
+    </div>
+    <div style="font-size:13px;color:#666;margin-top:4px;">
+        Total Débits : <strong>@Model.TotalDebits.ToString("N0") FCFA</strong> |
+        Total Crédits : <strong>@Model.TotalCredits.ToString("N0") FCFA</strong> |
+        Écart : <strong>@((Model.TotalDebits - Model.TotalCredits).ToString("N0")) FCFA</strong>
+    </div>
+</div>
+
+<div class="tc">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left;">Compte</th>
+                <th style="text-align:left;">Libellé</th>
+                <th>Débit</th>
+                <th>Crédit</th>
+                <th>Solde débiteur</th>
+                <th>Solde créditeur</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var classe4 = Model.Comptes.Where(c => c.Compte.StartsWith("4")).ToList();
+                var classe5 = Model.Comptes.Where(c => c.Compte.StartsWith("5")).ToList();
+                var classe7 = Model.Comptes.Where(c => c.Compte.StartsWith("7")).ToList();
+            }
+
+            @if (classe4.Any())
+            {
+                <tr class="classe-header"><td colspan="6">CLASSE 4 - Comptes de Tiers</td></tr>
+                @foreach (var c in classe4)
+                {
+                    <tr>
+                        <td style="font-family:monospace;font-weight:600;">@c.Compte</td>
+                        <td>@c.Libelle</td>
+                        <td>@(c.TotalDebit > 0  ? c.TotalDebit.ToString("N0")   : "")</td>
+                        <td>@(c.TotalCredit > 0 ? c.TotalCredit.ToString("N0")  : "")</td>
+                        <td style="color:#C62828;font-weight:600;">@(c.SoldeDebiteur > 0 ? c.SoldeDebiteur.ToString("N0") : "")</td>
+                        <td style="color:#0F6E56;font-weight:600;">@(c.SoldeCredit > 0  ? c.SoldeCredit.ToString("N0")   : "")</td>
+                    </tr>
+                }
+            }
+            @if (classe5.Any())
+            {
+                <tr class="classe-header"><td colspan="6">CLASSE 5 - Comptes de Trésorerie</td></tr>
+                @foreach (var c in classe5)
+                {
+                    <tr>
+                        <td style="font-family:monospace;font-weight:600;">@c.Compte</td>
+                        <td>@c.Libelle</td>
+                        <td>@(c.TotalDebit > 0  ? c.TotalDebit.ToString("N0")   : "")</td>
+                        <td>@(c.TotalCredit > 0 ? c.TotalCredit.ToString("N0")  : "")</td>
+                        <td style="color:#C62828;font-weight:600;">@(c.SoldeDebiteur > 0 ? c.SoldeDebiteur.ToString("N0") : "")</td>
+                        <td style="color:#0F6E56;font-weight:600;">@(c.SoldeCredit > 0  ? c.SoldeCredit.ToString("N0")   : "")</td>
+                    </tr>
+                }
+            }
+            @if (classe7.Any())
+            {
+                <tr class="classe-header"><td colspan="6">CLASSE 7 - Produits</td></tr>
+                @foreach (var c in classe7)
+                {
+                    <tr>
+                        <td style="font-family:monospace;font-weight:600;">@c.Compte</td>
+                        <td>@c.Libelle</td>
+                        <td>@(c.TotalDebit > 0  ? c.TotalDebit.ToString("N0")   : "")</td>
+                        <td>@(c.TotalCredit > 0 ? c.TotalCredit.ToString("N0")  : "")</td>
+                        <td style="color:#C62828;font-weight:600;">@(c.SoldeDebiteur > 0 ? c.SoldeDebiteur.ToString("N0") : "")</td>
+                        <td style="color:#0F6E56;font-weight:600;">@(c.SoldeCredit > 0  ? c.SoldeCredit.ToString("N0")   : "")</td>
+                    </tr>
+                }
+            }
+            <tr class="total-row">
+                <td colspan="2">TOTAL GÉNÉRAL</td>
+                <td>@Model.TotalDebits.ToString("N0")</td>
+                <td>@Model.TotalCredits.ToString("N0")</td>
+                <td style="color:#C62828;">@Model.Comptes.Sum(c => c.SoldeDebiteur).ToString("N0")</td>
+                <td style="color:#0F6E56;">@Model.Comptes.Sum(c => c.SoldeCredit).ToString("N0")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using tontine.MVC.Filters;
 using tontine.MVC.Models;
 using tontine.MVC.Services;
 
 namespace tontine.MVC.Controllers
 {
-    public class PenaliteController : Controller
+    public class PenaliteController : BaseController
     {
         private readonly IPenaliteService _service;
 
@@ -12,11 +13,27 @@ namespace tontine.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
+            SetBreadcrumbs(
+                BreadcrumbItem("Tableau de bord", "Home", "Index"),
+                BreadcrumbItem("Paramètres"),
+                BreadcrumbItem("Pénalités", isActive: true)
+            );
             var penalites = await _service.GetAllAsync();
             return View(penalites);
         }
 
-        public IActionResult Create() => View(new PenaliteViewModel());
+        public IActionResult Create()
+        {
+            SetBreadcrumbs(
+                BreadcrumbItem("Tableau de bord", "Home", "Index"),
+                BreadcrumbItem("Paramètres"),
+                BreadcrumbItem("Pénalités", "Penalite", "Index"),
+                BreadcrumbItem("Ajouter", isActive: true)
+            );
+            return View(new PenaliteViewModel());
+        }
+
+        [RoleAuthorize("Administrateur", "Gestionnaire")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -30,9 +47,17 @@ namespace tontine.MVC.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            SetBreadcrumbs(
+                BreadcrumbItem("Tableau de bord", "Home", "Index"),
+                BreadcrumbItem("Paramètres"),
+                BreadcrumbItem("Pénalités", "Penalite", "Index"),
+                BreadcrumbItem("Modifier", isActive: true)
+            );
             var penalite = await _service.GetByIdAsync(id);
             return penalite == null ? NotFound() : View(penalite);
         }
+
+        [RoleAuthorize("Administrateur", "Gestionnaire")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -46,9 +71,17 @@ namespace tontine.MVC.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            SetBreadcrumbs(
+                BreadcrumbItem("Tableau de bord", "Home", "Index"),
+                BreadcrumbItem("Paramètres"),
+                BreadcrumbItem("Pénalités", "Penalite", "Index"),
+                BreadcrumbItem("Supprimer", isActive: true)
+            );
             var penalite = await _service.GetByIdAsync(id);
             return penalite == null ? NotFound() : View(penalite);
         }
+
+        [RoleAuthorize("Administrateur", "Gestionnaire")]
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

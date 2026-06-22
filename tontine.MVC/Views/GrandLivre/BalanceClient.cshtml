@@ -1,0 +1,144 @@
+@model tontine.MVC.Models.BalanceDetailViewModel
+@{ ViewData["Title"] = "Balance client"; }
+
+<style>
+    .compta-header { background:linear-gradient(135deg,#1A237E,#3949AB);margin:-26px -28px 24px -28px;
+                     padding:24px 36px;display:flex;flex-direction:column;justify-content:flex-end; }
+    .card { background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:24px; }
+    .bg-table { width:100%;border-collapse:collapse; }
+    .bg-table thead th { padding:10px 12px;font-size:11px;font-weight:700;color:#444;text-transform:uppercase;
+                         letter-spacing:.4px;border-bottom:2px solid #3949AB;background:#EEF2FF;text-align:right; }
+    .bg-table thead th:first-child { text-align:left; }
+    .bg-table thead th:nth-child(2) { text-align:left; }
+    .bg-table td { padding:9px 12px;font-size:12.5px;color:#333;border-bottom:1px solid #F0F0F0;text-align:right; }
+    .bg-table td:first-child { text-align:left;font-family:monospace;font-weight:700; }
+    .bg-table td:nth-child(2) { text-align:left;font-size:12px; }
+    .bg-table tr:hover td { background:#FAFAFA; }
+    .total-row td { background:#F0FAF6;font-weight:800;border-top:2px solid #0F6E56;font-size:13px; }
+    .solde-d { color:#C62828; }
+    .solde-c { color:#0F6E56; }
+    .zero    { color:#BDBDBD; }
+    .btn-afficher { background:#1A237E;color:white;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer; }
+    .btn-imprimer { background:#37474F;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer; }
+    .btn-fermer   { background:#757575;color:white;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer; }
+    .radio-group { display:flex;gap:16px;align-items:center; }
+    .radio-group label { display:flex;align-items:center;gap:6px;font-size:13px;color:#444;cursor:pointer;font-weight:500; }
+</style>
+
+<div class="compta-header">
+    <div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Comptabilité OHADA</div>
+    <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">Balance client</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0;">Soldes par compte tiers (séquestre, commissions)</p>
+</div>
+
+<!-- Critères -->
+<div class="card" style="margin-bottom:20px;">
+    <form method="get" asp-action="BalanceClient" style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Date début</label>
+            <input type="date" name="dateDebut" value="@ViewBag.DateDebut"
+                   style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+        </div>
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Date fin</label>
+            <input type="date" name="dateFin" value="@ViewBag.DateFin"
+                   style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;" />
+        </div>
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Type de compte</label>
+            <select name="prefixeCompte" style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;min-width:220px;">
+                <option value="467" selected="@(ViewBag.PrefixeCompte=="467"?"selected":null)">467 — Comptes séquestre / commission</option>
+                <option value="4671" selected="@(ViewBag.PrefixeCompte=="4671"?"selected":null)">4671 — Séquestre par tontine</option>
+                <option value="4672" selected="@(ViewBag.PrefixeCompte=="4672"?"selected":null)">4672 — Commission transit</option>
+                <option value="521" selected="@(ViewBag.PrefixeCompte=="521"?"selected":null)">521 — Comptes banque</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:5px;">Personne</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="typePers" value="physique"
+                           @(ViewBag.TypePers=="physique"?"checked":"") />
+                    Physique
+                </label>
+                <label>
+                    <input type="radio" name="typePers" value="morale"
+                           @(ViewBag.TypePers=="morale"?"checked":"") />
+                    Morale
+                </label>
+                <label>
+                    <input type="radio" name="typePers" value="" checked="@(string.IsNullOrEmpty(ViewBag.TypePers as string)?"checked":null)" />
+                    Les deux
+                </label>
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-left:auto;">
+            <button type="submit" class="btn-afficher">Afficher</button>
+            <button type="button" class="btn-imprimer" onclick="window.print()">Imprimer</button>
+            <a href="@Url.Action("Index","GrandLivre")" class="btn-fermer" style="text-decoration:none;display:inline-flex;align-items:center;">Fermer</a>
+        </div>
+    </form>
+</div>
+
+<!-- Table -->
+<div class="card" style="overflow-x:auto;">
+    @if (!Model.Comptes.Any())
+    {
+        <div style="text-align:center;padding:50px;color:#888;">Aucun compte trouvé pour les critères sélectionnés.</div>
+    }
+    else
+    {
+        <table class="bg-table">
+            <thead>
+                <tr>
+                    <th style="text-align:left;min-width:90px;">Compte</th>
+                    <th style="text-align:left;min-width:200px;">Intitulé</th>
+                    <th>Solde initial D</th>
+                    <th>Solde initial C</th>
+                    <th>Mvt période D</th>
+                    <th>Mvt période C</th>
+                    <th>Solde final D</th>
+                    <th>Solde final C</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Comptes)
+                {
+                    <tr>
+                        <td>@c.CompteOhada</td>
+                        <td>@c.Intitule</td>
+                        <td class="@(c.SoldeInitialDebit>0?"solde-d":"zero")">
+                            @(c.SoldeInitialDebit > 0 ? c.SoldeInitialDebit.ToString("N0") : "—")
+                        </td>
+                        <td class="@(c.SoldeInitialCredit>0?"solde-c":"zero")">
+                            @(c.SoldeInitialCredit > 0 ? c.SoldeInitialCredit.ToString("N0") : "—")
+                        </td>
+                        <td class="@(c.MouvementDebit>0?"solde-d":"zero")">
+                            @(c.MouvementDebit > 0 ? c.MouvementDebit.ToString("N0") : "—")
+                        </td>
+                        <td class="@(c.MouvementCredit>0?"solde-c":"zero")">
+                            @(c.MouvementCredit > 0 ? c.MouvementCredit.ToString("N0") : "—")
+                        </td>
+                        <td class="@(c.SoldeFinalDebit>0?"solde-d":"zero")">
+                            @(c.SoldeFinalDebit > 0 ? c.SoldeFinalDebit.ToString("N0") : "—")
+                        </td>
+                        <td class="@(c.SoldeFinalCredit>0?"solde-c":"zero")">
+                            @(c.SoldeFinalCredit > 0 ? c.SoldeFinalCredit.ToString("N0") : "—")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="2">TOTAUX</td>
+                    <td class="solde-d">@Model.Totaux.TotalSoldeInitialDebit.ToString("N0")</td>
+                    <td class="solde-c">@Model.Totaux.TotalSoldeInitialCredit.ToString("N0")</td>
+                    <td class="solde-d">@Model.Totaux.TotalMouvementDebit.ToString("N0")</td>
+                    <td class="solde-c">@Model.Totaux.TotalMouvementCredit.ToString("N0")</td>
+                    <td class="solde-d">@Model.Totaux.TotalSoldeFinalDebit.ToString("N0")</td>
+                    <td class="solde-c">@Model.Totaux.TotalSoldeFinalCredit.ToString("N0")</td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</div>

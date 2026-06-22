@@ -138,7 +138,7 @@
 
     <div style="display:flex; gap:10px; align-items:center;">
 
-        <input id="search-versement" type="text" placeholder="Rechercher par membre, tontineâ€¦"
+        <input id="search-versement" type="text" placeholder="Rechercher par membre, tontine..."
 
                oninput="filtrerVersements(this.value)"
 
@@ -207,27 +207,27 @@
 
                     <tr class="versement-row" data-search="@v.NomMembre @v.LibelleTontine @v.NomCycle">
 
-                        <td style=”font-weight:500;”>@v.NomMembre</td>
+                        <td style="font-weight:500;">@v.NomMembre</td>
 
                         <td>@v.LibelleTontine</td>
 
                         <td>@v.NomCycle</td>
 
-                        <td style=”font-weight:600; color:#0F6E56;”>@v.Montant.ToString(“N0”) FCFA</td>
+                        <td style="font-weight:600; color:#0F6E56;">@v.Montant.ToString("N0") FCFA</td>
 
-                        <td style=”color:#F57F17; font-size:12px;”>- @v.MontantDeduction.ToString(“N0”)</td>
+                        <td style="color:#F57F17; font-size:12px;">- @v.MontantDeduction.ToString("N0")</td>
 
-                        <td style=”color:#BF360C; font-size:12px;”>- @v.MontantCommission.ToString(“N0”)</td>
+                        <td style="color:#BF360C; font-size:12px;">- @v.MontantCommission.ToString("N0")</td>
 
-                        <td style=”font-weight:700; color:#1B5E20;”>@v.MontantNet.ToString(“N0”) FCFA</td>
+                        <td style="font-weight:700; color:#1B5E20;">@v.MontantNet.ToString("N0") FCFA</td>
 
-                        <td>@v.DateVersement.ToString(“dd/MM/yyyy”)</td>
+                        <td>@v.DateVersement.ToString("dd/MM/yyyy")</td>
 
-                        <td style=”color:#888780; font-size:12px;”>@(v.Notes ?? “—“)</td>
+                        <td style="color:#888780; font-size:12px;">@(v.Notes ?? "-")</td>
 
                         <td>
 
-                            <a asp-action=”Delete” asp-route-id=”@v.IdVersement” class=”action-btn btn-del” style=”display:inline-flex;align-items:center;gap:4px;”><i data-lucide=”trash-2” style=”width:13px;height:13px;”></i> Supprimer</a>
+                            <a asp-action="Delete" asp-route-id="@v.IdVersement" class="action-btn btn-del" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="trash-2" style="width:13px;height:13px;"></i> Supprimer</a>
 
                         </td>
 

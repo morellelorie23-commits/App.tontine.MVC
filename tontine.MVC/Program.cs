@@ -56,6 +56,8 @@ builder.Services.AddHttpClient<IPaiementMobileService, PaiementMobileService>(cl
     client.BaseAddress = new Uri("http://localhost:5185/"));
 builder.Services.AddHttpClient<IGrandLivreService, GrandLivreService>(client =>
     client.BaseAddress = new Uri("http://localhost:5185/"));
+builder.Services.AddHttpClient<ISaisieSeanceService, SaisieSeanceService>(client =>
+    client.BaseAddress = new Uri("http://localhost:5185/"));
 builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddSingleton<PdfService>();
 QuestPDF.Settings.License = LicenseType.Community;

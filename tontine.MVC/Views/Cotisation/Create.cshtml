@@ -1,0 +1,131 @@
+@model tontine.MVC.Models.CotisationViewModel
+@{
+    ViewData["Title"] = "Nouvelle cotisation";
+}
+
+<div style="max-width:520px;">
+    <div style="margin-bottom:24px;">
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Nouvelle cotisation</h2>
+    </div>
+
+    <form asp-action="Create" method="post"
+          data-confirm="Voulez-vous enregistrer cette cotisation ?"
+          data-confirm-type="create">
+        @Html.AntiForgeryToken()
+        <div style="background:white; border-radius:12px; padding:28px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label asp-for="IdMembre" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="IdMembre" asp-items="ViewBag.Membres"
+                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                    <span asp-validation-for="IdMembre" style="color:#C62828; font-size:12px;"></span>
+                </div>
+                <div>
+                    <label asp-for="IdTontine" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="IdTontine" asp-items="ViewBag.Tontines"
+                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                    <span asp-validation-for="IdTontine" style="color:#C62828; font-size:12px;"></span>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;">Cycle</label>
+                    <div style="padding:10px 14px; border:1.5px solid #0F6E56; border-radius:8px; font-size:14px; background:#F0FAF6; color:#0F6E56; font-weight:500;">
+                        @ViewData["CycleNom"]
+                    </div>
+                    <input asp-for="IdCycle" type="hidden" />
+                </div>
+                <div>
+                    <label asp-for="Montant" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="Montant" type="number" step="100" min="0"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                    <span asp-validation-for="Montant" style="color:#C62828; font-size:12px;"></span>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label asp-for="Statut" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="Statut"
+                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                        <option value="Payé">Payé</option>
+                        <option value="En attente">En attente</option>
+                        <option value="En retard">En retard</option>
+                    </select>
+                </div>
+                <div>
+                    <label asp-for="DateCotisation" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="DateCotisation" type="datetime-local"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label asp-for="ModePaiement" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:2px solid #E0E0E0;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s;" id="lbl-cash">
+                        <input type="radio" asp-for="ModePaiement" value="Cash" style="display:none;" onchange="selectMode('Cash')" />
+                        💵 Espèces
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:2px solid #E0E0E0;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s;" id="lbl-mtn">
+                        <input type="radio" asp-for="ModePaiement" value="MTN" style="display:none;" onchange="selectMode('MTN')" />
+                        📱 MTN MoMo
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:2px solid #E0E0E0;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s;" id="lbl-orange">
+                        <input type="radio" asp-for="ModePaiement" value="Orange Money" style="display:none;" onchange="selectMode('Orange Money')" />
+                        🟠 Orange Money
+                    </label>
+                </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label asp-for="IdMandataire" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                <select asp-for="IdMandataire" asp-items="ViewBag.Membres"
+                        style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                    <option value="">-- Aucun (membre présent) --</option>
+                </select>
+                <span style="font-size:11px; color:#888;">Membre qui récupère la mise à la place du bénéficiaire absent</span>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label asp-for="Notes" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                <textarea asp-for="Notes" rows="3"
+                          style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;"></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7;
+                   border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit" style="background:#0F6E56; color:white; border:none; border-radius:8px;
+                        padding:10px 24px; font-size:14px; font-weight:600; cursor:pointer;">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+    function selectMode(v) {
+        var map = { 'Cash': 'lbl-cash', 'MTN': 'lbl-mtn', 'Orange Money': 'lbl-orange' };
+        ['lbl-cash','lbl-mtn','lbl-orange'].forEach(function(id) {
+            var el = document.getElementById(id);
+            el.style.borderColor = id === map[v] ? '#0F6E56' : '#E0E0E0';
+            el.style.background  = id === map[v] ? '#F0FAF6' : 'white';
+            el.style.color       = id === map[v] ? '#0F6E56' : '#333';
+        });
+    }
+    document.addEventListener('DOMContentLoaded', function() { selectMode('Cash'); });
+    </script>
+}

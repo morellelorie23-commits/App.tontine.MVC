@@ -1,0 +1,295 @@
+@model List<tontine.MVC.Models.PretViewModel>
+
+@{
+
+    ViewData["Title"] = "Gestion des Prêts";
+
+    string DateOuTiret(DateTime d) => d == DateTime.MinValue ? "-" : d.ToString("dd/MM/yyyy");
+
+}
+
+
+
+<div style="background-image:url('/photo/prets.jfif');background-size:cover;background-position:center;margin:-26px -28px 24px -28px;position:relative;overflow:hidden;min-height:90px;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,60,42,0.88) 0%,rgba(11,89,64,0.82) 60%,rgba(15,110,86,0.70) 100%);"></div>
+    <div style="position:absolute;inset:0;padding:20px 36px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;">Crédit</div>
+        <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px 0;">Prêts</h2>
+        <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">Gestion des demandes et remboursements</p>
+    </div>
+</div>
+<div style="padding: 8px 0;">
+
+    @if (TempData["Success"] != null) {
+
+        <div style="margin-bottom:12px; padding:12px; background:#E6F4EE; border-left:4px solid #0F6E56; border-radius:6px; color:#085041;">@TempData["Success"]</div>
+
+    }
+
+    @if (TempData["Error"] != null) {
+
+        <div style="margin-bottom:12px; padding:12px; background:#FFEBEE; border-left:4px solid #C62828; border-radius:6px; color:#C62828;">@TempData["Error"]</div>
+
+    }
+
+
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+
+        <div>
+
+            <h2 style="margin:0; font-size:22px; font-weight:600; color:#1a1a1a;">Gestion des Prêts</h2>
+
+            <p style="margin:4px 0 0; color:#888780; font-size:14px;">@Model.Count prêt(s) enregistré(s)</p>
+
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+
+            @{
+                var pretsRetard = Model.Count(p => p.Statut == "En retard");
+            }
+            @if (pretsRetard > 0)
+            {
+                <form asp-controller="Alerte" asp-action="EnvoyerAlertesRetard" method="post" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" style="background:#FFEBEE; color:#C62828; border:1.5px solid #FFCDD2; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                        <i data-lucide="bell-ring" style="width:15px;height:15px;"></i>
+                        Envoyer alertes (@pretsRetard en retard)
+                    </button>
+                </form>
+            }
+
+            <button type="button" onclick="pagerPret.csv(['Membre','Montant (FCFA)','Taux %','Intérêts','Statut','Échéance'],function(r){var c=r.querySelectorAll('td');return[c[0].textContent.trim(),c[1].textContent.trim(),c[2].textContent.trim(),c[3].textContent.trim(),c[4].textContent.trim(),c[5].textContent.trim()]},'prets')" style="background:#1565C0;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="download" style="width:14px;height:14px;"></i> CSV</button>
+            <a asp-action="Create" style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 20px; font-size:14px; font-weight:500; text-decoration:none;">
+                + Nouveau prêt
+            </a>
+
+        </div>
+
+    </div>
+
+    @if (TempData["AlerteResult"] != null)
+    {
+        <div style="margin-bottom:12px; padding:12px; background:#E3F2FD; border-left:4px solid #1565C0; border-radius:6px; color:#0D47A1;">
+            <i data-lucide="mail-check" style="width:15px;height:15px;vertical-align:middle;margin-right:6px;"></i>
+            @TempData["AlerteResult"]
+        </div>
+    }
+
+
+
+    <!-- Recherche -->
+
+    <div style="margin-bottom:16px;">
+
+        <input id="search-pret" type="text" placeholder="Rechercher par membre, statut..."
+
+               oninput="filtrerPrets(this.value)"
+
+               style="width:100%; max-width:360px; padding:10px 14px; border:1.5px solid #E0E0E0;
+
+                      border-radius:8px; font-size:14px; outline:none;"
+
+               onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
+
+    </div>
+
+
+
+    <div id="tc-pret" style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+
+            <thead>
+
+                <tr style="background:linear-gradient(135deg, #F44336, #C62828); color:white;">
+
+                    <th style="padding:14px 18px; text-align:left;">Membre</th>
+
+                    <th style="padding:14px 18px; text-align:left;">Montant</th>
+
+                    <th style="padding:14px 18px; text-align:left;">Taux</th>
+
+                    <th style="padding:14px 18px; text-align:left;">Intérêts</th>
+
+                    <th style="padding:14px 18px; text-align:left;">Statut</th>
+
+                    <th style="padding:14px 18px; text-align:left;">Échéance</th>
+
+                    <th style="padding:14px 18px; text-align:left;">Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tbody-prets">
+
+                @foreach (var pret in Model)
+
+                {
+
+                    var (statBg, statClr) = pret.Statut switch {
+
+                        "En attente" => ("#FFF3E0", "#F57C00"),
+
+                        "Approuvé"   => ("#E3F2FD", "#1976D2"),
+
+                        "Remboursé"  => ("#E6F4EE", "#0F6E56"),
+
+                        "En retard"  => ("#FFEBEE", "#C62828"),
+
+                        _            => ("#F5F5F5", "#666")
+
+                    };
+
+                    var interets = Math.Round(pret.Montant * pret.Taux / 100, 0);
+
+                    var estEnRetard = pret.Statut == "En retard";
+
+
+
+                    <tr class="pret-row" data-search="@pret.NomMembre @pret.Statut"
+
+                        style="border-bottom:1px solid #F1EFE8;"
+
+                        onmouseover="this.style.background='#FFF8F8'" onmouseout="this.style.background='white'">
+
+                        <td style="padding:14px 18px; font-weight:600;">@pret.NomMembre</td>
+
+                        <td style="padding:14px 18px;">@pret.Montant.ToString("N0") FCFA</td>
+
+                        <td style="padding:14px 18px;">@pret.Taux%</td>
+
+                        <td style="padding:14px 18px; color:@(interets > 0 ? "#C62828" : "#888");">
+
+                            @(interets > 0 ? $"+{interets:N0} FCFA" : "-")
+
+                        </td>
+
+                        <td style="padding:14px 18px;">
+
+                            <span style="background:@statBg; color:@statClr; padding:4px 12px; border-radius:12px; font-weight:500; font-size:12px;">
+
+                                @pret.Statut
+
+                            </span>
+
+                        </td>
+
+                        <td style="padding:14px 18px; color:@(estEnRetard ? "#C62828" : "#444"); font-weight:@(estEnRetard ? "600" : "400");">
+
+                            @DateOuTiret(pret.DateRemboursement)
+
+                            @if (estEnRetard) { <i data-lucide="alert-triangle" style="width:13px;height:13px;color:#C62828;vertical-align:middle;margin-left:4px;"></i> }
+
+                        </td>
+
+                        <td style="padding:14px 18px;">
+
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+
+                                @if (pret.Statut == "En attente") {
+
+                                    <form asp-action="Approuver" asp-route-id="@pret.IdPret" method="post" style="display:inline;"
+
+                                          data-confirm="Approuver le prêt de @pret.Montant.ToString("N0") FCFA pour @pret.NomMembre ?"
+
+                                          data-confirm-type="create">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" style="background:#E3F2FD; color:#1565C0; border:1px solid #90CAF9; border-radius:6px; padding:5px 10px; cursor:pointer; font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:4px;">
+
+                                            <i data-lucide="check-circle" style="width:13px;height:13px;"></i> Approuver
+
+                                        </button>
+
+                                    </form>
+
+                                }
+
+                                @if (pret.Statut == "Approuvé" || pret.Statut == "En retard") {
+
+                                    <form asp-action="Rembourser" asp-route-id="@pret.IdPret" method="post" style="display:inline;"
+
+                                          data-confirm="Marquer ce prêt de @pret.Montant.ToString("N0") FCFA comme remboursé ?"
+
+                                          data-confirm-type="edit">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" style="background:#E6F4EE; color:#0F6E56; border:1px solid #A5D6A7; border-radius:6px; padding:5px 10px; cursor:pointer; font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:4px;">
+
+                                            <i data-lucide="badge-check" style="width:13px;height:13px;"></i> Remboursé
+
+                                        </button>
+
+                                    </form>
+
+                                }
+
+                                @if (pret.Statut != "Remboursé") {
+
+                                    <a asp-action="Edit" asp-route-id="@pret.IdPret" style="background:#F5F5F5; color:#444; border:1px solid #E0E0E0; border-radius:6px; padding:5px 10px; text-decoration:none; font-size:12px; display:inline-flex; align-items:center;">
+
+                                        <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+
+                                    </a>
+
+                                }
+
+                                <a asp-action="Delete" asp-route-id="@pret.IdPret" style="background:#FFEBEE; color:#C62828; border:1px solid #FFCDD2; border-radius:6px; padding:5px 10px; text-decoration:none; font-size:12px; display:inline-flex; align-items:center;">
+
+                                    <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+                @if (!Model.Any())
+
+                {
+
+                    <tr>
+
+                        <td colspan="7" style="padding:48px; text-align:center; color:#888780;">
+
+                            <div style="margin-bottom:8px; display:flex; justify-content:center;"><i data-lucide="credit-card" style="width:36px;height:36px;opacity:.4;"></i></div>
+
+                            <div style="font-weight:500;">Aucun prêt enregistré</div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+<script>
+
+var pagerPret = new TablePager({ rowClass: 'pret-row', pageSize: 15, barParent: 'tc-pret' });
+function filtrerPrets(q) { pagerPret.search(q); }
+
+</script>
+
+}
+
+

@@ -1,34 +1,71 @@
-﻿@model tontine.MVC.Models.PosteViewModel
-@{
-    ViewData["Title"] = "Modifier le poste";
-}
-<div style="max-width:820px;">
-    <div style="margin-bottom:24px;">
-        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
-        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Modifier le poste</h2>
-    </div>
-
-    <form asp-action="Edit" method="post" data-confirm-message="Voulez-vous enregistrer les modifications ?" enctype="multipart/form-data">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="IdPoste" />
-        <div style="background:white; border-radius:12px; padding:28px;">
-            <div>
-                <label asp-for="LibellePoste" style="display:block; margin-bottom:6px;"></label>
-                <input asp-for="LibellePoste" style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;" />
-            </div>
-            <div style="margin-top:12px;">
-                <label asp-for="Description" style="display:block; margin-bottom:6px;"></label>
-                <textarea asp-for="Description" rows="4" style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;"></textarea>
-            </div>
-
-            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
-                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px;">Annuler</a>
-                <button type="submit" style="background:#F57F17; color:white; border:none; border-radius:8px; padding:10px 24px;">Enregistrer les modifications</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@model tontine.MVC.Models.PosteViewModel
+
+@{
+
+    ViewData["Title"] = "Modifier le poste";
+
+}
+
+<div style="max-width:480px;">
+
+    <div style="margin-bottom:24px;">
+
+        <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
+
+        <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Modifier le poste</h2>
+
+    </div>
+
+
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data"
+
+      data-confirm="Voulez-vous enregistrer les modifications de ce poste ?"
+
+      data-confirm-type="edit">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="IdPoste" />
+
+        <div style="background:white; border-radius:12px; padding:28px;">
+
+            <div>
+
+                <label asp-for="LibellePoste" style="display:block; margin-bottom:6px;"></label>
+
+                <input asp-for="LibellePoste" style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;" />
+
+            </div>
+
+            <div style="margin-top:12px;">
+
+                <label asp-for="Description" style="display:block; margin-bottom:6px;"></label>
+
+                <textarea asp-for="Description" rows="4" style="width:100%; padding:10px; border:1.5px solid #E0E0E0; border-radius:8px;"></textarea>
+
+            </div>
+
+
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+
+                <a asp-action="Index" style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px;">Annuler</a>
+
+                <button type="submit" style="background:#F57F17; color:white; border:none; border-radius:8px; padding:10px 24px;">Enregistrer les modifications</button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
 }

@@ -1,0 +1,439 @@
+@model tontine.MVC.Models.LoginViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Connexion";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion &mdash; TontineApp</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Panneau gauche : PHOTO (restauré) ─── */
+        .login-image-panel {
+            display: none;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-image-panel img {
+            width: 100%; height: 100%;
+            object-fit: cover; object-position: center;
+        }
+        .login-image-panel .overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(11,89,64,0.72), rgba(29,158,117,0.4));
+        }
+        .login-image-panel .caption {
+            position: absolute; bottom: 48px; left: 48px; right: 48px;
+        }
+        .login-image-panel .caption h2 {
+            color: white; font-size: 26px; font-weight: 700; margin: 0 0 12px;
+        }
+        .login-image-panel .caption p {
+            color: rgba(255,255,255,0.82); font-size: 15px; line-height: 1.6; margin: 0;
+        }
+
+        /* ── Panneau droit : formulaire ─────────── */
+        .login-form-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(135deg, #0B5940 0%, #0F6E56 50%, #1D9E75 100%);
+        }
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 48px 44px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        }
+
+        .brand { text-align: center; margin-bottom: 32px; }
+
+        /* Espace au-dessus pour que les billets tombent dans la zone visible */
+        .brand-bag-wrap {
+            display: inline-flex;
+            justify-content: center;
+            margin-bottom: 14px;
+            padding-top: 50px;
+            overflow: visible;
+        }
+
+        .brand h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; }
+        .brand p  { font-size: 13px; color: #888780; margin-top: 4px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display:block; font-size:13px; font-weight:500; color:#444; margin-bottom:8px; }
+        .form-group input,
+        .form-group select {
+            width:100%; padding:12px 16px;
+            border:1.5px solid #E0E0E0; border-radius:10px;
+            font-size:14px; outline:none; transition:border-color 0.2s;
+            background:white; appearance:none; -webkit-appearance:none;
+        }
+        .form-group input:focus,
+        .form-group select:focus { border-color: #0F6E56; }
+
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content:''; position:absolute; right:14px; top:50%;
+            transform:translateY(-50%); width:0; height:0;
+            border-left:5px solid transparent; border-right:5px solid transparent;
+            border-top:6px solid #888; pointer-events:none;
+        }
+
+        .error-summary {
+            background:#FFF3F3; border:1px solid #F5C6CB; border-radius:8px;
+            padding:12px 16px; margin-bottom:20px; font-size:13px; color:#C62828;
+        }
+        .field-error { color:#C62828; font-size:12px; margin-top:4px; }
+
+        .btn-login {
+            width:100%; padding:13px;
+            background:linear-gradient(135deg, #0F6E56, #1D9E75);
+            color:white; border:none; border-radius:10px;
+            font-size:15px; font-weight:600; cursor:pointer;
+            box-shadow:0 4px 16px rgba(15,110,86,0.35); transition:opacity 0.2s;
+        }
+        .btn-login:hover { opacity:0.92; }
+        .footer-note { text-align:center; margin-top:24px; font-size:12px; color:#aaa; }
+
+        @@media (min-width: 900px) {
+            .login-image-panel { display: block; }
+            .login-form-panel  { flex-shrink:0; width:auto; min-width:480px; max-width:520px; background:white; }
+            .login-card        { box-shadow:none; padding:0; }
+            body { background: linear-gradient(135deg, #0B5940 0%, #0F6E56 50%, #1D9E75 100%); }
+        }
+
+        /* ══════════════════════════════════════════════════
+           ANIMATION SAC D'ARGENT - Physique réaliste
+           Sac IMMOBILE. Chaque billet a sa propre
+           trajectoire : dérive latérale + rotation +
+           effet "papier dans l'air" (scaleX flip).
+           Durée 3.5 s / billet, 6 billets décalés.
+        ══════════════════════════════════════════════════ */
+
+        /* Billet 1 - dérive gauche, tourne dans le sens antihoraire */
+        @@keyframes b1Fall {
+            0%   { transform: translate(0px,  0px) rotate(  0deg) scaleX( 1.0); opacity:1;   }
+            15%  { transform: translate(-3px, 10px) rotate(-18deg) scaleX( 0.55); opacity:1;   }
+            38%  { transform: translate(-7px, 26px) rotate( -4deg) scaleX(-0.80); opacity:0.9; }
+            65%  { transform: translate(-11px,48px) rotate(-22deg) scaleX( 0.45); opacity:0.6; }
+            100% { transform: translate(-15px,72px) rotate(-30deg) scaleX( 0.2); opacity:0;   }
+        }
+
+        /* Billet 2 - dérive droite, tourne dans le sens horaire */
+        @@keyframes b2Fall {
+            0%   { transform: translate(0px,  0px) rotate(  5deg) scaleX( 1.0); opacity:1;   }
+            20%  { transform: translate( 5px, 13px) rotate( 22deg) scaleX( 0.65); opacity:1;   }
+            45%  { transform: translate( 9px, 31px) rotate(  9deg) scaleX(-0.85); opacity:0.85;}
+            72%  { transform: translate(13px, 54px) rotate( 26deg) scaleX( 0.50); opacity:0.5; }
+            100% { transform: translate(16px, 73px) rotate( 34deg) scaleX( 0.25); opacity:0;  }
+        }
+
+        /* Billet 3 - quasi vertical, flottement central */
+        @@keyframes b3Fall {
+            0%   { transform: translate(0px,  0px) rotate( -3deg) scaleX( 1.0); opacity:1;   }
+            25%  { transform: translate( 4px, 15px) rotate( 14deg) scaleX( 0.50); opacity:1;   }
+            52%  { transform: translate( 2px, 36px) rotate( -9deg) scaleX(-0.72); opacity:0.9; }
+            80%  { transform: translate( 6px, 58px) rotate( 19deg) scaleX( 0.40); opacity:0.5; }
+            100% { transform: translate( 8px, 73px) rotate( 24deg) scaleX( 0.18); opacity:0;  }
+        }
+
+        /* Billet 4 - rebond latéral gauche-droite */
+        @@keyframes b4Fall {
+            0%   { transform: translate(0px,  0px) rotate(  8deg) scaleX( 1.0); opacity:1;   }
+            18%  { transform: translate(-6px, 12px) rotate(-11deg) scaleX( 0.60); opacity:1;   }
+            42%  { transform: translate(-3px, 30px) rotate( 16deg) scaleX(-0.80); opacity:0.9; }
+            70%  { transform: translate(-8px, 51px) rotate( -6deg) scaleX( 0.48); opacity:0.6; }
+            100% { transform: translate(-11px,72px) rotate(-16deg) scaleX( 0.22); opacity:0;  }
+        }
+
+        /* Billet 5 - rotation rapide, dérive droite */
+        @@keyframes b5Fall {
+            0%   { transform: translate(0px,  0px) rotate( -6deg) scaleX( 1.0); opacity:1;   }
+            22%  { transform: translate( 7px, 14px) rotate( 17deg) scaleX( 0.75); opacity:1;   }
+            48%  { transform: translate( 5px, 34px) rotate(-13deg) scaleX(-0.62); opacity:0.85;}
+            76%  { transform: translate(10px, 55px) rotate( 21deg) scaleX( 0.42); opacity:0.5; }
+            100% { transform: translate(13px, 74px) rotate( 30deg) scaleX( 0.20); opacity:0;  }
+        }
+
+        /* Billet 6 - vol lent, grande amplitude */
+        @@keyframes b6Fall {
+            0%   { transform: translate(0px,  0px) rotate(  3deg) scaleX( 1.0); opacity:1;   }
+            28%  { transform: translate(-4px, 17px) rotate(-21deg) scaleX( 0.68); opacity:1;   }
+            55%  { transform: translate(-8px, 37px) rotate(  6deg) scaleX(-0.90); opacity:0.8; }
+            82%  { transform: translate(-5px, 58px) rotate(-19deg) scaleX( 0.50); opacity:0.5; }
+            100% { transform: translate(-8px, 73px) rotate(-26deg) scaleX( 0.24); opacity:0;  }
+        }
+
+        /* Chaque billet a son animation propre, durée 3.5 s */
+        .bill    { animation-duration: 3.5s; animation-timing-function: ease-in; animation-iteration-count: infinite; }
+        .bill.b1 { animation-name: b1Fall; animation-delay:  0.0s; }
+        .bill.b2 { animation-name: b2Fall; animation-delay: -3.0s; }
+        .bill.b3 { animation-name: b3Fall; animation-delay: -2.5s; }
+        .bill.b4 { animation-name: b4Fall; animation-delay: -2.0s; }
+        .bill.b5 { animation-name: b5Fall; animation-delay: -1.5s; }
+        .bill.b6 { animation-name: b6Fall; animation-delay: -1.0s; }
+    </style>
+</head>
+<body>
+
+<!-- ── Panneau gauche : photo restaurée ── -->
+<div class="login-image-panel">
+    <img src="/photo/login.jfif" alt="" />
+    <div class="overlay"></div>
+    <div class="caption">
+        <h2>Gérez vos tontines en toute simplicité</h2>
+        <p>Suivi des cotisations, prêts, versements et membres &mdash; tout en un.</p>
+    </div>
+</div>
+
+<!-- ── Panneau droit : formulaire ── -->
+<div class="login-form-panel">
+    <div class="login-card">
+
+        <div class="brand">
+            <!--
+                SAC D'ARGENT ANIMÉ
+                viewBox "0 0 100 80" = corps du sac
+                overflow="visible"  = les billets peuvent sortir vers le bas
+                Les billets sont positionnés à l'ouverture (y ≈ 8) et tombent vers y ≈ 73
+            -->
+            <div class="brand-bag-wrap">
+                <svg viewBox="0 0 100 80" width="100" height="80"
+                     overflow="visible" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="bodyClip">
+                            <circle cx="50" cy="52" r="27"/>
+                        </clipPath>
+                        <radialGradient id="shine" cx="36%" cy="30%" r="55%">
+                            <stop offset="0%"   stop-color="white" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+
+                    <!-- Ombre -->
+                    <ellipse cx="50" cy="81" rx="26" ry="5" fill="rgba(0,0,0,0.13)"/>
+
+                    <!-- Corps du sac -->
+                    <circle cx="50" cy="52" r="27" fill="#F9A825"/>
+                    <circle cx="50" cy="52" r="27" fill="url(#shine)"/>
+                    <circle cx="50" cy="52" r="27" fill="none" stroke="#E65100" stroke-width="2"/>
+
+                    <!-- Reflet sur le corps -->
+                    <ellipse cx="38" cy="38" rx="9" ry="6"
+                             fill="rgba(255,255,255,0.18)"
+                             transform="rotate(-25 38 38)"/>
+
+                    <!-- Goulot -->
+                    <rect x="41" y="8" width="18" height="30" rx="6" fill="#E65100"/>
+                    <rect x="43" y="10" width="14" height="27" rx="5" fill="#F57F17"/>
+                    <!-- Reflet goulot -->
+                    <rect x="44" y="12" width="5" height="22" rx="3"
+                          fill="rgba(255,255,255,0.18)"/>
+
+                    <!-- Nœud -->
+                    <ellipse cx="50" cy="39" rx="13" ry="6"  fill="#BF360C"/>
+                    <ellipse cx="50" cy="39" rx="9"  rx="9" ry="4" fill="#D84315"/>
+                    <circle  cx="50" cy="39" r="3"           fill="#BF360C"/>
+
+                    <!-- Ouverture du goulot -->
+                    <ellipse cx="50" cy="8"  rx="9" ry="3.5" fill="#D84315"/>
+                    <ellipse cx="50" cy="7.5" rx="6" ry="2"  fill="#BF360C"/>
+
+                    <!-- Signe $ sur le corps -->
+                    <text x="50" y="60" text-anchor="middle"
+                          font-size="22" font-weight="900" font-style="italic"
+                          font-family="Georgia, serif"
+                          fill="rgba(190,80,0,0.35)">$</text>
+
+                    <!--
+                        6 BILLETS - chacun a son animation propre
+                        Design : rectangle billet avec cadre intérieur,
+                        ovale central, signe $, chiffres aux coins
+                    -->
+
+                    <!-- Billet 1 -->
+                    <g class="bill b1" transform="translate(40, 8)">
+                        <rect width="22" height="11" rx="1.5" fill="#2E7D32"/>
+                        <rect x="1" y="1" width="20" height="9" rx="1"
+                              fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.6"/>
+                        <ellipse cx="11" cy="5.5" rx="4" ry="3.2"
+                                 fill="rgba(0,80,0,0.45)" stroke="rgba(255,255,255,0.18)" stroke-width="0.4"/>
+                        <text x="11" y="7" text-anchor="middle"
+                              font-size="4.5" font-weight="bold" fill="rgba(255,255,255,0.95)">$</text>
+                        <text x="2.5" y="4"   font-size="2.2" fill="rgba(255,255,255,0.55)">500</text>
+                        <text x="19.5" y="10" font-size="2.2" fill="rgba(255,255,255,0.55)" text-anchor="end">500</text>
+                        <line x1="2" y1="6.5" x2="5.5" y2="6.5" stroke="rgba(255,255,255,0.18)" stroke-width="0.5"/>
+                        <line x1="16.5" y1="6.5" x2="20" y2="6.5" stroke="rgba(255,255,255,0.18)" stroke-width="0.5"/>
+                    </g>
+
+                    <!-- Billet 2 -->
+                    <g class="bill b2" transform="translate(41, 8)">
+                        <rect width="20" height="10" rx="1.5" fill="#1B5E20"/>
+                        <rect x="1" y="1" width="18" height="8" rx="1"
+                              fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="0.5"/>
+                        <ellipse cx="10" cy="5" rx="3.5" ry="2.8"
+                                 fill="rgba(0,70,0,0.5)" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+                        <text x="10" y="6.5" text-anchor="middle"
+                              font-size="4" font-weight="bold" fill="rgba(255,255,255,0.9)">$</text>
+                        <text x="2" y="3.8"  font-size="2" fill="rgba(255,255,255,0.5)">1000</text>
+                        <text x="18" y="9.5" font-size="2" fill="rgba(255,255,255,0.5)" text-anchor="end">1000</text>
+                    </g>
+
+                    <!-- Billet 3 -->
+                    <g class="bill b3" transform="translate(42, 8)">
+                        <rect width="21" height="10.5" rx="1.5" fill="#388E3C"/>
+                        <rect x="1" y="1" width="19" height="8.5" rx="1"
+                              fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.5"/>
+                        <ellipse cx="10.5" cy="5.2" rx="3.8" ry="3"
+                                 fill="rgba(0,90,0,0.4)" stroke="rgba(255,255,255,0.18)" stroke-width="0.4"/>
+                        <text x="10.5" y="6.8" text-anchor="middle"
+                              font-size="4.2" font-weight="bold" fill="white">$</text>
+                        <text x="2" y="4"    font-size="2.1" fill="rgba(255,255,255,0.55)">500</text>
+                        <text x="19" y="10"  font-size="2.1" fill="rgba(255,255,255,0.55)" text-anchor="end">500</text>
+                        <line x1="2" y1="6" x2="5" y2="6"   stroke="rgba(255,255,255,0.2)" stroke-width="0.4"/>
+                        <line x1="16" y1="6" x2="19" y2="6" stroke="rgba(255,255,255,0.2)" stroke-width="0.4"/>
+                    </g>
+
+                    <!-- Billet 4 -->
+                    <g class="bill b4" transform="translate(40, 8)">
+                        <rect width="22" height="11" rx="1.5" fill="#2E7D32"/>
+                        <rect x="1" y="1" width="20" height="9" rx="1"
+                              fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.6"/>
+                        <ellipse cx="11" cy="5.5" rx="4" ry="3.2"
+                                 fill="rgba(0,80,0,0.45)" stroke="rgba(255,255,255,0.18)" stroke-width="0.4"/>
+                        <text x="11" y="7" text-anchor="middle"
+                              font-size="4.5" font-weight="bold" fill="rgba(255,255,255,0.95)">$</text>
+                        <text x="2.5" y="4"    font-size="2.2" fill="rgba(255,255,255,0.55)">500</text>
+                        <text x="19.5" y="10"  font-size="2.2" fill="rgba(255,255,255,0.55)" text-anchor="end">500</text>
+                    </g>
+
+                    <!-- Billet 5 -->
+                    <g class="bill b5" transform="translate(42, 8)">
+                        <rect width="19" height="10" rx="1.5" fill="#1B5E20"/>
+                        <rect x="1" y="1" width="17" height="8" rx="1"
+                              fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.5"/>
+                        <ellipse cx="9.5" cy="5" rx="3.3" ry="2.7"
+                                 fill="rgba(0,70,0,0.5)" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+                        <text x="9.5" y="6.4" text-anchor="middle"
+                              font-size="4" font-weight="bold" fill="rgba(255,255,255,0.9)">$</text>
+                    </g>
+
+                    <!-- Billet 6 -->
+                    <g class="bill b6" transform="translate(41, 8)">
+                        <rect width="21" height="11" rx="1.5" fill="#388E3C"/>
+                        <rect x="1" y="1" width="19" height="9" rx="1"
+                              fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="0.5"/>
+                        <ellipse cx="10.5" cy="5.5" rx="3.8" ry="3.1"
+                                 fill="rgba(0,85,0,0.42)" stroke="rgba(255,255,255,0.16)" stroke-width="0.4"/>
+                        <text x="10.5" y="7" text-anchor="middle"
+                              font-size="4.3" font-weight="bold" fill="white">$</text>
+                        <text x="2" y="4"    font-size="2.1" fill="rgba(255,255,255,0.52)">1000</text>
+                        <text x="19" y="10"  font-size="2.1" fill="rgba(255,255,255,0.52)" text-anchor="end">1000</text>
+                        <line x1="2" y1="6.3" x2="5" y2="6.3"   stroke="rgba(255,255,255,0.18)" stroke-width="0.4"/>
+                        <line x1="15.5" y1="6.3" x2="19" y2="6.3" stroke="rgba(255,255,255,0.18)" stroke-width="0.4"/>
+                    </g>
+                </svg>
+            </div>
+
+            <h1>TontineApp</h1>
+            <p>Système de gestion des tontines</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="error-summary">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div>@error.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <form asp-controller="Auth" asp-action="Login" method="post"
+              asp-route-returnUrl="@ViewData["ReturnUrl"]">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="Nom"></label>
+                <input asp-for="Nom" type="text"
+                       placeholder="ex : morelle" autocomplete="username" />
+                <span asp-validation-for="Nom" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MotDePasse"></label>
+                <div style="position:relative;">
+                    <input id="pwd-input" asp-for="MotDePasse" type="password"
+                           placeholder="Votre mot de passe"
+                           autocomplete="current-password"
+                           style="padding-right:44px;" />
+                    <button type="button" onclick="togglePwd()" tabindex="-1"
+                            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+                                   background:none;border:none;cursor:pointer;color:#888;
+                                   padding:0;display:flex;align-items:center;">
+                        <i id="pwd-icon" data-lucide="eye" style="width:18px;height:18px;"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="MotDePasse" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdCycle"></label>
+                <div class="select-wrapper">
+                    <select asp-for="IdCycle">
+                        <option value="">-- Sélectionner un cycle --</option>
+                        @foreach (var cycle in (ViewData["Cycles"] as List<tontine.MVC.Models.CycleViewModel> ?? new()))
+                        {
+                            <option value="@cycle.IdCycle">@cycle.NomCycle (@cycle.Statut)</option>
+                        }
+                    </select>
+                </div>
+                <span asp-validation-for="IdCycle" class="field-error"></span>
+            </div>
+
+            <button type="submit" class="btn-login">Se connecter</button>
+        </form>
+
+        <p class="footer-note">&copy; 2026 TontineApp &mdash; v1.0</p>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/js/lucide.min.js"></script>
+<script>
+    lucide.createIcons();
+    function togglePwd() {
+        var input = document.getElementById('pwd-input');
+        var icon  = document.getElementById('pwd-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.setAttribute('data-lucide', 'eye-off');
+        } else {
+            input.type = 'password';
+            icon.setAttribute('data-lucide', 'eye');
+        }
+        lucide.createIcons();
+    }
+</script>
+</body>
+</html>

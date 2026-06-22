@@ -1,0 +1,229 @@
+@model tontine.MVC.Models.LivreDeCompteViewModel
+@{
+    ViewData["Title"] = "Livre de compte";
+    var tontines  = ViewBag.Tontines as List<tontine.MVC.Models.TontineViewModel> ?? new();
+    int idTontine = ViewBag.IdTontine ?? 0;
+}
+
+<style>
+    .kpi-row   { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+    .kpi-card  { background:white; border-radius:12px; padding:18px 20px;
+                 box-shadow:0 1px 4px rgba(0,0,0,0.07); display:flex; align-items:center; gap:14px; }
+    .kpi-icon  { width:46px; height:46px; border-radius:12px;
+                 display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .kpi-val   { font-size:22px; font-weight:700; color:#1a1a1a; line-height:1; }
+    .kpi-lbl   { font-size:12px; color:#888780; margin-top:3px; }
+
+    .table-card { background:white; border-radius:12px; overflow:hidden;
+                  box-shadow:0 1px 4px rgba(0,0,0,0.07); }
+    table  { width:100%; border-collapse:collapse; }
+    thead  { background:#F8FDF9; position:sticky; top:0; z-index:1; }
+    th     { padding:12px 16px; font-size:12px; font-weight:600; color:#444;
+             text-align:left; text-transform:uppercase; letter-spacing:0.5px;
+             border-bottom:1.5px solid #E1F5EE; }
+    td     { padding:13px 16px; font-size:13.5px; color:#333; border-bottom:1px solid #F4F4F2; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#FAFFF9; }
+
+    .type-depot  { color:#0F6E56; font-weight:700; }
+    .type-retrait{ color:#C62828; font-weight:700; }
+
+    .solde-pos { color:#0F6E56; font-weight:700; }
+    .solde-neg { color:#C62828; font-weight:700; }
+
+    .mode-badge { display:inline-flex;align-items:center;gap:4px;
+                  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
+
+    .empty-msg { text-align:center;padding:60px;color:#888780;font-size:14px; }
+
+    .solde-banner { background:linear-gradient(135deg,#0F6E56 0%,#1A8C6E 100%);
+                    color:white;border-radius:12px;padding:20px 28px;
+                    display:flex;align-items:center;justify-content:space-between;
+                    margin-bottom:24px;box-shadow:0 4px 16px rgba(15,110,86,0.3); }
+</style>
+
+<div style="background-image:url('/photo/cotisations.png');background-size:cover;background-position:center;margin:-26px -28px 24px -28px;position:relative;overflow:hidden;min-height:90px;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,20,140,0.88) 0%,rgba(106,27,154,0.82) 60%,rgba(142,36,170,0.70) 100%);"></div>
+    <div style="position:absolute;inset:0;padding:20px 36px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;">Finance - Transparence</div>
+        <h2 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px 0;">Livre de compte</h2>
+        <p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">Dépôts, retraits et solde en temps réel</p>
+    </div>
+</div>
+
+<!-- Sélecteur tontine + retour -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <label style="font-size:13px;font-weight:600;color:#444;">Tontine :</label>
+        <select id="sel-tontine" onchange="changerTontine(this.value)"
+                style="padding:8px 14px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;outline:none;">
+            @foreach (var t in tontines)
+            {
+                <option value="@t.IdTontine" selected="@(t.IdTontine == idTontine ? "selected" : null)">@t.Libelle</option>
+            }
+        </select>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <button onclick="exportCSV()" style="background:#1565C0;color:white;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="download" style="width:14px;height:14px;"></i> CSV
+        </button>
+        <a asp-action="Index" style="color:#0F6E56;font-size:13px;font-weight:500;text-decoration:none;display:flex;align-items:center;">← Retour aux cotisations</a>
+    </div>
+</div>
+
+<!-- Solde banner -->
+<div class="solde-banner" id="solde-banner">
+    <div>
+        <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">Solde disponible</div>
+        <div style="font-size:32px;font-weight:800;">@Model.SoldeActuel.ToString("N0") FCFA</div>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:12px;opacity:0.75;margin-bottom:6px;">Tontine &amp; Cycle actuel</div>
+        <div style="font-size:13px;font-weight:600;opacity:0.9;">@ViewData["CycleNom"]</div>
+    </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row" id="kpis">
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#E8F5E9;color:#388E3C;">↑</div>
+        <div><div class="kpi-val" id="kpi-depots">@Model.TotalDepots.ToString("N0")</div><div class="kpi-lbl">Total dépôts (FCFA)</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#FFEBEE;color:#C62828;">↓</div>
+        <div><div class="kpi-val" id="kpi-retraits">@Model.TotalRetraits.ToString("N0")</div><div class="kpi-lbl">Total retraits (FCFA)</div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background:#E3F2FD;color:#1565C0;">⚖</div>
+        <div><div class="kpi-val" id="kpi-ops">@Model.Lignes.Count</div><div class="kpi-lbl">Opérations</div></div>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="table-card" id="livre-table">
+    @if (!Model.Lignes.Any())
+    {
+        <div class="empty-msg">Aucune opération enregistrée pour cette tontine.</div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Membre</th>
+                    <th>Description</th>
+                    <th>Mode</th>
+                    <th style="text-align:right;">Montant</th>
+                    <th style="text-align:right;">Solde</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-livre">
+                @foreach (var l in Model.Lignes)
+                {
+                    var isDepot = l.Type == "Dépôt";
+                    var modeIcon = l.ModePaiement switch {
+                        "Cash"         => ("💵", "#E8F5E9", "#2E7D32"),
+                        "MTN"          => ("📱", "#FFFDE7", "#F57F17"),
+                        "Orange Money" => ("🟠", "#FFF3E0", "#E65100"),
+                        "Espèces"      => ("💵", "#E8F5E9", "#2E7D32"),
+                        _              => ("💳", "#F3E5F5", "#6A1B9A")
+                    };
+                    <tr>
+                        <td style="color:#666;">@l.Date.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            <span class="@(isDepot ? "type-depot" : "type-retrait")">
+                                @(isDepot ? "▲ Dépôt" : "▼ Retrait")
+                            </span>
+                        </td>
+                        <td style="font-weight:500;">@l.NomMembre</td>
+                        <td style="color:#666;">@l.Description</td>
+                        <td>
+                            <span class="mode-badge" style="background:@modeIcon.Item2;color:@modeIcon.Item3;">
+                                @modeIcon.Item1 @l.ModePaiement
+                            </span>
+                        </td>
+                        <td style="text-align:right;font-weight:700;" class="@(isDepot ? "type-depot" : "type-retrait")">
+                            @(isDepot ? "+" : "−")@l.Montant.ToString("N0")
+                        </td>
+                        <td style="text-align:right;" class="@(l.Solde >= 0 ? "solde-pos" : "solde-neg")">
+                            @l.Solde.ToString("N0") FCFA
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Scripts {
+<script>
+var _livreData = null;
+
+function changerTontine(idTontine) {
+    fetch('@Url.Action("LivreData", "Cotisation")?idTontine=' + idTontine)
+        .then(r => r.json())
+        .then(data => {
+            _livreData = data;
+            renderLivre(data);
+        });
+}
+
+function renderLivre(data) {
+    document.getElementById('kpi-depots').textContent   = Number(data.totalDepots   || 0).toLocaleString('fr-FR');
+    document.getElementById('kpi-retraits').textContent = Number(data.totalRetraits || 0).toLocaleString('fr-FR');
+    document.getElementById('kpi-ops').textContent      = (data.lignes || []).length;
+
+    var banner = document.getElementById('solde-banner');
+    var solde  = data.soldeActuel || 0;
+    banner.querySelector('div:first-child div:last-child').textContent = Number(solde).toLocaleString('fr-FR') + ' FCFA';
+
+    var tbody = document.getElementById('tbody-livre');
+    if (!tbody) {
+        document.getElementById('livre-table').innerHTML = renderTable(data.lignes || []);
+        lucide.createIcons();
+        return;
+    }
+    tbody.innerHTML = (data.lignes || []).map(function(l) {
+        var isDepot = l.type === 'Dépôt';
+        var modeIcon = { 'Cash': '💵', 'MTN': '📱', 'Orange Money': '🟠', 'Espèces': '💵' }[l.modePaiement] || '💳';
+        var modeBg   = { 'Cash': '#E8F5E9', 'MTN': '#FFFDE7', 'Orange Money': '#FFF3E0', 'Espèces': '#E8F5E9' }[l.modePaiement] || '#F3E5F5';
+        var modeClr  = { 'Cash': '#2E7D32', 'MTN': '#F57F17', 'Orange Money': '#E65100', 'Espèces': '#2E7D32' }[l.modePaiement] || '#6A1B9A';
+        var d = new Date(l.date);
+        var dateStr = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'}) + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+        return '<tr>' +
+            '<td style="color:#666;">' + dateStr + '</td>' +
+            '<td><span class="' + (isDepot ? 'type-depot' : 'type-retrait') + '">' + (isDepot ? '▲ Dépôt' : '▼ Retrait') + '</span></td>' +
+            '<td style="font-weight:500;">' + (l.nomMembre || '') + '</td>' +
+            '<td style="color:#666;">' + (l.description || '') + '</td>' +
+            '<td><span class="mode-badge" style="background:' + modeBg + ';color:' + modeClr + ';">' + modeIcon + ' ' + (l.modePaiement || '') + '</span></td>' +
+            '<td style="text-align:right;font-weight:700;" class="' + (isDepot ? 'type-depot' : 'type-retrait') + '">' + (isDepot ? '+' : '−') + Number(l.montant).toLocaleString('fr-FR') + '</td>' +
+            '<td style="text-align:right;font-weight:700;color:' + (l.solde >= 0 ? '#0F6E56' : '#C62828') + ';">' + Number(l.solde).toLocaleString('fr-FR') + ' FCFA</td>' +
+            '</tr>';
+    }).join('');
+}
+
+function exportCSV() {
+    var rows = [['Date','Type','Membre','Description','Mode','Montant','Solde']];
+    var lignes = _livreData ? _livreData.lignes : @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Lignes));
+    (lignes || []).forEach(function(l) {
+        var d = new Date(l.date || l.Date);
+        rows.push([
+            d.toLocaleDateString('fr-FR'),
+            l.type || l.Type,
+            l.nomMembre || l.NomMembre,
+            l.description || l.Description,
+            l.modePaiement || l.ModePaiement,
+            l.montant || l.Montant,
+            l.solde || l.Solde
+        ]);
+    });
+    var csv = rows.map(r => r.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')).join('\n');
+    var a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,﻿' + encodeURIComponent(csv);
+    a.download = 'livre-de-compte.csv';
+    a.click();
+}
+</script>
+}
