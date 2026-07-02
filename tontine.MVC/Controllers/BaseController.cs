@@ -13,6 +13,12 @@ namespace tontine.MVC.Controllers
                 context.Result = RedirectToAction("Login", "Auth");
                 return;
             }
+            // Les membres ont leur propre espace — on les redirige vers le portail
+            if (HttpContext.Session.GetString("user_role") == "Membre")
+            {
+                context.Result = RedirectToAction("Index", "PortailMembre");
+                return;
+            }
             ViewData["CycleId"]  = CycleId;
             ViewData["CycleNom"] = CycleNom;
             base.OnActionExecuting(context);
@@ -21,15 +27,15 @@ namespace tontine.MVC.Controllers
         protected int CycleId => int.Parse(HttpContext.Session.GetString("cycle_id")!);
         protected string CycleNom => HttpContext.Session.GetString("cycle_nom") ?? "";
 
-        protected void SetBreadcrumbs(params (string Label, string Controller, string Action, bool IsActive)[] breadcrumbs)
+        protected void SetBreadcrumbs(params (string Label, string? Controller, string? Action, bool IsActive)[] breadcrumbs)
         {
-            ViewData["Breadcrumbs"] = new List<(string, string, string, bool)>(breadcrumbs);
+            ViewData["Breadcrumbs"] = new List<(string, string?, string?, bool)>(breadcrumbs);
         }
 
-        protected (string Label, string, string, bool) BreadcrumbItem(
+        protected (string Label, string?, string?, bool) BreadcrumbItem(
             string label,
-            string controller = null,
-            string action = null,
+            string? controller = null,
+            string? action = null,
             bool isActive = false)
         {
             return (label, controller, action, isActive);

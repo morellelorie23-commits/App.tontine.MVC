@@ -1,0 +1,116 @@
+@model tontine.MVC.Models.FondsSolidariteViewModel
+@{
+    ViewData["Title"] = "Modifier le fonds";
+}
+
+<div style="margin-bottom:24px;">
+    <a asp-action="Detail" asp-route-id="@Model.IdFonds"
+       style="color:#0F6E56;font-size:13px;text-decoration:none;font-weight:500;">
+        ← Retour au détail
+    </a>
+    <h2 style="margin:8px 0 4px;font-size:24px;font-weight:700;color:#1a1a1a;">Modifier le fonds</h2>
+    <p style="margin:0;color:#888780;font-size:14px;">@Model.Nom</p>
+</div>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdFonds" />
+    <input type="hidden" asp-for="IdCycle" />
+
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;">
+
+        <!-- Colonne principale -->
+        <div>
+            <div style="background:white;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);">
+
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+                    <div style="width:4px;height:22px;background:#0F6E56;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.6px;">Informations du fonds</span>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <label asp-for="Nom" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <input asp-for="Nom"
+                           style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                  font-size:15px;outline:none;color:#111;"
+                           onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                           onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'" />
+                    <span asp-validation-for="Nom" style="color:#DC2626;font-size:12px;display:block;margin-top:4px;"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Description" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <textarea asp-for="Description" rows="7"
+                              style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                     font-size:14px;outline:none;resize:vertical;color:#111;line-height:1.6;"
+                              onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                              onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne latérale -->
+        <div>
+
+            <!-- Cotisation -->
+            <div style="background:white;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+                    <div style="width:4px;height:22px;background:#1D9E75;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#1D9E75;text-transform:uppercase;letter-spacing:0.6px;">Cotisation par membre</span>
+                </div>
+
+                <div>
+                    <label asp-for="MontantParMembre" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <div style="display:flex;align-items:center;border:1.5px solid #E5E7EB;border-radius:10px;overflow:hidden;"
+                         id="montant-wrap">
+                        <input asp-for="MontantParMembre" type="number" min="0" step="500"
+                               style="flex:1;padding:12px 16px;border:none;font-size:22px;font-weight:700;
+                                      outline:none;color:#065F46;background:white;min-width:0;"
+                               onfocus="document.getElementById('montant-wrap').style.borderColor='#0F6E56';document.getElementById('montant-wrap').style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                               onblur="document.getElementById('montant-wrap').style.borderColor='#E5E7EB';document.getElementById('montant-wrap').style.boxShadow='none'" />
+                        <span style="padding:0 16px;background:#F9FAFB;color:#6B7280;font-size:13px;font-weight:700;
+                                     border-left:1.5px solid #E5E7EB;align-self:stretch;display:flex;align-items:center;">
+                            FCFA
+                        </span>
+                    </div>
+                    <p style="margin:8px 0 0;font-size:12px;color:#6B7280;">Mettez 0 si les contributions sont libres.</p>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <div style="background:#F0FDF4;border:1.5px solid #6EE7B7;border-radius:12px;padding:20px;">
+                <div style="font-size:12px;font-weight:700;color:#065F46;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:14px;">État du fonds</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:20px;font-weight:800;color:#065F46;">@Model.TotalCollecte.ToString("N0")</div>
+                        <div style="font-size:11px;color:#6B7280;margin-top:2px;">Collecté (FCFA)</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:20px;font-weight:800;color:@(Model.Solde >= 0 ? "#065F46" : "#DC2626");">@Model.Solde.ToString("N0")</div>
+                        <div style="font-size:11px;color:#6B7280;margin-top:2px;">Solde (FCFA)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre d'actions -->
+    <div style="background:white;border-radius:12px;padding:20px 28px;margin-top:8px;
+                box-shadow:0 1px 4px rgba(0,0,0,0.08);display:flex;justify-content:flex-end;gap:12px;align-items:center;">
+        <a asp-action="Detail" asp-route-id="@Model.IdFonds"
+           style="background:white;color:#5F5E5A;border:1.5px solid #D1D5DB;border-radius:10px;
+                  padding:11px 28px;font-size:14px;text-decoration:none;font-weight:600;">
+            Annuler
+        </a>
+        <button type="submit"
+                style="background:linear-gradient(135deg,#D97706,#F59E0B);color:white;border:none;
+                       border-radius:10px;padding:11px 32px;font-size:14px;font-weight:700;
+                       cursor:pointer;box-shadow:0 2px 8px rgba(217,119,6,0.35);">
+            ✓ Enregistrer les modifications
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

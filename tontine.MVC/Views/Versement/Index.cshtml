@@ -147,6 +147,10 @@
                onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
 
         <button type="button" onclick="pagerVer.csv(['Membre','Tontine','Cycle','Montant brut','Déduction','Commission','Net encaissé','Date','Notes'],function(r){var c=r.querySelectorAll('td');return[c[0].textContent.trim(),c[1].textContent.trim(),c[2].textContent.trim(),c[3].textContent.trim(),c[4].textContent.trim(),c[5].textContent.trim(),c[6].textContent.trim(),c[7].textContent.trim(),c[8].textContent.trim()]},'versements')" style="background:#1565C0;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="download" style="width:14px;height:14px;"></i> CSV</button>
+        <a asp-action="ExportExcel"
+           style="background:#1B5E20;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i> Excel
+        </a>
         <a asp-action="Create" class="btn-add">+ Nouveau versement</a>
 
     </div>

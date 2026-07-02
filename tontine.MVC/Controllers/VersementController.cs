@@ -16,11 +16,12 @@ namespace tontine.MVC.Controllers
         private readonly IMembreCycleTontineService  _mct;
         private readonly ICotisationService          _cotisations;
         private readonly IPretService                _prets;
+        private readonly ExcelService                _excel;
 
         public VersementController(IVersementService service, IMembreService membres,
                                     ITontineService tontines, ICycleService cycles,
                                     IMembreCycleTontineService mct, ICotisationService cotisations,
-                                    IPretService prets)
+                                    IPretService prets, ExcelService excel)
         {
             _service     = service;
             _membres     = membres;
@@ -29,6 +30,7 @@ namespace tontine.MVC.Controllers
             _mct         = mct;
             _cotisations = cotisations;
             _prets       = prets;
+            _excel       = excel;
         }
 
         public async Task<IActionResult> Index()
@@ -165,6 +167,17 @@ namespace tontine.MVC.Controllers
             ViewData["CotisationsCycleJson"] = JsonSerializer.Serialize(cotisationsCycle, opts);
             ViewData["PretsActifsJson"]      = JsonSerializer.Serialize(pretsActifs, opts);
             ViewData["TontinesJson"]         = JsonSerializer.Serialize(tontinesSimples, opts);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportExcel()
+        {
+            var list  = await _service.GetAllAsync();
+            var donnees = list.Where(v => v.IdCycle == CycleId).ToList();
+            var bytes = _excel.ExporterVersements(donnees, CycleNom);
+            return File(bytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"versements-{CycleNom}-{DateTime.Now:yyyyMMdd}.xlsx");
         }
     }
 }

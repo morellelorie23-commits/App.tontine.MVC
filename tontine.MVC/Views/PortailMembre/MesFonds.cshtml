@@ -1,0 +1,144 @@
+@model List<tontine.MVC.Models.FondsSolidariteViewModel>
+@{
+    Layout = "~/Views/Shared/_LayoutMembre.cshtml";
+    ViewData["Title"] = "Fonds de solidarité";
+    var mesDemandes = (Dictionary<int, List<tontine.MVC.Models.DemandeAideViewModel>>)ViewBag.MesDemandes;
+}
+
+<div style="margin-bottom:28px;">
+    <h2 style="font-size:22px;font-weight:700;color:#1a1a1a;margin:0 0 4px;">Fonds de solidarité</h2>
+    <p style="margin:0;color:#6B7280;font-size:14px;">Consultez les fonds disponibles et soumettez une demande d'aide si vous en avez besoin.</p>
+</div>
+
+@if (TempData["SuccesFonds"] != null)
+{
+    <div style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:12px;padding:16px 20px;
+                display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+        <svg style="width:20px;height:20px;color:#065F46;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span style="font-size:14px;color:#065F46;font-weight:500;">@TempData["SuccesFonds"]</span>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div style="text-align:center;padding:60px 20px;background:white;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <svg style="width:48px;height:48px;color:#D1D5DB;margin:0 auto 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>
+        <p style="color:#6B7280;font-size:15px;font-weight:500;">Aucun fonds de solidarité disponible pour ce cycle.</p>
+    </div>
+}
+else
+{
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;">
+        @foreach (var f in Model)
+        {
+            var mesReqs = mesDemandes.TryGetValue(f.IdFonds, out var r) ? r : new();
+            var derniereReq = mesReqs.OrderByDescending(d => d.DateDemande).FirstOrDefault();
+
+            var (statBg, statClr, statTxt) = derniereReq?.Statut switch {
+                "En attente" => ("#FEF3C7","#92400E","En attente de décision"),
+                "Approuvé"   => ("#D1FAE5","#065F46","Approuvée"),
+                "Payé"       => ("#DBEAFE","#1E40AF","Payée"),
+                "Rejeté"     => ("#FEE2E2","#991B1B","Rejetée"),
+                _            => ("","","")
+            };
+
+            <div class="fonds-card">
+
+                <!-- En-tête coloré -->
+                <div style="background:linear-gradient(135deg,#0F6E56,#1D9E75);padding:20px 24px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div style="width:42px;height:42px;background:rgba(255,255,255,0.2);border-radius:10px;
+                                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg style="width:22px;height:22px;color:white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </div>
+                        @if (f.Solde > 0)
+                        {
+                            <span style="background:rgba(255,255,255,0.2);color:white;font-size:11px;font-weight:700;
+                                         padding:4px 10px;border-radius:20px;">
+                                @f.Solde.ToString("N0") FCFA dispo.
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="background:rgba(220,38,38,0.3);color:#FCA5A5;font-size:11px;font-weight:700;
+                                         padding:4px 10px;border-radius:20px;">
+                                Fonds vide
+                            </span>
+                        }
+                    </div>
+                    <h3 style="color:white;font-size:16px;font-weight:700;margin:14px 0 0;line-height:1.3;">@f.Nom</h3>
+                </div>
+
+                <!-- Corps -->
+                <div style="padding:20px 24px;flex:1;display:flex;flex-direction:column;gap:16px;">
+
+                    @if (!string.IsNullOrEmpty(f.Description))
+                    {
+                        <p style="font-size:13px;color:#6B7280;line-height:1.6;margin:0;">
+                            @(f.Description!.Length > 140 ? f.Description[..137] + "…" : f.Description)
+                        </p>
+                    }
+
+                    <!-- Stats -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                        <div style="background:#F9FAFB;border-radius:8px;padding:10px 14px;">
+                            <div style="font-size:16px;font-weight:700;color:#0F6E56;">@f.TotalCollecte.ToString("N0")</div>
+                            <div style="font-size:11px;color:#9CA3AF;">FCFA collectés</div>
+                        </div>
+                        <div style="background:#F9FAFB;border-radius:8px;padding:10px 14px;">
+                            <div style="font-size:16px;font-weight:700;color:#D97706;">@f.NombreDemandesEnAttente</div>
+                            <div style="font-size:11px;color:#9CA3AF;">Demande(s) en attente</div>
+                        </div>
+                    </div>
+
+                    <!-- Statut de MA demande -->
+                    @if (derniereReq != null)
+                    {
+                        <div style="background:@statBg;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
+                            <div>
+                                <div style="font-size:12px;color:@statClr;font-weight:700;">Votre demande : @statTxt</div>
+                                <div style="font-size:12px;color:@statClr;opacity:0.8;margin-top:2px;">
+                                    @derniereReq.MontantDemande.ToString("N0") FCFA demandés
+                                    @if (derniereReq.MontantAccorde > 0)
+                                    {
+                                        <span> — @derniereReq.MontantAccorde.ToString("N0") FCFA accordés</span>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(derniereReq.NotesDecision))
+                                {
+                                    <div style="font-size:11px;color:@statClr;opacity:0.7;margin-top:4px;font-style:italic;">
+                                        "@derniereReq.NotesDecision"
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Action -->
+                    <div style="margin-top:auto;">
+                        @if (derniereReq?.Statut == "En attente")
+                        {
+                            <div style="background:#FEF3C7;border-radius:10px;padding:10px 14px;font-size:13px;color:#92400E;text-align:center;">
+                                Demande en cours d'examen
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-action="DemanderAide" asp-route-idFonds="@f.IdFonds"
+                               class="btn-pm btn-pm-green" style="display:flex;justify-content:center;">
+                                @(derniereReq == null ? "Demander une aide" : "Soumettre une nouvelle demande")
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

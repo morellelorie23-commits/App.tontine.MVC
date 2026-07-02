@@ -37,5 +37,8 @@ namespace tontine.MVC.Models
 
         [Display(Name = "Photo de profil")]
         public IFormFile? PhotoFile { get; set; }
+
+        [Display(Name = "Membre lié (portail membre)")]
+        public int? IdMembre { get; set; }
     }
 }

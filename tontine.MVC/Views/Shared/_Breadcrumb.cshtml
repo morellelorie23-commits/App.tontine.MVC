@@ -1,6 +1,6 @@
 @{
-    var breadcrumbs = ViewData["Breadcrumbs"] as List<(string Label, string Controller, string Action, bool IsActive)>
-                      ?? new List<(string, string, string, bool)>();
+    var breadcrumbs = ViewData["Breadcrumbs"] as List<(string Label, string? Controller, string? Action, bool IsActive)>
+                      ?? new List<(string, string?, string?, bool)>();
 }
 
 @if (breadcrumbs.Count > 0)

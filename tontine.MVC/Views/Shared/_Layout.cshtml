@@ -15,6 +15,7 @@
     <link rel="manifest" href="/manifest.json" />
 
     <title>@ViewData["Title"] - Tontine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
@@ -36,7 +37,7 @@
 
         body {
 
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
 
             background: #F4F6F9;
 
@@ -827,6 +828,9 @@
                 var isSecurite = ctrl == "Compte" || ctrl == "Journal" || ctrl == "Role";
 
                 var isReunion = ctrl == "Reunion";
+                var isCalendrier = ctrl == "Calendrier";
+                var isFondsSolidarite = ctrl == "FondsSolidarite";
+                var isLitige = ctrl == "Litige";
 
             }
 
@@ -1083,6 +1087,28 @@
 
 
 
+            <!-- Notifications -->
+
+            <div style="padding:4px 0;">
+
+                <a class="menu-item @(ctrl == "Notification" ? "active" : "")"
+                   asp-controller="Notification" asp-action="Index">
+
+                    <i data-lucide="bell" style="width:17px;height:17px;flex-shrink:0;"></i>
+
+                    <span>Notifications</span>
+
+                    <span id="notif-badge-menu"
+                          style="display:none;margin-left:auto;background:#C62828;color:white;
+                                 font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;
+                                 min-width:18px;text-align:center;"></span>
+
+                </a>
+
+            </div>
+
+
+
             <!-- Réunions -->
 
             <div style="padding:4px 0;">
@@ -1096,6 +1122,66 @@
                     </svg>
 
                     <span>Réunions</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Calendrier des versements -->
+
+            <div style="padding:4px 0;">
+
+                <a class="menu-item @(isCalendrier ? "active" : "")"
+                   asp-controller="Calendrier" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+
+                    <span>Calendrier versements</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Litiges & Exclusions -->
+
+            <div style="padding:4px 0;">
+
+                <a class="menu-item @(isLitige ? "active" : "")"
+                   asp-controller="Litige" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+
+                    <span>Litiges & Exclusions</span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Fonds de solidarité -->
+
+            <div style="padding:4px 0;">
+
+                <a class="menu-item @(isFondsSolidarite ? "active" : "")"
+                   asp-controller="FondsSolidarite" asp-action="Index">
+
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+
+                    <span>Fonds de solidarité</span>
 
                 </a>
 
@@ -1464,6 +1550,23 @@
                     </div>
                 }
 
+                <!-- Cloche notifications -->
+                <a asp-controller="Notification" asp-action="Index"
+                   id="notif-bell"
+                   style="position:relative;display:flex;align-items:center;justify-content:center;
+                          width:36px;height:36px;border-radius:50%;background:#F4F6F9;
+                          text-decoration:none;transition:background 0.2s;"
+                   title="Notifications"
+                   onmouseover="this.style.background='#E6F4EE'" onmouseout="this.style.background='#F4F6F9'">
+                    <i data-lucide="bell" style="width:17px;height:17px;color:#555;"></i>
+                    <span id="notif-badge"
+                          style="display:none;position:absolute;top:0;right:0;
+                                 background:#C62828;color:white;font-size:9px;font-weight:700;
+                                 min-width:16px;height:16px;border-radius:8px;
+                                 padding:0 4px;line-height:16px;text-align:center;
+                                 border:2px solid white;"></span>
+                </a>
+
                 <!-- Sélecteur de langue -->
 
                 <select id="language-selector" onchange="window.onLanguageChange(this)" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #0F6E56; background: #F0F0F0; font-size: 12px; cursor: pointer;">
@@ -1705,6 +1808,21 @@
         }
 
 
+
+        // Badge notifications
+        (function() {
+            fetch('@Url.Action("Count", "Notification")')
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(data) {
+                    if (!data || data.count <= 0) return;
+                    var badge  = document.getElementById('notif-badge');
+                    var badge2 = document.getElementById('notif-badge-menu');
+                    var text   = data.count > 99 ? '99+' : String(data.count);
+                    if (badge)  { badge.textContent  = text; badge.style.display  = 'block'; }
+                    if (badge2) { badge2.textContent = text; badge2.style.display = 'inline-block'; }
+                })
+                .catch(function() {});
+        })();
 
         // Badge alertes menu
 

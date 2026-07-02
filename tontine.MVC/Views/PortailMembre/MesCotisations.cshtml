@@ -1,0 +1,76 @@
+@model List<tontine.MVC.Models.CotisationViewModel>
+@{ Layout = "~/Views/Shared/_LayoutMembre.cshtml"; ViewData["Title"] = "Mes cotisations"; string F(decimal v) => v.ToString("N0") + " FCFA"; }
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+    <div>
+        <h2 style="margin:0;font-size:22px;font-weight:700;">Mes cotisations</h2>
+        <p style="margin:4px 0 0;color:#888;font-size:14px;">Cycle : @ViewBag.CycleNom</p>
+    </div>
+    <div style="display:flex;gap:8px;">
+        <span style="background:#E6F4EE;color:#0F6E56;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13px;">
+            @Model.Count(c => c.Statut == "Payé") payée(s)
+        </span>
+        @if (Model.Any(c => c.Statut == "En retard"))
+        {
+            <span style="background:#FFEBEE;color:#C62828;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13px;">
+                @Model.Count(c => c.Statut == "En retard") en retard
+            </span>
+        }
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div style="background:white;border-radius:12px;padding:60px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <i data-lucide="credit-card" style="width:40px;height:40px;opacity:.3;margin-bottom:12px;"></i>
+        <p style="color:#888;">Aucune cotisation enregistrée pour ce cycle.</p>
+    </div>
+}
+else
+{
+    <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <thead>
+                <tr style="background:#F8FDF9;">
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Tontine</th>
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Montant</th>
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Date</th>
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Mode</th>
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Statut</th>
+                    <th style="padding:14px 18px;border-bottom:1.5px solid #E1F5EE;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.OrderByDescending(x => x.DateCotisation))
+                {
+                    var (bg, clr) = c.Statut switch {
+                        "Payé"      => ("#E6F4EE", "#0F6E56"),
+                        "En retard" => ("#FFEBEE", "#C62828"),
+                        _           => ("#FFF8E1", "#F57C00")
+                    };
+                    <tr style="border-bottom:1px solid #F4F4F2;" onmouseover="this.style.background='#FAFFF9'" onmouseout="this.style.background=''">
+                        <td style="padding:14px 18px;font-weight:600;">@c.LibelleTontine</td>
+                        <td style="padding:14px 18px;font-weight:700;color:#0F6E56;">@F(c.Montant)</td>
+                        <td style="padding:14px 18px;color:#555;">@c.DateCotisation.ToString("dd/MM/yyyy")</td>
+                        <td style="padding:14px 18px;color:#555;">@c.ModePaiement</td>
+                        <td style="padding:14px 18px;">
+                            <span style="background:@bg;color:@clr;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">@c.Statut</span>
+                        </td>
+                        <td style="padding:14px 18px;">
+                            @if (c.Statut == "Payé")
+                            {
+                                <a asp-action="TelechargerRecu" asp-route-id="@c.IdCotisation" class="btn-pm-light">
+                                    <i data-lucide="file-down" style="width:13px;height:13px;"></i> Reçu PDF
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div style="padding:14px 18px;background:#F8FDF9;display:flex;justify-content:flex-end;gap:24px;border-top:1.5px solid #E1F5EE;">
+            <span style="font-size:13px;color:#555;">Total payé : <strong style="color:#0F6E56;">@F(Model.Where(c => c.Statut == "Payé").Sum(c => c.Montant))</strong></span>
+            <span style="font-size:13px;color:#555;">Total en attente : <strong style="color:#F57C00;">@F(Model.Where(c => c.Statut != "Payé").Sum(c => c.Montant))</strong></span>
+        </div>
+    </div>
+}

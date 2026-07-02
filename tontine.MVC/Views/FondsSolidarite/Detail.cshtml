@@ -1,0 +1,261 @@
+@model tontine.MVC.Models.FondsDetailViewModel
+@{
+    ViewData["Title"] = Model.Fonds.Nom;
+    var fonds = Model.Fonds;
+    var pct = fonds.TotalCollecte > 0 ? (int)(fonds.TotalDepense / fonds.TotalCollecte * 100) : 0;
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title">@fonds.Nom</h2>
+        <p class="page-subtitle">@(fonds.Description ?? "Fonds de solidarité")</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="AjouterContribution" asp-route-idFonds="@fonds.IdFonds" class="btn-primary-tontine">
+            + Contribution
+        </a>
+        <a asp-action="NouvelleDemandeAide" asp-route-idFonds="@fonds.IdFonds"
+           class="btn btn-warning" style="border-radius:10px;font-weight:600;">
+            + Demande d'aide
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary" style="border-radius:10px;">Retour</a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Cartes de synthèse -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card text-center p-3" style="border:none;border-radius:12px;background:#F0FDF4;">
+            <div class="fw-bold fs-5" style="color:#065F46;">@fonds.TotalCollecte.ToString("N0")</div>
+            <div style="font-size:12px;color:#6B7280;">FCFA collectés</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center p-3" style="border:none;border-radius:12px;background:#FEF3C7;">
+            <div class="fw-bold fs-5" style="color:#D97706;">@fonds.TotalDepense.ToString("N0")</div>
+            <div style="font-size:12px;color:#6B7280;">FCFA dépensés</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center p-3" style="border:none;border-radius:12px;background:#EFF6FF;">
+            <div class="fw-bold fs-5" style="color:#1D4ED8;">@fonds.Solde.ToString("N0")</div>
+            <div style="font-size:12px;color:#6B7280;">FCFA disponibles</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center p-3" style="border:none;border-radius:12px;background:#FDF2F8;">
+            <div class="fw-bold fs-5" style="color:#9D174D;">@fonds.NombreDemandesEnAttente</div>
+            <div style="font-size:12px;color:#6B7280;">Demandes en attente</div>
+        </div>
+    </div>
+</div>
+
+<!-- Barre de progression -->
+<div class="card mb-4" style="border:none;border-radius:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06);">
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-between mb-1">
+            <span style="font-size:13px;color:#374151;">Utilisation du fonds</span>
+            <span style="font-size:13px;font-weight:600;">@pct%</span>
+        </div>
+        <div style="background:#E5E7EB;border-radius:8px;height:10px;">
+            <div style="background:linear-gradient(90deg,#065F46,#059669);border-radius:8px;height:10px;width:@(Math.Min(pct,100))%;transition:width 0.5s;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Contributions -->
+    <div class="col-lg-6">
+        <div class="card h-100" style="border:none;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <div class="card-header d-flex justify-content-between align-items-center py-3"
+                 style="background:#F0FDF4;border-radius:16px 16px 0 0;border-bottom:1px solid #D1FAE5;">
+                <span class="fw-semibold" style="color:#065F46;">Contributions (@Model.Contributions.Count)</span>
+                <a asp-action="AjouterContribution" asp-route-idFonds="@fonds.IdFonds"
+                   style="font-size:12px;color:#065F46;">+ Ajouter</a>
+            </div>
+            <div class="card-body p-0" style="overflow-y:auto;max-height:380px;">
+                @if (!Model.Contributions.Any())
+                {
+                    <p class="text-center text-muted py-4">Aucune contribution enregistrée.</p>
+                }
+                else
+                {
+                    <table class="table table-sm mb-0">
+                        <thead style="position:sticky;top:0;background:white;">
+                            <tr>
+                                <th style="font-size:12px;">Membre</th>
+                                <th style="font-size:12px;">Montant</th>
+                                <th style="font-size:12px;">Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model.Contributions)
+                            {
+                                <tr>
+                                    <td style="font-size:13px;">@c.NomMembre</td>
+                                    <td style="font-size:13px;font-weight:600;color:#065F46;">
+                                        @c.Montant.ToString("N0")
+                                    </td>
+                                    <td style="font-size:12px;color:#6B7280;">
+                                        @c.DateContribution.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td class="text-end">
+                                        <form asp-action="SupprimerContribution" method="post"
+                                              onsubmit="return confirm('Supprimer cette contribution ?')">
+                                            <input type="hidden" name="id" value="@c.IdContribution" />
+                                            <input type="hidden" name="idFonds" value="@fonds.IdFonds" />
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-link btn-sm text-danger p-0">✕</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @if (!string.IsNullOrEmpty(c.Notes))
+                                {
+                                    <tr>
+                                        <td colspan="4" style="font-size:11px;color:#6B7280;padding-top:0;">
+                                            📝 @c.Notes
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Demandes d'aide -->
+    <div class="col-lg-6">
+        <div class="card h-100" style="border:none;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <div class="card-header d-flex justify-content-between align-items-center py-3"
+                 style="background:#FFF7ED;border-radius:16px 16px 0 0;border-bottom:1px solid #FED7AA;">
+                <span class="fw-semibold" style="color:#C2410C;">Demandes d'aide (@Model.Demandes.Count)</span>
+                <a asp-action="NouvelleDemandeAide" asp-route-idFonds="@fonds.IdFonds"
+                   style="font-size:12px;color:#C2410C;">+ Demande</a>
+            </div>
+            <div class="card-body p-0" style="overflow-y:auto;max-height:380px;">
+                @if (!Model.Demandes.Any())
+                {
+                    <p class="text-center text-muted py-4">Aucune demande d'aide.</p>
+                }
+                else
+                {
+                    @foreach (var d in Model.Demandes)
+                    {
+                        var statutBg = d.Statut switch {
+                            "Approuvé" => "#D1FAE5", "Rejeté" => "#FEE2E2",
+                            "Payé"     => "#DBEAFE", _        => "#FEF3C7"
+                        };
+                        var statutColor = d.Statut switch {
+                            "Approuvé" => "#065F46", "Rejeté" => "#991B1B",
+                            "Payé"     => "#1E40AF", _        => "#92400E"
+                        };
+                        <div class="p-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <span class="fw-semibold" style="font-size:14px;">@d.NomMembre</span>
+                                    <span style="background:@statutBg;color:@statutColor;font-size:11px;
+                                                 font-weight:600;padding:2px 8px;border-radius:10px;margin-left:8px;">
+                                        @d.Statut
+                                    </span>
+                                </div>
+                                <span class="fw-bold" style="color:#D97706;">@d.MontantDemande.ToString("N0") FCFA</span>
+                            </div>
+                            <p style="font-size:12px;color:#6B7280;margin:4px 0;">@d.Motif</p>
+                            <div style="font-size:11px;color:#9CA3AF;">@d.DateDemande.ToString("dd/MM/yyyy")</div>
+
+                            @if (d.Statut == "En attente")
+                            {
+                                <div class="mt-2 d-flex gap-2">
+                                    <!-- Approuver -->
+                                    <button type="button" class="btn btn-sm btn-success"
+                                            style="font-size:11px;border-radius:6px;"
+                                            data-bs-toggle="modal" data-bs-target="#modalApprouver-@d.IdDemande">
+                                        ✓ Approuver
+                                    </button>
+                                    <!-- Rejeter -->
+                                    <form asp-action="Rejeter" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="idDemande" value="@d.IdDemande" />
+                                        <input type="hidden" name="idFonds"   value="@fonds.IdFonds" />
+                                        <input type="hidden" name="notes"     value="" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                style="font-size:11px;border-radius:6px;"
+                                                onclick="return confirm('Rejeter cette demande ?')">
+                                            ✕ Rejeter
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Modal approbation -->
+                                <div class="modal fade" id="modalApprouver-@d.IdDemande" tabindex="-1">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content" style="border-radius:12px;">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title">Approuver la demande</h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form asp-action="Approuver" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="idDemande" value="@d.IdDemande" />
+                                                <input type="hidden" name="idFonds"   value="@fonds.IdFonds" />
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-semibold">Montant accordé (FCFA)</label>
+                                                        <input type="number" name="montantAccorde" class="form-control form-control-sm"
+                                                               value="@d.MontantDemande" min="1" required />
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label class="form-label small fw-semibold">Notes (optionnel)</label>
+                                                        <textarea name="notes" class="form-control form-control-sm" rows="2"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                                        Confirmer l'approbation
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (d.Statut == "Approuvé")
+                            {
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <span style="font-size:12px;color:#065F46;">Accordé : @d.MontantAccorde.ToString("N0") FCFA</span>
+                                    <form asp-action="MarquerPaye" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="idDemande" value="@d.IdDemande" />
+                                        <input type="hidden" name="idFonds"   value="@fonds.IdFonds" />
+                                        <button type="submit" class="btn btn-sm btn-primary"
+                                                style="font-size:11px;border-radius:6px;">
+                                            Marquer payé
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else if (d.Statut == "Payé")
+                            {
+                                <div style="font-size:12px;color:#1E40AF;margin-top:4px;">
+                                    Payé : @d.MontantAccorde.ToString("N0") FCFA
+                                    @if (d.DateDecision.HasValue) { <span> le @d.DateDecision.Value.ToString("dd/MM/yyyy")</span> }
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

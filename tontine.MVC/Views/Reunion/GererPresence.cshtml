@@ -1,0 +1,122 @@
+@model tontine.MVC.Models.GererPresenceViewModel
+@{
+    ViewData["Title"] = "Feuille de présence";
+    var r = Model.Reunion;
+}
+
+<div style="margin-bottom:24px;">
+    <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour aux réunions</a>
+    <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Feuille de présence</h2>
+    <p style="margin:0; font-size:14px; color:#555;">
+        <strong>@r.Objet</strong> — @r.DateReunion.ToString("dd/MM/yyyy à HH:mm")
+        @if (!string.IsNullOrEmpty(r.Lieu)) { <span>— @r.Lieu</span> }
+    </p>
+</div>
+
+<form asp-action="GererPresence" asp-route-id="@r.IdReunion" method="post">
+    @Html.AntiForgeryToken()
+
+    @* Champs cachés pour reconstruire GererPresenceViewModel.Reunion *@
+    <input type="hidden" name="Reunion.IdReunion"      value="@r.IdReunion" />
+    <input type="hidden" name="Reunion.IdCycle"        value="@r.IdCycle" />
+    <input type="hidden" name="Reunion.IdTontine"      value="@r.IdTontine" />
+    <input type="hidden" name="Reunion.Objet"          value="@r.Objet" />
+    <input type="hidden" name="Reunion.DateReunion"    value="@r.DateReunion.ToString("yyyy-MM-ddTHH:mm")" />
+
+    <div style="background:white; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.08); overflow:hidden;">
+
+        @if (!Model.Presences.Any())
+        {
+            <div style="padding:48px; text-align:center; color:#888;">
+                <p>Aucun membre inscrit à cette tontine pour ce cycle.</p>
+                <p style="font-size:13px;">Inscrivez d'abord des membres via <a asp-controller="MembreCycleTontine" asp-action="Index" style="color:#0F6E56;">Inscriptions</a>.</p>
+            </div>
+        }
+        else
+        {
+            <div style="padding:16px 20px; background:#EEF4FF; border-bottom:1px solid #BBDEFB; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; color:#1565C0; font-weight:600;">@Model.Presences.Count membre(s)</span>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" onclick="setAll('Présent')"
+                            style="background:#E6F4EE; color:#0F6E56; border:none; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer;">
+                        Tous présents
+                    </button>
+                    <button type="button" onclick="setAll('Absent')"
+                            style="background:#FFEBEE; color:#C62828; border:none; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer;">
+                        Tous absents
+                    </button>
+                </div>
+            </div>
+
+            <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                <thead>
+                    <tr style="background:#F8F7F2; border-bottom:1.5px solid #E8E6DC;">
+                        <th style="padding:12px 16px; text-align:left; font-weight:600; color:#444; width:40px;">#</th>
+                        <th style="padding:12px 16px; text-align:left; font-weight:600; color:#444;">Membre</th>
+                        <th style="padding:12px 16px; text-align:center; font-weight:600; color:#0F6E56;">Présent</th>
+                        <th style="padding:12px 16px; text-align:center; font-weight:600; color:#F57C00;">Excusé</th>
+                        <th style="padding:12px 16px; text-align:center; font-weight:600; color:#C62828;">Absent</th>
+                        <th style="padding:12px 16px; text-align:left; font-weight:600; color:#444;">Remarque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Presences.Count; i++)
+                    {
+                        var p = Model.Presences[i];
+                        <tr style="border-bottom:1px solid #F0EEE8;" class="presence-row">
+                            <td style="padding:12px 16px; color:#888; font-size:12px;">@(i + 1)</td>
+                            <td style="padding:12px 16px; font-weight:600;">
+                                @p.NomMembre
+                                <input type="hidden" name="Presences[@i].IdPresence"     value="@p.IdPresence" />
+                                <input type="hidden" name="Presences[@i].IdReunion"      value="@p.IdReunion" />
+                                <input type="hidden" name="Presences[@i].IdMembre"       value="@p.IdMembre" />
+                                <input type="hidden" name="Presences[@i].NomMembre"      value="@p.NomMembre" />
+                            </td>
+                            <td style="padding:12px 16px; text-align:center;">
+                                <input type="radio" name="Presences[@i].StatutPresence" value="Présent"
+                                       @(p.StatutPresence == "Présent" ? "checked" : "")
+                                       style="accent-color:#0F6E56; width:18px; height:18px; cursor:pointer;" />
+                            </td>
+                            <td style="padding:12px 16px; text-align:center;">
+                                <input type="radio" name="Presences[@i].StatutPresence" value="Excusé"
+                                       @(p.StatutPresence == "Excusé" ? "checked" : "")
+                                       style="accent-color:#F57C00; width:18px; height:18px; cursor:pointer;" />
+                            </td>
+                            <td style="padding:12px 16px; text-align:center;">
+                                <input type="radio" name="Presences[@i].StatutPresence" value="Absent"
+                                       @(p.StatutPresence == "Absent" ? "checked" : "")
+                                       style="accent-color:#C62828; width:18px; height:18px; cursor:pointer;" />
+                            </td>
+                            <td style="padding:8px 16px;">
+                                <input type="text" name="Presences[@i].Remarque" value="@p.Remarque"
+                                       placeholder="Optionnel…"
+                                       style="width:100%; padding:6px 10px; border:1px solid #E0E0E0; border-radius:6px; font-size:13px;" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div style="padding:16px 20px; background:#FAFAFA; border-top:1.5px solid #E8E6DC; display:flex; justify-content:flex-end; gap:12px;">
+                <a asp-action="Index"
+                   style="background:white; color:#5F5E5A; border:1.5px solid #D3D1C7; border-radius:8px; padding:10px 24px; font-size:14px; text-decoration:none; font-weight:500;">
+                    Annuler
+                </a>
+                <button type="submit"
+                        style="background:#0F6E56; color:white; border:none; border-radius:8px; padding:10px 28px; font-size:14px; font-weight:600; cursor:pointer;">
+                    Enregistrer les présences
+                </button>
+            </div>
+        }
+    </div>
+</form>
+
+@section Scripts {
+<script>
+function setAll(statut) {
+    document.querySelectorAll('input[type=radio]').forEach(radio => {
+        if (radio.value === statut) radio.checked = true;
+    });
+}
+</script>
+}

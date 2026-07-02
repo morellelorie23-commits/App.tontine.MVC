@@ -1,0 +1,81 @@
+@model List<tontine.MVC.Models.PretViewModel>
+@{ Layout = "~/Views/Shared/_LayoutMembre.cshtml"; ViewData["Title"] = "Mes prêts"; string F(decimal v) => v.ToString("N0") + " FCFA"; }
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+    <div>
+        <h2 style="margin:0;font-size:22px;font-weight:700;">Mes prêts</h2>
+        <p style="margin:4px 0 0;color:#888;font-size:14px;">Historique de vos demandes de prêt</p>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div style="background:white;border-radius:12px;padding:60px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <i data-lucide="landmark" style="width:40px;height:40px;opacity:.3;margin-bottom:12px;"></i>
+        <p style="color:#888;">Vous n'avez aucun prêt enregistré.</p>
+    </div>
+}
+else
+{
+    @foreach (var p in Model.OrderByDescending(x => x.DatePret))
+    {
+        var (bg, clr, icon) = p.Statut switch {
+            "En attente" => ("#FFF8E1", "#F57C00", "clock"),
+            "Approuvé"   => ("#E3F2FD", "#1565C0", "check-circle"),
+            "Remboursé"  => ("#E6F4EE", "#0F6E56", "badge-check"),
+            "En retard"  => ("#FFEBEE", "#C62828", "alert-triangle"),
+            _            => ("#F5F5F5", "#666",     "help-circle")
+        };
+        var interets = Math.Round(p.Montant * p.Taux / 100, 0);
+        var totalDu  = p.Montant + interets;
+
+        <div style="background:white;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.07);margin-bottom:16px;border-left:4px solid @clr;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                        <span style="background:@bg;color:@clr;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px;">
+                            <i data-lucide="@icon" style="width:12px;height:12px;"></i> @p.Statut
+                        </span>
+                        <span style="color:#888;font-size:13px;">Demandé le @p.DatePret.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div style="font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">@F(p.Montant)</div>
+                    @if (!string.IsNullOrEmpty(p.Description))
+                    {
+                        <div style="color:#888;font-size:13px;">@p.Description</div>
+                    }
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:12px;color:#888;margin-bottom:4px;">Taux d'intérêt</div>
+                    <div style="font-size:18px;font-weight:700;color:#C62828;">@p.Taux%</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:20px;margin-top:16px;padding-top:16px;border-top:1px solid #F4F4F2;flex-wrap:wrap;">
+                <div>
+                    <div style="font-size:11px;color:#888;text-transform:uppercase;font-weight:600;">Intérêts</div>
+                    <div style="font-size:14px;font-weight:700;color:#C62828;">+ @F(interets)</div>
+                </div>
+                <div>
+                    <div style="font-size:11px;color:#888;text-transform:uppercase;font-weight:600;">Total à rembourser</div>
+                    <div style="font-size:14px;font-weight:700;color:#1a1a1a;">@F(totalDu)</div>
+                </div>
+                <div>
+                    <div style="font-size:11px;color:#888;text-transform:uppercase;font-weight:600;">Échéance</div>
+                    <div style="font-size:14px;font-weight:700;color:@(p.Statut == "En retard" ? "#C62828" : "#1a1a1a");">
+                        @p.DateRemboursement.ToString("dd/MM/yyyy")
+                        @if (p.Statut == "En retard")
+                        {
+                            <i data-lucide="alert-triangle" style="width:13px;height:13px;color:#C62828;vertical-align:middle;margin-left:4px;"></i>
+                        }
+                    </div>
+                </div>
+                @if (p.Statut == "Remboursé")
+                {
+                    <div>
+                        <div style="font-size:11px;color:#888;text-transform:uppercase;font-weight:600;">Montant remboursé</div>
+                        <div style="font-size:14px;font-weight:700;color:#0F6E56;">@F(p.MontantRemboursé)</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

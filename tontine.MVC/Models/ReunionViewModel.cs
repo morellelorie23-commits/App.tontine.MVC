@@ -28,8 +28,20 @@ namespace tontine.MVC.Models
         [Display(Name = "Notes")]
         public string? Notes { get; set; }
 
+        [Display(Name = "Statut")]
+        public string Statut { get; set; } = "Planifiée";
+
+        [Display(Name = "Procès-verbal")]
+        public string? ProcesVerbal { get; set; }
+
         // Affichage
         public string NomCycle       { get; set; } = "";
         public string LibelleTontine { get; set; } = "";
+
+        // Compteurs de présence
+        public int NombrePresents { get; set; }
+        public int NombreAbsents  { get; set; }
+        public int NombreExcuses  { get; set; }
+        public int TotalPresences => NombrePresents + NombreAbsents + NombreExcuses;
     }
 }

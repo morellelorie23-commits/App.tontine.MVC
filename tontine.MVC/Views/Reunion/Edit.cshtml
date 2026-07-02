@@ -3,7 +3,7 @@
     ViewData["Title"] = "Modifier la réunion";
 }
 
-<div style="max-width:520px;">
+<div style="max-width:600px;">
     <div style="margin-bottom:24px;">
         <a asp-action="Index" style="color:#0F6E56; font-size:13px; text-decoration:none; font-weight:500;">← Retour à la liste</a>
         <h2 style="margin:8px 0 4px; font-size:22px; font-weight:600;">Modifier la réunion</h2>
@@ -29,11 +29,19 @@
                 </div>
             </div>
 
-            <div style="margin-bottom:16px;">
-                <label asp-for="DateReunion" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
-                <input asp-for="DateReunion" type="datetime-local"
-                       style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
-                <span asp-validation-for="DateReunion" style="color:#C62828; font-size:12px;"></span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div>
+                    <label asp-for="DateReunion" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <input asp-for="DateReunion" type="datetime-local"
+                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
+                    <span asp-validation-for="DateReunion" style="color:#C62828; font-size:12px;"></span>
+                </div>
+                <div>
+                    <label asp-for="Statut" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                    <select asp-for="Statut" asp-items="ViewBag.Statuts"
+                            style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px; background:white;">
+                    </select>
+                </div>
             </div>
 
             <div style="margin-bottom:16px;">
@@ -49,10 +57,17 @@
                        style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;" />
             </div>
 
-            <div style="margin-bottom:20px;">
+            <div style="margin-bottom:16px;">
                 <label asp-for="Notes" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
                 <textarea asp-for="Notes" rows="3"
                           style="width:100%; padding:10px 14px; border:1.5px solid #E0E0E0; border-radius:8px; font-size:14px;"></textarea>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label asp-for="ProcesVerbal" style="font-size:13px; font-weight:500; color:#444; display:block; margin-bottom:6px;"></label>
+                <p style="font-size:12px; color:#888; margin:0 0 6px;">Délibérations, décisions prises, résolutions votées…</p>
+                <textarea asp-for="ProcesVerbal" rows="5"
+                          style="width:100%; padding:10px 14px; border:1.5px solid #6A1B9A; border-radius:8px; font-size:14px;"></textarea>
             </div>
 
             <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:16px; border-top:1px solid #F1EFE8;">

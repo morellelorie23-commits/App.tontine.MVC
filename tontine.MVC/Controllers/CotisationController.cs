@@ -18,6 +18,8 @@ namespace tontine.MVC.Controllers
         private readonly IReunionService          _reunions;
         private readonly IGrandLivreService       _gl;
         private readonly IVersementService        _versements;
+        private readonly ExcelService             _excel;
+        private readonly IEmailService            _email;
 
         public CotisationController(ICotisationService service, IMembreService membres,
                                      ITontineService tontines, ICycleService cycles,
@@ -25,7 +27,9 @@ namespace tontine.MVC.Controllers
                                      IPaiementMobileService paiements,
                                      IReunionService reunions,
                                      IGrandLivreService gl,
-                                     IVersementService versements)
+                                     IVersementService versements,
+                                     ExcelService excel,
+                                     IEmailService email)
         {
             _service    = service;
             _membres    = membres;
@@ -37,6 +41,8 @@ namespace tontine.MVC.Controllers
             _reunions   = reunions;
             _gl         = gl;
             _versements = versements;
+            _excel      = excel;
+            _email      = email;
         }
 
         public async Task<IActionResult> Index()
@@ -127,7 +133,26 @@ namespace tontine.MVC.Controllers
         public async Task<IActionResult> PayerCash(int id)
         {
             var ok = await _service.PayerCashAsync(id);
-            TempData["Success"] = ok ? "Paiement en espèces enregistré." : "Erreur lors de l'enregistrement.";
+            if (ok)
+            {
+                TempData["Success"] = "Paiement en espèces enregistré.";
+                // Envoi de la confirmation par email (en arrière-plan, sans bloquer la réponse)
+                _ = Task.Run(async () =>
+                {
+                    var cot = await _service.GetByIdAsync(id);
+                    if (cot == null) return;
+                    var membre = await _membres.GetByIdAsync(cot.IdMembre);
+                    if (membre?.Email != null)
+                        await _email.SendConfirmationPaiementAsync(
+                            membre.Email, $"{membre.Prenom} {membre.Nom}",
+                            cot.LibelleTontine, cot.NomCycle,
+                            cot.Montant, cot.DateCotisation, cot.IdCotisation);
+                });
+            }
+            else
+            {
+                TempData["Error"] = "Erreur lors de l'enregistrement.";
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -217,8 +242,15 @@ namespace tontine.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> InitierPaiement([FromBody] InitierPaiementViewModel req)
         {
-            var (succes, reference, message) = await _paiements.InitierAsync(req);
-            return Json(new { succes, reference, message });
+            var result = await _paiements.InitierAsync(req);
+            return Json(new { succes = result.Succes, reference = result.Reference, message = result.Message, paymentUrl = result.PaymentUrl });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> VerifierStatutPaiement(string reference)
+        {
+            var statut = await _paiements.VerifierStatutAsync(reference);
+            return Json(statut);
         }
 
         [HttpPost]
@@ -393,6 +425,17 @@ namespace tontine.MVC.Controllers
             ViewBag.Membres  = membres.Select(m => new SelectListItem(m.Nom + " " + m.Prenom, m.IdMembre.ToString()));
             ViewBag.Tontines = tontines.Select(t => new SelectListItem(t.Libelle, t.IdTontine.ToString()));
             ViewBag.Cycles   = cycles.Select(c => new SelectListItem(c.NomCycle, c.IdCycle.ToString()));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportExcel()
+        {
+            var list    = await _service.GetAllAsync();
+            var donnees = list.Where(c => c.IdCycle == CycleId).ToList();
+            var bytes   = _excel.ExporterCotisations(donnees, CycleNom);
+            return File(bytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"cotisations-{CycleNom}-{DateTime.Now:yyyyMMdd}.xlsx");
         }
     }
 }

@@ -10,13 +10,16 @@ namespace tontine.MVC.Controllers
     {
         private readonly ICompteService _service;
         private readonly IWebHostEnvironment _env;
+        private readonly IMembreService _membreService;
 
-        public CompteController(ICompteService service, IWebHostEnvironment env)
+        public CompteController(ICompteService service, IWebHostEnvironment env, IMembreService membreService)
         {
             _service = service;
             _env = env;
+            _membreService = membreService;
         }
 
+        [RoleAuthorize("Administrateur")]
         public async Task<IActionResult> Index()
         {
             SetBreadcrumbs(
@@ -28,7 +31,8 @@ namespace tontine.MVC.Controllers
             return View(list);
         }
 
-        public IActionResult Create()
+        [RoleAuthorize("Administrateur")]
+        public async Task<IActionResult> Create()
         {
             SetBreadcrumbs(
                 BreadcrumbItem("Tableau de bord", "Home", "Index"),
@@ -36,7 +40,7 @@ namespace tontine.MVC.Controllers
                 BreadcrumbItem("Comptes utilisateurs", "Compte", "Index"),
                 BreadcrumbItem("Ajouter", isActive: true)
             );
-            PopulateDropdowns();
+            await PopulateDropdowns();
             return View(new CompteUtilisateurViewModel
             {
                 DateCreation = DateOnly.FromDateTime(DateTime.Now)
@@ -44,17 +48,17 @@ namespace tontine.MVC.Controllers
         }
 
         [RoleAuthorize("Administrateur")]
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CompteUtilisateurViewModel vm)
         {
-            if (!ModelState.IsValid) { PopulateDropdowns(); return View(vm); }
+            if (!ModelState.IsValid) { await PopulateDropdowns(); return View(vm); }
             var ok = await _service.CreateAsync(vm);
-            if (!ok) { ModelState.AddModelError("", "Erreur lors de l'enregistrement."); PopulateDropdowns(); return View(vm); }
+            if (!ok) { ModelState.AddModelError("", "Erreur lors de l'enregistrement."); await PopulateDropdowns(); return View(vm); }
             return RedirectToAction(nameof(Index));
         }
 
+        [RoleAuthorize("Administrateur")]
         public async Task<IActionResult> Edit(int id)
         {
             SetBreadcrumbs(
@@ -65,21 +69,27 @@ namespace tontine.MVC.Controllers
             );
             var vm = await _service.GetByIdAsync(id);
             if (vm == null) return NotFound();
-            PopulateDropdowns();
+            await PopulateDropdowns();
             return View(vm);
         }
 
         [RoleAuthorize("Administrateur")]
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CompteUtilisateurViewModel vm)
         {
             if (vm.PhotoFile != null && vm.PhotoFile.Length > 0)
             {
+                if (!IsValidImageFile(vm.PhotoFile, out var err))
+                {
+                    ModelState.AddModelError("PhotoFile", err);
+                    await PopulateDropdowns();
+                    return View(vm);
+                }
                 var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
                 Directory.CreateDirectory(uploadsDir);
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(vm.PhotoFile.FileName);
+                var ext = Path.GetExtension(vm.PhotoFile.FileName).ToLower();
+                var fileName = Guid.NewGuid().ToString() + ext;
                 using var stream = new FileStream(Path.Combine(uploadsDir, fileName), FileMode.Create);
                 await vm.PhotoFile.CopyToAsync(stream);
                 vm.Photo = fileName;
@@ -89,12 +99,13 @@ namespace tontine.MVC.Controllers
             }
             ModelState.Remove("PhotoFile");
             ModelState.Remove("Photo");
-            if (!ModelState.IsValid) { PopulateDropdowns(); return View(vm); }
+            if (!ModelState.IsValid) { await PopulateDropdowns(); return View(vm); }
             var ok = await _service.UpdateAsync(vm);
-            if (!ok) { ModelState.AddModelError("", "Erreur lors de la modification."); PopulateDropdowns(); return View(vm); }
+            if (!ok) { ModelState.AddModelError("", "Erreur lors de la modification."); await PopulateDropdowns(); return View(vm); }
             return RedirectToAction(nameof(Index));
         }
 
+        [RoleAuthorize("Administrateur")]
         public async Task<IActionResult> Delete(int id)
         {
             SetBreadcrumbs(
@@ -108,7 +119,6 @@ namespace tontine.MVC.Controllers
         }
 
         [RoleAuthorize("Administrateur")]
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -151,13 +161,30 @@ namespace tontine.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private void PopulateDropdowns()
+        private static readonly string[] _allowedImageMimes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+        private static readonly string[] _allowedImageExts  = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+
+        private static bool IsValidImageFile(IFormFile file, out string error)
+        {
+            error = "";
+            if (file.Length > 5 * 1024 * 1024)
+            { error = "La photo ne doit pas dépasser 5 Mo."; return false; }
+            if (!_allowedImageMimes.Contains(file.ContentType.ToLower()))
+            { error = "Type de fichier non autorisé (JPG, PNG, GIF ou WEBP uniquement)."; return false; }
+            var ext = Path.GetExtension(file.FileName).ToLower();
+            if (!_allowedImageExts.Contains(ext))
+            { error = "Extension de fichier non autorisée."; return false; }
+            return true;
+        }
+
+        private async Task PopulateDropdowns()
         {
             ViewBag.Roles = new List<SelectListItem>
             {
                 new SelectListItem("Administrateur", "Administrateur"),
                 new SelectListItem("Gestionnaire",   "Gestionnaire"),
-                new SelectListItem("Lecteur",         "Lecteur"),
+                new SelectListItem("Lecteur",        "Lecteur"),
+                new SelectListItem("Membre",         "Membre"),
             };
             ViewBag.Statuts = new List<SelectListItem>
             {
@@ -165,6 +192,11 @@ namespace tontine.MVC.Controllers
                 new SelectListItem("Inactif",  "Inactif"),
                 new SelectListItem("Suspendu", "Suspendu"),
             };
+            var membres = await _membreService.GetAllAsync();
+            ViewBag.Membres = membres.Select(m => new SelectListItem(
+                $"{m.Prenom} {m.Nom}",
+                m.IdMembre.ToString()
+            )).Prepend(new SelectListItem("— Aucun membre lié —", "")).ToList();
         }
     }
 }

@@ -1,0 +1,181 @@
+@model tontine.MVC.Models.LitigeViewModel
+@{
+    ViewData["Title"] = "Signaler un litige";
+}
+
+<div style="margin-bottom:24px;">
+    <a asp-action="Index" style="color:#0F6E56;font-size:13px;text-decoration:none;font-weight:500;">
+        ← Retour aux litiges & exclusions
+    </a>
+    <h2 style="margin:8px 0 4px;font-size:24px;font-weight:700;color:#1a1a1a;">Signaler un litige</h2>
+    <p style="margin:0;color:#888780;font-size:14px;">Déclarer un conflit, un manquement ou un comportement fautif d'un membre</p>
+</div>
+
+<form asp-action="SignalerLitige" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdCycle" />
+
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;">
+
+        <!-- Colonne principale -->
+        <div>
+
+            <!-- Parties impliquées -->
+            <div style="background:white;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);margin-bottom:20px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+                    <div style="width:4px;height:22px;background:#0F6E56;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.6px;">Parties impliquées</span>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div>
+                        <label asp-for="IdMembreAccuse" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                        <select asp-for="IdMembreAccuse" asp-items="ViewBag.Membres"
+                                style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                       font-size:14px;background:white;outline:none;color:#111;"
+                                onfocus="this.style.borderColor='#DC2626'"
+                                onblur="this.style.borderColor='#E5E7EB'">
+                            <option value="">-- Sélectionner le membre mis en cause --</option>
+                        </select>
+                        <span asp-validation-for="IdMembreAccuse" style="color:#DC2626;font-size:12px;"></span>
+                        <p style="margin:6px 0 0;font-size:12px;color:#6B7280;">Membre dont le comportement est signalé</p>
+                    </div>
+                    <div>
+                        <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;">
+                            Déclarant <span style="font-weight:400;color:#9CA3AF;">(optionnel)</span>
+                        </label>
+                        <select asp-for="IdMembreDeclarant" asp-items="ViewBag.Membres"
+                                style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                       font-size:14px;background:white;outline:none;color:#111;"
+                                onfocus="this.style.borderColor='#0F6E56'"
+                                onblur="this.style.borderColor='#E5E7EB'">
+                            <option value="">-- Administration / Bureau --</option>
+                        </select>
+                        <p style="margin:6px 0 0;font-size:12px;color:#6B7280;">Laisser vide si signalé par l'administration</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nature et description -->
+            <div style="background:white;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+                    <div style="width:4px;height:22px;background:#888780;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.6px;">Description des faits</span>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <label asp-for="Nature" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <input asp-for="Nature"
+                           placeholder="Ex : Non-paiement des cotisations, Fraude, Conflit verbal, Détournement..."
+                           style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                  font-size:15px;outline:none;color:#111;"
+                           onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                           onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'" />
+                    <span asp-validation-for="Nature" style="color:#DC2626;font-size:12px;"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Description" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <textarea asp-for="Description" rows="6"
+                              placeholder="Décrivez les faits en détail : dates, circonstances, montants concernés, témoins éventuels, documents disponibles..."
+                              style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                     font-size:14px;outline:none;resize:vertical;color:#111;line-height:1.6;"
+                              onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                              onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'"></textarea>
+                    <span asp-validation-for="Description" style="color:#DC2626;font-size:12px;"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne latérale -->
+        <div>
+
+            <!-- Gravité -->
+            <div style="background:white;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+                    <div style="width:4px;height:22px;background:#D97706;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#D97706;text-transform:uppercase;letter-spacing:0.6px;">Gravité</span>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <label id="lbl-min" style="display:flex;align-items:center;gap:14px;padding:14px 16px;
+                                                border:2px solid #E5E7EB;border-radius:10px;cursor:pointer;">
+                        <input type="radio" asp-for="Gravite" value="Mineure"
+                               style="width:18px;height:18px;accent-color:#065F46;flex-shrink:0;"
+                               onchange="updateGravite('Mineure')" />
+                        <div>
+                            <div style="font-size:14px;font-weight:600;color:#065F46;">● Mineure</div>
+                            <div style="font-size:12px;color:#6B7280;margin-top:2px;">Incident léger, avertissement</div>
+                        </div>
+                    </label>
+                    <label id="lbl-mod" style="display:flex;align-items:center;gap:14px;padding:14px 16px;
+                                                border:2px solid #D97706;border-radius:10px;cursor:pointer;background:#FFFBEB;">
+                        <input type="radio" asp-for="Gravite" value="Modérée" checked
+                               style="width:18px;height:18px;accent-color:#D97706;flex-shrink:0;"
+                               onchange="updateGravite('Modérée')" />
+                        <div>
+                            <div style="font-size:14px;font-weight:600;color:#D97706;">● Modérée</div>
+                            <div style="font-size:12px;color:#6B7280;margin-top:2px;">Sanction possible</div>
+                        </div>
+                    </label>
+                    <label id="lbl-grv" style="display:flex;align-items:center;gap:14px;padding:14px 16px;
+                                                border:2px solid #E5E7EB;border-radius:10px;cursor:pointer;">
+                        <input type="radio" asp-for="Gravite" value="Grave"
+                               style="width:18px;height:18px;accent-color:#DC2626;flex-shrink:0;"
+                               onchange="updateGravite('Grave')" />
+                        <div>
+                            <div style="font-size:14px;font-weight:600;color:#DC2626;">● Grave</div>
+                            <div style="font-size:12px;color:#6B7280;margin-top:2px;">Exclusion envisageable</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Alerte grave -->
+            <div id="alerte-grave" style="display:none;background:#FEE2E2;border:1.5px solid #FECACA;border-radius:12px;padding:18px;">
+                <div style="font-size:13px;font-weight:700;color:#991B1B;margin-bottom:6px;">⚠️ Gravité Grave</div>
+                <div style="font-size:13px;color:#7F1D1D;line-height:1.5;">
+                    Ce niveau peut mener à une exclusion. Assurez-vous que les faits sont documentés et validés en bureau.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre d'actions -->
+    <div style="background:white;border-radius:12px;padding:20px 28px;margin-top:8px;
+                box-shadow:0 1px 4px rgba(0,0,0,0.08);display:flex;justify-content:flex-end;gap:12px;align-items:center;">
+        <a asp-action="Index"
+           style="background:white;color:#5F5E5A;border:1.5px solid #D1D5DB;border-radius:10px;
+                  padding:11px 28px;font-size:14px;text-decoration:none;font-weight:600;">
+            Annuler
+        </a>
+        <button type="submit"
+                style="background:linear-gradient(135deg,#D97706,#F59E0B);color:white;border:none;
+                       border-radius:10px;padding:11px 32px;font-size:14px;font-weight:700;
+                       cursor:pointer;box-shadow:0 2px 8px rgba(217,119,6,0.35);">
+            ⚠ Enregistrer le litige
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function updateGravite(v) {
+            var cfg = {
+                'Mineure': { id:'lbl-min', bc:'#065F46', bg:'#F0FDF4' },
+                'Modérée':{ id:'lbl-mod', bc:'#D97706', bg:'#FFFBEB' },
+                'Grave':   { id:'lbl-grv', bc:'#DC2626', bg:'#FFF5F5' }
+            };
+            ['lbl-min','lbl-mod','lbl-grv'].forEach(function(id) {
+                document.getElementById(id).style.borderColor = '#E5E7EB';
+                document.getElementById(id).style.background  = 'white';
+            });
+            if (cfg[v]) {
+                document.getElementById(cfg[v].id).style.borderColor = cfg[v].bc;
+                document.getElementById(cfg[v].id).style.background  = cfg[v].bg;
+            }
+            document.getElementById('alerte-grave').style.display = v === 'Grave' ? 'block' : 'none';
+        }
+    </script>
+}

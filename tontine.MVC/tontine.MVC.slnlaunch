@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Tontine (API + MVC)",
+    "Projects": [
+      {
+        "Path": "..\\tontine.WebAPI\\tontine.WebAPI.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "tontine.MVC.csproj",
+        "Action": "StartWithoutDebugging"
+      }
+    ]
+  }
+]

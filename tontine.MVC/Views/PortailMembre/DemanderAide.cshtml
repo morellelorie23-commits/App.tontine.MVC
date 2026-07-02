@@ -1,0 +1,141 @@
+@model tontine.MVC.Models.DemandeAideViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutMembre.cshtml";
+    ViewData["Title"] = "Demander une aide";
+    var fonds = (tontine.MVC.Models.FondsSolidariteViewModel)ViewBag.Fonds;
+}
+
+<!-- Retour -->
+<div style="margin-bottom:20px;">
+    <a asp-action="MesFonds" class="lien-retour">
+        <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Retour aux fonds
+    </a>
+</div>
+
+<form asp-action="DemanderAide" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdFonds" />
+    <input type="hidden" asp-for="IdMembre" />
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+
+        <!-- Colonne principale -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+            <!-- Info sur le fonds -->
+            <div style="background:linear-gradient(135deg,#0F6E56,#1D9E75);border-radius:16px;padding:24px 28px;color:white;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;
+                             opacity:0.75;margin-bottom:8px;">Fonds sélectionné</div>
+                <h2 style="font-size:20px;font-weight:700;margin:0 0 10px;">@fonds.Nom</h2>
+                @if (!string.IsNullOrEmpty(fonds.Description))
+                {
+                    <p style="font-size:13px;opacity:0.85;line-height:1.6;margin:0 0 16px;">@fonds.Description</p>
+                }
+                <div style="display:flex;gap:20px;border-top:1px solid rgba(255,255,255,0.2);padding-top:14px;margin-top:4px;">
+                    <div>
+                        <div style="font-size:18px;font-weight:800;">@fonds.TotalCollecte.ToString("N0") FCFA</div>
+                        <div style="font-size:11px;opacity:0.7;">Total collecté</div>
+                    </div>
+                    <div>
+                        <div style="font-size:18px;font-weight:800;color:@(fonds.Solde>0?"#A7F3D0":"#FCA5A5");">@fonds.Solde.ToString("N0") FCFA</div>
+                        <div style="font-size:11px;opacity:0.7;">Solde disponible</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motif -->
+            <div style="background:white;border-radius:14px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+                    <div style="width:4px;height:22px;background:#0F6E56;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.6px;">Motif de la demande</span>
+                </div>
+                <p style="font-size:13px;color:#6B7280;margin:0 0 16px;line-height:1.5;">
+                    Expliquez votre situation en détail. Plus vous fournissez d'informations, plus vite votre demande sera traitée.
+                </p>
+                <textarea asp-for="Motif" rows="7"
+                          placeholder="Décrivez votre situation : nature de la difficulté, montant exact des frais, urgence de la situation, documents justificatifs disponibles..."
+                          style="width:100%;padding:14px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                 font-size:14px;outline:none;resize:vertical;color:#111;line-height:1.6;"
+                          onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                          onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'"></textarea>
+                <span asp-validation-for="Motif" style="color:#DC2626;font-size:12px;display:block;margin-top:6px;"></span>
+            </div>
+        </div>
+
+        <!-- Colonne latérale -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <!-- Montant demandé -->
+            <div style="background:white;border-radius:14px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+                    <div style="width:4px;height:22px;background:#D97706;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#D97706;text-transform:uppercase;letter-spacing:0.6px;">Montant demandé</span>
+                </div>
+
+                <div style="display:flex;align-items:center;border:1.5px solid #E5E7EB;border-radius:10px;overflow:hidden;"
+                     id="montant-wrap">
+                    <input asp-for="MontantDemande" type="number" min="1" step="500" placeholder="0"
+                           style="flex:1;padding:14px 16px;border:none;font-size:26px;font-weight:800;
+                                  outline:none;color:#D97706;background:white;min-width:0;"
+                           onfocus="document.getElementById('montant-wrap').style.borderColor='#D97706';document.getElementById('montant-wrap').style.boxShadow='0 0 0 3px rgba(217,119,6,0.08)'"
+                           onblur="document.getElementById('montant-wrap').style.borderColor='#E5E7EB';document.getElementById('montant-wrap').style.boxShadow='none'" />
+                    <span style="padding:0 16px;background:#FEF3C7;color:#92400E;font-size:13px;font-weight:700;
+                                 border-left:1.5px solid #E5E7EB;align-self:stretch;display:flex;align-items:center;">
+                        FCFA
+                    </span>
+                </div>
+                <span asp-validation-for="MontantDemande" style="color:#DC2626;font-size:12px;display:block;margin-top:6px;"></span>
+
+                @if (fonds.Solde > 0)
+                {
+                    <p style="margin:10px 0 0;font-size:12px;color:#6B7280;">
+                        Maximum disponible : <strong style="color:#0F6E56;">@fonds.Solde.ToString("N0") FCFA</strong>
+                    </p>
+                }
+            </div>
+
+            <!-- Avertissement si fonds vide -->
+            @if (fonds.Solde <= 0)
+            {
+                <div style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:12px;padding:16px;">
+                    <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:6px;">Fonds actuellement vide</div>
+                    <p style="font-size:12px;color:#78350F;margin:0;line-height:1.5;">
+                        Votre demande sera enregistrée en attente. Elle sera traitée dès que le fonds sera alimenté par de nouvelles contributions.
+                    </p>
+                </div>
+            }
+
+            <!-- À savoir -->
+            <div style="background:#F0FDF4;border:1.5px solid #6EE7B7;border-radius:12px;padding:18px;">
+                <div style="font-size:13px;font-weight:700;color:#065F46;margin-bottom:10px;">À savoir</div>
+                <ul style="margin:0;padding-left:16px;font-size:12px;color:#374151;line-height:1.9;">
+                    <li>La demande est examinée par l'administrateur</li>
+                    <li>Vous serez informé de la décision</li>
+                    <li>Le montant accordé peut être inférieur au montant demandé</li>
+                    <li>Un seul dossier actif par fonds est possible</li>
+                </ul>
+            </div>
+
+            <!-- Bouton -->
+            <button type="submit" class="btn-pm btn-pm-amber btn-pm-full"
+                    style="box-shadow:0 4px 12px rgba(217,119,6,0.35);">
+                <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+                Soumettre ma demande
+            </button>
+
+            <a asp-action="MesFonds" class="btn-pm btn-pm-outline" style="display:flex;justify-content:center;margin-top:2px;">
+                Annuler
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

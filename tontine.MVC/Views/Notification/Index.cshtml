@@ -1,0 +1,85 @@
+@model List<tontine.MVC.Models.NotificationViewModel>
+@{ ViewData["Title"] = "Notifications"; }
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div>
+        <h2 style="margin:0;font-size:22px;font-weight:700;">Notifications</h2>
+        <p style="margin:4px 0 0;color:#888;font-size:14px;">
+            @Model.Count notification(s) &mdash;
+            <span style="color:#C62828;font-weight:600;">@Model.Count(n => !n.Lue) non lue(s)</span>
+        </p>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <form asp-action="SupprimerLues" method="post" style="margin:0;"
+              data-confirm="Supprimer toutes les notifications lues ?" data-confirm-type="delete">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    style="background:#FFF3F3;color:#C62828;border:1px solid #FFCDD2;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Supprimer les lues
+            </button>
+        </form>
+        <form asp-action="MarquerToutesLues" method="post" style="margin:0;">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    style="background:#E6F4EE;color:#085041;border:1px solid #C8E6C9;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                <i data-lucide="check-check" style="width:14px;height:14px;"></i> Tout marquer lues
+            </button>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div style="background:white;border-radius:12px;padding:56px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <i data-lucide="bell-off" style="width:48px;height:48px;color:#0F6E56;margin-bottom:16px;display:block;margin-left:auto;margin-right:auto;"></i>
+        <h3 style="margin:0 0 8px;color:#1a1a1a;">Aucune notification</h3>
+        <p style="color:#888;font-size:14px;margin:0;">Vous êtes à jour !</p>
+    </div>
+}
+else
+{
+    <div style="display:flex;flex-direction:column;gap:10px;">
+        @foreach (var n in Model.OrderByDescending(x => x.DateCreation))
+        {
+            <div style="background:white;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,0.07);
+                        display:flex;align-items:flex-start;gap:16px;
+                        border-left:4px solid @n.CouleurType;
+                        opacity:@(n.Lue ? "0.65" : "1");">
+                <div style="width:38px;height:38px;border-radius:50%;background:@(n.Lue ? "#F4F6F9" : n.CouleurType + "18");
+                            display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i data-lucide="@n.IconeType" style="width:18px;height:18px;color:@n.CouleurType;"></i>
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+                        <strong style="font-size:14px;color:#1a1a1a;">@n.Titre</strong>
+                        @if (!n.Lue)
+                        {
+                            <span style="background:@n.CouleurType;color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">NOUVEAU</span>
+                        }
+                        <span style="margin-left:auto;font-size:12px;color:#888;">
+                            @n.DateCreation.ToString("dd/MM/yyyy HH:mm")
+                        </span>
+                    </div>
+                    <p style="margin:0;font-size:13px;color:#555;line-height:1.5;">@n.Message</p>
+                    @if (!string.IsNullOrEmpty(n.Lien))
+                    {
+                        <a href="@n.Lien" style="font-size:12px;color:#0F6E56;text-decoration:none;margin-top:6px;display:inline-block;">
+                            Voir le détail &rarr;
+                        </a>
+                    }
+                </div>
+                <div style="display:flex;gap:6px;flex-shrink:0;">
+                    <form asp-action="Delete" method="post" style="margin:0;"
+                          data-confirm="Supprimer cette notification ?" data-confirm-type="delete">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@n.IdNotification" />
+                        <button type="submit" title="Supprimer"
+                                style="background:#FFF3F3;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;color:#C62828;">
+                            <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}

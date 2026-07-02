@@ -87,6 +87,7 @@
     .btn-del    { color:#C62828; background:#FFF5F5; }
 
     .empty-msg  { text-align:center; padding:40px; color:#888780; font-size:14px; }
+    @@keyframes spin { to { transform: rotate(360deg); } }
 
 </style>
 
@@ -182,6 +183,10 @@
         </a>
         <a asp-action="LivreDeCompte" style="background:#4A148C;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
             <i data-lucide="book-open" style="width:14px;height:14px;"></i> Livre de compte
+        </a>
+        <a asp-action="ExportExcel"
+           style="background:#1B5E20;color:white;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="file-spreadsheet" style="width:14px;height:14px;"></i> Excel
         </a>
         <a asp-action="Create" class="btn-add">+ Nouvelle cotisation</a>
 
@@ -318,22 +323,30 @@
                    onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
         </div>
 
-        <!-- État en attente -->
-        <div id="pm-waiting" style="display:none;text-align:center;padding:16px;">
-            <div style="font-size:32px;margin-bottom:8px;">⏳</div>
-            <p style="font-size:14px;font-weight:600;color:#333;">Demande envoyée !</p>
-            <p style="font-size:13px;color:#666;">Confirmez le paiement sur votre téléphone.</p>
-            <p id="pm-ref-display" style="font-size:11px;color:#999;margin-top:4px;"></p>
-            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
-                <button onclick="simulerConfirmation(true)"
-                        style="background:#0F6E56;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;">
-                    ✓ Simuler succès
-                </button>
-                <button onclick="simulerConfirmation(false)"
-                        style="background:#C62828;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;">
-                    ✕ Simuler échec
-                </button>
+        <!-- État en attente de confirmation -->
+        <div id="pm-waiting" style="display:none;text-align:center;padding:12px 8px;">
+            <div style="width:52px;height:52px;border-radius:50%;background:#E8F5E9;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+                <i data-lucide="smartphone" style="width:26px;height:26px;color:#2E7D32;"></i>
             </div>
+            <p style="font-size:15px;font-weight:700;color:#1a1a1a;margin:0 0 4px;">Demande créée !</p>
+            <p id="pm-ref-display" style="font-size:11px;color:#888;margin:0 0 12px;"></p>
+
+            <!-- Bouton principal : ouvrir sur le téléphone -->
+            <a id="pm-payment-url" href="#" target="_blank"
+               style="display:inline-flex;align-items:center;gap:8px;background:#FF6D00;color:white;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;margin-bottom:12px;">
+                <i data-lucide="external-link" style="width:16px;height:16px;"></i>
+                Ouvrir sur mon téléphone pour payer
+            </a>
+
+            <p style="font-size:12px;color:#777;margin:0 0 10px;">
+                Clique le bouton ci-dessus → entre ton numéro <span id="pm-tel-display" style="font-weight:600;color:#333;"></span> → confirme l'USSD
+            </p>
+
+            <!-- Barre de progression -->
+            <div style="background:#E8F5E9;border-radius:4px;height:3px;overflow:hidden;margin-bottom:6px;">
+                <div id="pm-progress" style="height:100%;background:#0F6E56;border-radius:4px;width:0%;transition:width 300s linear;"></div>
+            </div>
+            <p style="font-size:11px;color:#aaa;margin:0;">En attente de ta confirmation... (<span id="pm-timer">5:00</span>)</p>
         </div>
 
         <!-- Résultat -->
@@ -363,24 +376,31 @@ var _pmIdCotisation = null;
 var _pmMontant      = 0;
 var _pmOperateur    = 'MTN';
 var _pmReference    = null;
+var _pmPaymentUrl   = null;
+var _pmPollTimer    = null;
+var _pmCountdown    = null;
+var _pmSecondes     = 300; // 5 minutes max
 
 function ouvrirModalPaiement(idCotisation, montant) {
     _pmIdCotisation = idCotisation;
     _pmMontant      = montant;
     _pmReference    = null;
+    _pmPaymentUrl   = null;
+    stopPolling();
     document.getElementById('pm-montant-label').textContent = 'Montant : ' + montant.toLocaleString('fr-FR') + ' FCFA';
     document.getElementById('pm-telephone').value = '';
-    document.getElementById('pm-waiting').style.display = 'none';
-    document.getElementById('pm-result').style.display  = 'none';
-    document.getElementById('pm-actions').style.display = 'flex';
+    document.getElementById('pm-waiting').style.display     = 'none';
+    document.getElementById('pm-result').style.display      = 'none';
+    document.getElementById('pm-actions').style.display     = 'flex';
+    document.getElementById('btn-payer').disabled = false;
     selectOperateur('MTN');
-    var modal = document.getElementById('modal-paiement');
-    modal.style.display = 'flex';
+    document.getElementById('modal-paiement').style.display = 'flex';
     document.body.style.overflow = 'hidden';
     lucide.createIcons();
 }
 
 function fermerModalPaiement() {
+    stopPolling();
     document.getElementById('modal-paiement').style.display = 'none';
     document.body.style.overflow = '';
     if (_pmReference) location.reload();
@@ -401,6 +421,9 @@ function initierPaiement() {
     if (!tel) { showToast('Veuillez saisir un numéro de téléphone.', 'warning'); return; }
 
     document.getElementById('btn-payer').disabled = true;
+    document.getElementById('btn-payer').innerHTML = '<i data-lucide="loader" style="width:15px;height:15px;animation:spin 1s linear infinite;"></i> Envoi en cours...';
+    lucide.createIcons();
+
     fetch('@Url.Action("InitierPaiement", "Cotisation")', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '' },
@@ -409,38 +432,93 @@ function initierPaiement() {
     .then(r => r.json())
     .then(data => {
         if (data.succes) {
-            _pmReference = data.reference;
-            document.getElementById('pm-ref-display').textContent = 'Référence : ' + data.reference;
+            _pmReference  = data.reference;
+            _pmPaymentUrl = data.paymentUrl;
+            document.getElementById('pm-ref-display').textContent = 'Réf : ' + data.reference;
+            document.getElementById('pm-tel-display').textContent = document.getElementById('pm-telephone').value.trim();
+            if (_pmPaymentUrl) {
+                document.getElementById('pm-payment-url').href = _pmPaymentUrl;
+            }
             document.getElementById('pm-waiting').style.display = 'block';
             document.getElementById('pm-actions').style.display = 'none';
+            // Lancer la barre de progression
+            var bar = document.getElementById('pm-progress');
+            bar.style.transition = 'none'; bar.style.width = '0%';
+            setTimeout(function() { bar.style.transition = 'width 300s linear'; bar.style.width = '100%'; }, 50);
+            demarrerPolling();
         } else {
             showToast(data.message || 'Erreur lors de l\'initiation.', 'error');
             document.getElementById('btn-payer').disabled = false;
+            document.getElementById('btn-payer').innerHTML = '<i data-lucide="send" style="width:15px;height:15px;"></i> Envoyer la demande';
+            lucide.createIcons();
         }
     })
     .catch(() => {
-        showToast('Erreur réseau.', 'error');
+        showToast('Erreur réseau. Vérifiez votre connexion.', 'error');
         document.getElementById('btn-payer').disabled = false;
+        document.getElementById('btn-payer').innerHTML = '<i data-lucide="send" style="width:15px;height:15px;"></i> Envoyer la demande';
+        lucide.createIcons();
     });
 }
 
-function simulerConfirmation(succes) {
+function demarrerPolling() {
+    _pmSecondes = 300;
+    // Countdown
+    majTimer();
+    _pmCountdown = setInterval(function() {
+        _pmSecondes--;
+        majTimer();
+        if (_pmSecondes <= 0) { stopPolling(); afficherResultat(false, 'Délai d\'attente dépassé (5 min). Réessayez.'); }
+    }, 1000);
+    // Polling toutes les 5 secondes
+    _pmPollTimer = setInterval(verifierStatut, 5000);
+}
+
+function stopPolling() {
+    if (_pmPollTimer)  { clearInterval(_pmPollTimer);  _pmPollTimer  = null; }
+    if (_pmCountdown)  { clearInterval(_pmCountdown);  _pmCountdown  = null; }
+}
+
+function majTimer() {
+    var m = Math.floor(_pmSecondes / 60);
+    var s = _pmSecondes % 60;
+    document.getElementById('pm-timer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function verifierStatut() {
     if (!_pmReference) return;
-    fetch('@Url.Action("SimulerPaiement", "Cotisation")/' + _pmReference + '?succes=' + succes, { method: 'POST' })
+    fetch('@Url.Action("VerifierStatutPaiement", "Cotisation")?reference=' + encodeURIComponent(_pmReference))
     .then(r => r.json())
     .then(data => {
-        document.getElementById('pm-waiting').style.display = 'none';
-        var resultEl = document.getElementById('pm-result');
-        resultEl.style.display = 'block';
-        if (succes) {
-            resultEl.innerHTML = '<div style="font-size:36px">✅</div><p style="font-size:15px;font-weight:700;color:#0F6E56;margin:8px 0 4px;">Paiement confirmé !</p><p style="font-size:13px;color:#666;">La cotisation est marquée comme Payée.</p>';
-            showToast('Paiement Mobile Money confirmé avec succès !', 'success');
-        } else {
-            resultEl.innerHTML = '<div style="font-size:36px">❌</div><p style="font-size:15px;font-weight:700;color:#C62828;margin:8px 0 4px;">Paiement échoué</p><p style="font-size:13px;color:#666;">Veuillez réessayer ou contacter votre opérateur.</p>';
-            showToast('Paiement échoué.', 'error');
+        if (!data) return;
+        if (data.statut === 'Confirmé') {
+            stopPolling();
+            document.getElementById('pm-waiting').style.display = 'none';
+            afficherResultat(true, 'Paiement confirmé ! La cotisation est marquée comme Payée.');
+        } else if (data.statut === 'Échoué') {
+            stopPolling();
+            document.getElementById('pm-waiting').style.display = 'none';
+            afficherResultat(false, 'Paiement refusé par l\'opérateur. Réessayez ou contactez ' + _pmOperateur + '.');
         }
-        setTimeout(() => fermerModalPaiement(), 2500);
-    });
+        // Si "En attente" — on continue à poller
+    })
+    .catch(function() { /* réseau temporairement indisponible — on réessaie au prochain tick */ });
+}
+
+function afficherResultat(succes, message) {
+    var el = document.getElementById('pm-result');
+    el.style.display = 'block';
+    if (succes) {
+        el.innerHTML = '<div style="font-size:40px;margin-bottom:8px;">✅</div>'
+            + '<p style="font-size:15px;font-weight:700;color:#0F6E56;margin:0 0 6px;">' + message + '</p>'
+            + '<p style="font-size:12px;color:#888;">Fermeture automatique dans 3 secondes…</p>';
+        showToast('Paiement Mobile Money confirmé !', 'success');
+    } else {
+        el.innerHTML = '<div style="font-size:40px;margin-bottom:8px;">❌</div>'
+            + '<p style="font-size:15px;font-weight:700;color:#C62828;margin:0 0 6px;">' + message + '</p>';
+        showToast('Paiement échoué.', 'error');
+    }
+    if (succes) setTimeout(() => fermerModalPaiement(), 3000);
 }
 
 document.getElementById('modal-paiement').addEventListener('click', function(e) {

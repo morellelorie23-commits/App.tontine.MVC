@@ -20,6 +20,106 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Amende/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1lbmRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Auth/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Auth/Refuse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZWZ1c2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Calendrier/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FsZW5kcmllclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Compte/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcHRlXENoYW5nZVBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Compte/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcHRlXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Compte/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcHRlXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Compte/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcHRlXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Compte/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcHRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/LivreDeCompte.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxMaXZyZURlQ29tcHRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/PaiementCaisse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxQYWllbWVudENhaXNzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cotisation/Tours.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ290aXNhdGlvblxUb3Vycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontinePenalite/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lUGVuYWxpdGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontinePenalite/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lUGVuYWxpdGVcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontinePenalite/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lUGVuYWxpdGVcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontinePenalite/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lUGVuYWxpdGVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontine/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontine/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontine/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/CycleTontine/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVUb250aW5lXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cycle/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Cycle/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -32,12 +132,140 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3ljbGVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/FondsSolidarite/AjouterContribution.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9uZHNTb2xpZGFyaXRlXEFqb3V0ZXJDb250cmlidXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/FondsSolidarite/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9uZHNTb2xpZGFyaXRlXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/FondsSolidarite/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9uZHNTb2xpZGFyaXRlXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/FondsSolidarite/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9uZHNTb2xpZGFyaXRlXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/FondsSolidarite/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9uZHNTb2xpZGFyaXRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/FondsSolidarite/NouvelleDemandeAide.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9uZHNTb2xpZGFyaXRlXE5vdXZlbGxlRGVtYW5kZUFpZGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Garant/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FyYW50XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Garant/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FyYW50XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Garant/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FyYW50XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Garant/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FyYW50XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/Balance.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxCYWxhbmNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/BalanceClient.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxCYWxhbmNlQ2xpZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/BalanceGenerale.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxCYWxhbmNlR2VuZXJhbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/Journal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxKb3VybmFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/Journee.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxKb3VybmVlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/OperationComptable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxPcGVyYXRpb25Db21wdGFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/Rapprochement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxSYXBwcm9jaGVtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/ReleveCaisse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxSZWxldmVDYWlzc2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/GrandLivre/TransfertCaisse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhbmRMaXZyZVxUcmFuc2ZlcnRDYWlzc2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Journal/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm91cm5hbFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Litige/ExclureMembre.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGl0aWdlXEV4Y2x1cmVNZW1icmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Litige/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGl0aWdlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Litige/SignalerLitige.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGl0aWdlXFNpZ25hbGVyTGl0aWdlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembreCycleTontine/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlQ3ljbGVUb250aW5lXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembreCycleTontine/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlQ3ljbGVUb250aW5lXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembreCycleTontine/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlQ3ljbGVUb250aW5lXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembreCycleTontine/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlQ3ljbGVUb250aW5lXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembrePosteCycle/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlUG9zdGVDeWNsZVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembrePosteCycle/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlUG9zdGVDeWNsZVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembrePosteCycle/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlUG9zdGVDeWNsZVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/MembrePosteCycle/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlUG9zdGVDeWNsZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Membre/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Membre/Delete.cshtml]
@@ -52,6 +280,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Membre/Releve.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYnJlXFJlbGV2ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Notification/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Penalite/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVuYWxpdGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Penalite/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVuYWxpdGVcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -62,6 +302,38 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Penalite/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVuYWxpdGVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/DemanderAide.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxEZW1hbmRlckFpZGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/MesCotisations.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxNZXNDb3Rpc2F0aW9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/MesFonds.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxNZXNGb25kcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/MesPrets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxNZXNQcmV0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/MesVersements.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxNZXNWZXJzZW1lbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/PortailMembre/MonProfil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9ydGFpbE1lbWJyZVxNb25Qcm9maWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Poste/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zdGVcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Poste/Delete.cshtml]
@@ -76,12 +348,76 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zdGVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Pret/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJldFxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Pret/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJldFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Pret/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJldFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Pret/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJldFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Rapport/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFwcG9ydFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Reunion/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV1bmlvblxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Reunion/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV1bmlvblxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Reunion/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV1bmlvblxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Reunion/GererPresence.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV1bmlvblxHZXJlclByZXNlbmNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Reunion/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV1bmlvblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Role/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/SaisieSeance/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Fpc2llU2VhbmNlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Shared/_Breadcrumb.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CcmVhZGNydW1iLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Shared/_LayoutMembre.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRNZW1icmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Statistique/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlzdGlxdWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Tontine/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9udGluZVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Tontine/Delete.cshtml]
@@ -94,6 +430,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Tontine/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9udGluZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Versement/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVyc2VtZW50XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Versement/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVyc2VtZW50XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Versement/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVyc2VtZW50XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MorelleLight/source/repos/tontine.MVC/Views/Versement/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVyc2VtZW50XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/MorelleLight/source/repos/tontine.MVC/Views/_ViewImports.cshtml]

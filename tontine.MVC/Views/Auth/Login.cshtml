@@ -11,11 +11,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connexion &mdash; TontineApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
             min-height: 100vh;
             display: flex;
         }
@@ -53,6 +54,13 @@
             width: 100%;
             padding: 24px;
             background: linear-gradient(135deg, #0B5940 0%, #0F6E56 50%, #1D9E75 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
         }
         .login-card {
             background: white;
@@ -206,6 +214,11 @@
 
 <!-- ── Panneau droit : formulaire ── -->
 <div class="login-form-panel">
+    <!-- Orbes décoratifs -->
+    <div class="login-orb" style="width:300px;height:300px;top:-100px;right:-100px;background:rgba(255,255,255,0.06);"></div>
+    <div class="login-orb" style="width:220px;height:220px;bottom:-70px;left:-50px;background:rgba(255,255,255,0.05);"></div>
+    <div class="login-orb" style="width:120px;height:120px;top:42%;left:6%;background:rgba(255,255,255,0.04);"></div>
+    <div class="login-orb" style="width:60px;height:60px;top:20%;right:18%;background:rgba(255,255,255,0.07);"></div>
     <div class="login-card">
 
         <div class="brand">
@@ -373,18 +386,27 @@
 
             <div class="form-group">
                 <label asp-for="Nom"></label>
-                <input asp-for="Nom" type="text"
-                       placeholder="ex : morelle" autocomplete="username" />
+                <div style="position:relative;">
+                    <div style="position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;">
+                        <i data-lucide="user" style="width:15px;height:15px;color:#0F6E56;"></i>
+                    </div>
+                    <input asp-for="Nom" type="text"
+                           placeholder="ex : morelle" autocomplete="username"
+                           style="padding-left:40px;" />
+                </div>
                 <span asp-validation-for="Nom" class="field-error"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="MotDePasse"></label>
                 <div style="position:relative;">
+                    <div style="position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;">
+                        <i data-lucide="lock" style="width:15px;height:15px;color:#0F6E56;"></i>
+                    </div>
                     <input id="pwd-input" asp-for="MotDePasse" type="password"
                            placeholder="Votre mot de passe"
                            autocomplete="current-password"
-                           style="padding-right:44px;" />
+                           style="padding-right:44px;padding-left:40px;" />
                     <button type="button" onclick="togglePwd()" tabindex="-1"
                             style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
                                    background:none;border:none;cursor:pointer;color:#888;
@@ -398,7 +420,10 @@
             <div class="form-group">
                 <label asp-for="IdCycle"></label>
                 <div class="select-wrapper">
-                    <select asp-for="IdCycle">
+                    <div style="position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;z-index:1;">
+                        <i data-lucide="repeat" style="width:15px;height:15px;color:#0F6E56;"></i>
+                    </div>
+                    <select asp-for="IdCycle" style="padding-left:40px;">
                         <option value="">-- Sélectionner un cycle --</option>
                         @foreach (var cycle in (ViewData["Cycles"] as List<tontine.MVC.Models.CycleViewModel> ?? new()))
                         {
@@ -409,7 +434,10 @@
                 <span asp-validation-for="IdCycle" class="field-error"></span>
             </div>
 
-            <button type="submit" class="btn-login">Se connecter</button>
+            <button type="submit" class="btn-login" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                <i data-lucide="log-in" style="width:17px;height:17px;"></i>
+                Se connecter
+            </button>
         </form>
 
         <p class="footer-note">&copy; 2026 TontineApp &mdash; v1.0</p>

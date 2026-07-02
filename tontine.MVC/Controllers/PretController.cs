@@ -9,11 +9,13 @@ namespace tontine.MVC.Controllers
     {
         private readonly IPretService _service;
         private readonly IMembreService _membreService;
+        private readonly ExcelService   _excel;
 
-        public PretController(IPretService service, IMembreService membreService)
+        public PretController(IPretService service, IMembreService membreService, ExcelService excel)
         {
-            _service = service;
+            _service       = service;
             _membreService = membreService;
+            _excel         = excel;
         }
 
         public async Task<IActionResult> Index()
@@ -165,6 +167,16 @@ namespace tontine.MVC.Controllers
         {
             var membres = await _membreService.GetAllAsync();
             ViewData["Membres"] = membres;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportExcel()
+        {
+            var prets = await _service.GetAllAsync();
+            var bytes = _excel.ExporterPrets(prets, CycleNom);
+            return File(bytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"prets-{CycleNom}-{DateTime.Now:yyyyMMdd}.xlsx");
         }
     }
 }

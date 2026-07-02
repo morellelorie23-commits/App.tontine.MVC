@@ -19,19 +19,24 @@
 <div style="padding:8px 0;">
 
     <!-- Filtres avancés -->
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;">
-        <input id="search-membre" type="text" placeholder="Rechercher par nom, prénom, email, ville..."
-               oninput="filtrerMembresAvances()"
-               style="flex:1;min-width:240px;max-width:380px;padding:10px 14px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:14px;outline:none;"
-               onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
+    <div style="background:white;border-radius:12px;padding:14px 18px;box-shadow:0 1px 6px rgba(0,0,0,0.06);margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div style="position:relative;flex:1;min-width:220px;max-width:360px;">
+            <div style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;">
+                <i data-lucide="search" style="width:14px;height:14px;color:#aaa;"></i>
+            </div>
+            <input id="search-membre" type="text" placeholder="Rechercher par nom, prénom, email..."
+                   oninput="filtrerMembresAvances()"
+                   style="width:100%;padding:9px 12px 9px 34px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;outline:none;"
+                   onfocus="this.style.borderColor='#0F6E56'" onblur="this.style.borderColor='#E0E0E0'" />
+        </div>
         <select id="filtre-sexe" onchange="filtrerMembresAvances()"
-                style="padding:10px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;outline:none;cursor:pointer;">
+                style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;outline:none;cursor:pointer;">
             <option value="">Tous les sexes</option>
             <option value="M">Masculin</option>
             <option value="F">Féminin</option>
         </select>
         <select id="filtre-pays" onchange="filtrerMembresAvances()"
-                style="padding:10px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;outline:none;cursor:pointer;">
+                style="padding:9px 12px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;outline:none;cursor:pointer;">
             <option value="">Tous les pays</option>
             <option value="Cameroun">Cameroun</option>
             <option value="Sénégal">Sénégal</option>
@@ -50,35 +55,26 @@
             <option value="Autre">Autre</option>
         </select>
         <button onclick="reinitialiserFiltres()" type="button"
-                style="padding:10px 14px;border:1.5px solid #D3D1C7;border-radius:8px;font-size:13px;background:white;color:#5F5E5A;cursor:pointer;">
-            Réinitialiser
+                style="padding:9px 14px;border:1.5px solid #E0E0E0;border-radius:8px;font-size:13px;background:white;color:#666;cursor:pointer;display:inline-flex;align-items:center;gap:5px;"
+                onmouseover="this.style.borderColor='#C62828';this.style.color='#C62828'" onmouseout="this.style.borderColor='#E0E0E0';this.style.color='#666'">
+            <i data-lucide="x" style="width:13px;height:13px;"></i> Réinitialiser
         </button>
     </div>
 
 
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-bottom:20px;">
 
-        <div>
-
-            <h2 style="margin:0; font-size:22px; font-weight:600; color:#1a1a1a;">Gestion des membres</h2>
-
-            <p style="margin:4px 0 0; color:#888780; font-size:14px;">@Model.Count membre(s) enregistré(s)</p>
-
-        </div>
-
-        <button type="button" onclick="pagerMembre.csv(['Nom','Prénom','Téléphone','Email','Ville','Inscription'],function(r){var c=r.querySelectorAll('td');return[c[1].textContent.trim(),c[2].textContent.trim(),c[3].textContent.trim(),c[4].textContent.trim(),c[5].querySelector('span').textContent.trim(),c[6].textContent.trim()]},'membres')" style="background:#1565C0;color:white;border:none;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(21,101,192,0.3);"><i data-lucide="download" style="width:14px;height:14px;"></i> CSV</button>
+        <button type="button" onclick="pagerMembre.csv(['Nom','Prénom','Téléphone','Email','Ville','Inscription'],function(r){var c=r.querySelectorAll('td');return[c[1].textContent.trim(),c[2].textContent.trim(),c[3].textContent.trim(),c[4].textContent.trim(),c[5].querySelector('span').textContent.trim(),c[6].textContent.trim()]},'membres')"
+                style="background:#E3F2FD;color:#1565C0;border:1px solid #BBDEFB;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            <i data-lucide="download" style="width:14px;height:14px;"></i> Exporter CSV
+        </button>
 
         <button onclick="ouvrirModal()"
-
-                style="background:#0F6E56; color:white; border:none; border-radius:8px;
-
-                       padding:10px 20px; font-size:14px; font-weight:500; cursor:pointer;
-
-                       box-shadow:0 2px 8px rgba(15,110,86,0.3);">
-
-            + Nouveau membre
-
+                style="background:linear-gradient(135deg,#0F6E56,#1D9E75); color:white; border:none; border-radius:8px;
+                       padding:10px 20px; font-size:13px; font-weight:600; cursor:pointer;
+                       box-shadow:0 4px 14px rgba(15,110,86,0.35);display:inline-flex;align-items:center;gap:7px;">
+            <i data-lucide="user-plus" style="width:15px;height:15px;"></i> Nouveau membre
         </button>
 
     </div>

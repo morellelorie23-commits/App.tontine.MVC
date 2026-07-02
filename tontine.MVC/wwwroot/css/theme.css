@@ -1,0 +1,305 @@
+/* Variables CSS pour Light Mode (par défaut) */
+html, body {
+    --color-bg-primary: #F4F6F9;
+    --color-bg-secondary: #FFFFFF;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #666666;
+    --color-text-muted: #888780;
+    --color-border: #E8EAF0;
+    --color-border-light: #F1EFE8;
+
+    --sidebar-bg-start: #0B5940;
+    --sidebar-bg-mid: #0F6E56;
+    --sidebar-bg-end: #128060;
+    --sidebar-text: rgba(255, 255, 255, 0.75);
+    --sidebar-text-hover: rgba(255, 255, 255, 0.8);
+    --sidebar-text-active: #FFFFFF;
+    --sidebar-label: rgba(255, 255, 255, 0.35);
+    --sidebar-border: rgba(255, 255, 255, 0.12);
+
+    --topbar-bg: #FFFFFF;
+    --topbar-text: #1a1a2e;
+    --topbar-border: #E8EAF0;
+
+    --button-primary: #0F6E56;
+    --button-primary-hover: #0D5A46;
+    --button-secondary: #FFF8E1;
+    --button-secondary-text: #F57F17;
+    --button-danger: #C62828;
+    --button-danger-hover: #A01A1A;
+
+    --input-bg: #FFFFFF;
+    --input-border: #E0E0E0;
+    --input-text: #1a1a1a;
+    --input-placeholder: #999999;
+
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+
+    --badge-bg: #E6F4EE;
+    --badge-text: #085041;
+
+    --color-breadcrumb-bg: #FAFAFA;
+    --color-primary: #0F6E56;
+    --color-primary-dark: #085041;
+}
+
+/* Variables CSS pour Dark Mode */
+html.dark-mode, html.dark-mode body {
+    --color-bg-primary: #1a1a1a;
+    --color-bg-secondary: #2d2d2d;
+    --color-text-primary: #E8E8E8;
+    --color-text-secondary: #B0B0B0;
+    --color-text-muted: #808080;
+    --color-border: #404040;
+    --color-border-light: #383838;
+
+    --sidebar-bg-start: #0A3A2E;
+    --sidebar-bg-mid: #0D4A3D;
+    --sidebar-bg-end: #0F5A4C;
+    --sidebar-text: rgba(255, 255, 255, 0.7);
+    --sidebar-text-hover: rgba(255, 255, 255, 0.85);
+    --sidebar-text-active: #FFFFFF;
+    --sidebar-label: rgba(255, 255, 255, 0.4);
+    --sidebar-border: rgba(255, 255, 255, 0.15);
+
+    --topbar-bg: #2d2d2d;
+    --topbar-text: #E8E8E8;
+    --topbar-border: #404040;
+
+    --button-primary: #1D9E75;
+    --button-primary-hover: #158660;
+    --button-secondary: #3a3a2a;
+    --button-secondary-text: #FFD699;
+    --button-danger: #E53935;
+    --button-danger-hover: #C62828;
+
+    --input-bg: #383838;
+    --input-border: #505050;
+    --input-text: #E8E8E8;
+    --input-placeholder: #666666;
+
+    --card-bg: #2d2d2d;
+    --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+
+    --badge-bg: #1a4d42;
+    --badge-text: #7DCCB8;
+
+    --color-breadcrumb-bg: #2d2d2d;
+    --color-primary: #1D9E75;
+    --color-primary-dark: #158660;
+}
+
+/* Application des variables */
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-mid) 60%, var(--sidebar-bg-end) 100%);
+}
+
+.topbar {
+    background-color: var(--topbar-bg);
+    color: var(--topbar-text);
+    border-bottom-color: var(--topbar-border);
+}
+
+.topbar-title {
+    color: var(--topbar-text);
+}
+
+.sidebar-brand p {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.menu-item {
+    color: var(--sidebar-text);
+    border-left-color: transparent;
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--sidebar-text-hover);
+    border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-item.active {
+    background-color: rgba(255, 255, 255, 0.18);
+    color: var(--sidebar-text-active);
+    border-left-color: #9FE1CB;
+}
+
+.menu-section-btn {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-section-btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.menu-sublabel {
+    color: var(--sidebar-label);
+}
+
+.main-footer {
+    border-top-color: var(--topbar-border);
+    color: var(--color-text-muted);
+    background-color: var(--topbar-bg);
+}
+
+.content-area {
+    background-color: var(--color-bg-primary);
+}
+
+/* Cartes et conteneurs */
+div[style*="background:white"],
+div[style*="background: white"],
+.card {
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    color: var(--color-text-primary);
+}
+
+/* Boutons */
+button[style*="background:#0F6E56"],
+button[style*="background: #0F6E56"],
+a[style*="background:#0F6E56"],
+a[style*="background: #0F6E56"] {
+    background-color: var(--button-primary) !important;
+    color: white !important;
+}
+
+button[style*="background:#FFF8E1"],
+button[style*="background: #FFF8E1"] {
+    background-color: var(--button-secondary) !important;
+    color: var(--button-secondary-text) !important;
+}
+
+button[style*="background:#C62828"],
+button[style*="background: #C62828"] {
+    background-color: var(--button-danger) !important;
+    color: white !important;
+}
+
+/* Inputs */
+input, textarea, select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--input-border);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--input-placeholder);
+}
+
+/* Tables */
+table {
+    color: var(--color-text-primary);
+    background-color: var(--card-bg);
+}
+
+thead {
+    background: linear-gradient(135deg, var(--button-primary), var(--button-primary-hover));
+    color: white;
+}
+
+tbody tr {
+    border-bottom-color: var(--color-border-light);
+}
+
+tbody tr:hover {
+    background-color: rgba(15, 110, 86, 0.05);
+}
+
+/* Badges et labels */
+.topbar-badge {
+    background-color: var(--badge-bg);
+    color: var(--badge-text);
+}
+
+.badge-soon {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Messages d'erreur */
+div[style*="background:#FFEBEE"],
+div[style*="#FFEBEE"] {
+    background-color: rgba(198, 40, 40, 0.1) !important;
+    border-left-color: #C62828 !important;
+    color: #B71C1C !important;
+}
+
+div[style*="background:#E6F4EE"],
+div[style*="#E6F4EE"] {
+    background-color: var(--badge-bg) !important;
+    border-left-color: var(--button-primary) !important;
+    color: var(--badge-text) !important;
+}
+
+/* Smooth transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Breadcrumb styling */
+.breadcrumb-container {
+    background-color: var(--color-breadcrumb-bg);
+    border-bottom-color: var(--color-border);
+}
+
+.breadcrumb-container a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-container a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.breadcrumb-container span[data-i18n] {
+    color: var(--color-text-primary);
+}
+
+/* ─── Toast animations ───────────────────────────────────────────────── */
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+@keyframes toast-out {
+    from { opacity: 1; transform: translateY(0)    scale(1);    }
+    to   { opacity: 0; transform: translateY(8px)  scale(0.96); }
+}
+
+/* ─── Skeleton loading ───────────────────────────────────────────────── */
+@keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 6px;
+    color: transparent !important;
+    pointer-events: none;
+    user-select: none;
+}
+
+.skeleton * { visibility: hidden; }
+
+.skeleton-row td {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+    color: transparent !important;
+    border-radius: 4px;
+}
+

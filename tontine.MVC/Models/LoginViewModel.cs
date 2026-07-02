@@ -13,7 +13,6 @@ namespace tontine.MVC.Models
         [Display(Name = "Mot de passe")]
         public string MotDePasse { get; set; } = "";
 
-        [Required(ErrorMessage = "Veuillez sélectionner un cycle")]
         [Display(Name = "Cycle de travail")]
         public int? IdCycle { get; set; }
     }
@@ -26,5 +25,6 @@ namespace tontine.MVC.Models
         public string Email { get; set; } = "";
         public string Role { get; set; } = "";
         public string? Photo { get; set; }
+        public int? IdMembre { get; set; }
     }
 }

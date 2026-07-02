@@ -1,0 +1,53 @@
+@model List<tontine.MVC.Models.VersementViewModel>
+@{ Layout = "~/Views/Shared/_LayoutMembre.cshtml"; ViewData["Title"] = "Mes versements reçus"; string F(decimal v) => v.ToString("N0") + " FCFA"; }
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+    <div>
+        <h2 style="margin:0;font-size:22px;font-weight:700;">Mes versements reçus</h2>
+        <p style="margin:4px 0 0;color:#888;font-size:14px;">Cycle : @ViewBag.CycleNom</p>
+    </div>
+    @if (Model.Any())
+    {
+        <div style="background:#E6F4EE;color:#0F6E56;padding:10px 20px;border-radius:10px;font-weight:700;font-size:15px;">
+            Total net reçu : @F(Model.Sum(v => v.MontantNet))
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div style="background:white;border-radius:12px;padding:60px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <i data-lucide="banknote" style="width:40px;height:40px;opacity:.3;margin-bottom:12px;"></i>
+        <p style="color:#888;">Vous n'avez pas encore reçu de versement ce cycle.</p>
+    </div>
+}
+else
+{
+    <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <thead>
+                <tr style="background:#F8FDF9;">
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Tontine</th>
+                    <th style="padding:14px 18px;text-align:right;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Montant brut</th>
+                    <th style="padding:14px 18px;text-align:right;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Déduction</th>
+                    <th style="padding:14px 18px;text-align:right;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Commission</th>
+                    <th style="padding:14px 18px;text-align:right;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Net reçu</th>
+                    <th style="padding:14px 18px;text-align:left;font-weight:600;color:#444;font-size:12px;text-transform:uppercase;border-bottom:1.5px solid #E1F5EE;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.OrderByDescending(x => x.DateVersement))
+                {
+                    <tr style="border-bottom:1px solid #F4F4F2;" onmouseover="this.style.background='#FAFFF9'" onmouseout="this.style.background=''">
+                        <td style="padding:14px 18px;font-weight:600;">@v.LibelleTontine</td>
+                        <td style="padding:14px 18px;text-align:right;color:#555;">@F(v.Montant)</td>
+                        <td style="padding:14px 18px;text-align:right;color:#F57F17;font-size:13px;">- @F(v.MontantDeduction)</td>
+                        <td style="padding:14px 18px;text-align:right;color:#BF360C;font-size:13px;">- @F(v.MontantCommission)</td>
+                        <td style="padding:14px 18px;text-align:right;font-weight:700;color:#1B5E20;font-size:15px;">@F(v.MontantNet)</td>
+                        <td style="padding:14px 18px;color:#555;">@v.DateVersement.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

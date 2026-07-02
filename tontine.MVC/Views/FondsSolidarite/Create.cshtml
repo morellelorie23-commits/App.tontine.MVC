@@ -1,0 +1,113 @@
+@model tontine.MVC.Models.FondsSolidariteViewModel
+@{
+    ViewData["Title"] = "Nouveau fonds de solidarité";
+}
+
+<div style="margin-bottom:24px;">
+    <a asp-action="Index" style="color:#0F6E56;font-size:13px;text-decoration:none;font-weight:500;">
+        ← Retour à la liste
+    </a>
+    <h2 style="margin:8px 0 4px;font-size:24px;font-weight:700;color:#1a1a1a;">Nouveau fonds de solidarité</h2>
+    <p style="margin:0;color:#888780;font-size:14px;">Créer un fonds d'entraide pour les membres du cycle actif</p>
+</div>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdCycle" />
+
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;">
+
+        <!-- Colonne principale -->
+        <div>
+            <div style="background:white;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);margin-bottom:20px;">
+
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+                    <div style="width:4px;height:22px;background:#0F6E56;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:0.6px;">Informations du fonds</span>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <label asp-for="Nom" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <input asp-for="Nom"
+                           placeholder="Ex : Fonds d'urgence médicale, Fonds de solidarité 2026..."
+                           style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                  font-size:15px;outline:none;transition:border-color 0.2s;color:#111;"
+                           onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                           onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'" />
+                    <span asp-validation-for="Nom" style="color:#DC2626;font-size:12px;margin-top:4px;display:block;"></span>
+                </div>
+
+                <div style="margin-bottom:0;">
+                    <label asp-for="Description" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <textarea asp-for="Description" rows="5"
+                              placeholder="Décrivez l'objectif de ce fonds, les conditions d'utilisation, les règles d'éligibilité des membres..."
+                              style="width:100%;padding:12px 16px;border:1.5px solid #E5E7EB;border-radius:10px;
+                                     font-size:14px;outline:none;resize:vertical;color:#111;line-height:1.6;"
+                              onfocus="this.style.borderColor='#0F6E56';this.style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                              onblur="this.style.borderColor='#E5E7EB';this.style.boxShadow='none'"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne latérale -->
+        <div>
+            <div style="background:white;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);margin-bottom:16px;">
+
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+                    <div style="width:4px;height:22px;background:#1D9E75;border-radius:2px;"></div>
+                    <span style="font-size:13px;font-weight:700;color:#1D9E75;text-transform:uppercase;letter-spacing:0.6px;">Cotisation</span>
+                </div>
+
+                <div style="margin-bottom:8px;">
+                    <label asp-for="MontantParMembre" style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:8px;"></label>
+                    <div style="display:flex;align-items:center;border:1.5px solid #E5E7EB;border-radius:10px;overflow:hidden;transition:border-color 0.2s;"
+                         id="montant-wrap">
+                        <input asp-for="MontantParMembre" type="number" min="0" step="500" placeholder="0"
+                               style="flex:1;padding:12px 16px;border:none;font-size:22px;font-weight:700;
+                                      outline:none;color:#065F46;background:white;min-width:0;"
+                               onfocus="document.getElementById('montant-wrap').style.borderColor='#0F6E56';document.getElementById('montant-wrap').style.boxShadow='0 0 0 3px rgba(15,110,86,0.08)'"
+                               onblur="document.getElementById('montant-wrap').style.borderColor='#E5E7EB';document.getElementById('montant-wrap').style.boxShadow='none'" />
+                        <span style="padding:0 16px;background:#F9FAFB;color:#6B7280;font-size:13px;font-weight:700;
+                                     border-left:1.5px solid #E5E7EB;align-self:stretch;display:flex;align-items:center;">
+                            FCFA
+                        </span>
+                    </div>
+                    <p style="margin:8px 0 0;font-size:12px;color:#6B7280;line-height:1.5;">
+                        Montant indicatif par membre. Mettez 0 si les contributions sont libres.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Aide contextuelle -->
+            <div style="background:#F0FDF4;border:1.5px solid #6EE7B7;border-radius:12px;padding:20px;">
+                <div style="font-size:13px;font-weight:700;color:#065F46;margin-bottom:10px;">💡 À savoir</div>
+                <ul style="margin:0;padding-left:18px;font-size:13px;color:#374151;line-height:1.8;">
+                    <li>Les contributions des membres alimentent le fonds</li>
+                    <li>Les membres peuvent soumettre des demandes d'aide</li>
+                    <li>L'administrateur approuve ou rejette chaque demande</li>
+                    <li>Le solde est calculé automatiquement en temps réel</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre d'actions -->
+    <div style="background:white;border-radius:12px;padding:20px 28px;margin-top:8px;
+                box-shadow:0 1px 4px rgba(0,0,0,0.08);display:flex;justify-content:flex-end;gap:12px;align-items:center;">
+        <a asp-action="Index"
+           style="background:white;color:#5F5E5A;border:1.5px solid #D1D5DB;border-radius:10px;
+                  padding:11px 28px;font-size:14px;text-decoration:none;font-weight:600;">
+            Annuler
+        </a>
+        <button type="submit"
+                style="background:linear-gradient(135deg,#0F6E56,#1D9E75);color:white;border:none;
+                       border-radius:10px;padding:11px 32px;font-size:14px;font-weight:700;
+                       cursor:pointer;box-shadow:0 2px 8px rgba(15,110,86,0.35);">
+            ✓ Créer le fonds
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -242,6 +242,180 @@ namespace tontine.MVC.Services
             }).GeneratePdf();
         }
 
+        public byte[] GenererProcesVerbalPdf(ReunionViewModel reunion, List<PresenceViewModel> presences)
+        {
+            int presents = presences.Count(p => p.StatutPresence == "Présent");
+            int excuses  = presences.Count(p => p.StatutPresence == "Excusé");
+            int absents  = presences.Count(p => p.StatutPresence == "Absent");
+            int total    = presences.Count;
+
+            return Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(20, Unit.Millimetre);
+                    page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Arial"));
+
+                    page.Header().BorderBottom(2).BorderColor("#1565C0").PaddingBottom(10).Row(row =>
+                    {
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Text("TontineApp").FontSize(18).FontColor("#0F6E56").Bold();
+                            col.Item().Text("Procès-verbal de réunion").FontSize(11).FontColor(Colors.Grey.Darken1);
+                        });
+                        row.ConstantItem(140).AlignRight().Column(col =>
+                        {
+                            col.Item().AlignRight().Text("DOCUMENT OFFICIEL").FontSize(8).Bold().FontColor("#1565C0");
+                            col.Item().AlignRight().Text($"Édité le {DateTime.Now:dd/MM/yyyy à HH:mm}").FontSize(8).FontColor(Colors.Grey.Medium);
+                        });
+                    });
+
+                    page.Content().Column(col =>
+                    {
+                        col.Spacing(12);
+
+                        // Informations de la réunion
+                        col.Item().Background("#EEF4FF").Border(1).BorderColor("#BBDEFB").Padding(14).Column(info =>
+                        {
+                            info.Item().Text("INFORMATIONS DE LA RÉUNION").FontSize(9).Bold().FontColor("#1565C0");
+                            info.Item().PaddingTop(8).Table(table =>
+                            {
+                                table.ColumnsDefinition(c => { c.ConstantColumn(110); c.RelativeColumn(); });
+                                table.Cell().Padding(4).Text("Tontine").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                table.Cell().Padding(4).Text(reunion.LibelleTontine).Bold().FontSize(9);
+                                table.Cell().Padding(4).Text("Cycle").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                table.Cell().Padding(4).Text(reunion.NomCycle).Bold().FontSize(9);
+                                table.Cell().Padding(4).Text("Date").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                table.Cell().Padding(4).Text(reunion.DateReunion.ToString("dddd dd MMMM yyyy à HH:mm")).Bold().FontSize(9);
+                                if (!string.IsNullOrEmpty(reunion.Lieu))
+                                {
+                                    table.Cell().Padding(4).Text("Lieu").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    table.Cell().Padding(4).Text(reunion.Lieu).Bold().FontSize(9);
+                                }
+                                table.Cell().Padding(4).Text("Objet").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                table.Cell().Padding(4).Text(reunion.Objet).Bold().FontSize(9);
+                                table.Cell().Padding(4).Text("Statut").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                table.Cell().Padding(4).Text(reunion.Statut).Bold().FontSize(9).FontColor(reunion.Statut == "Terminée" ? "#0F6E56" : "#F57C00");
+                            });
+                        });
+
+                        // Résumé présences
+                        col.Item().Row(row =>
+                        {
+                            row.RelativeItem().Padding(3).Background("#E6F4EE").Padding(10).Column(c =>
+                            {
+                                c.Item().Text("PRÉSENTS").FontSize(8).Bold().FontColor("#0F6E56");
+                                c.Item().Text($"{presents}").FontSize(20).Bold().FontColor("#0F6E56");
+                                if (total > 0) c.Item().Text($"{100 * presents / total}%").FontSize(8).FontColor("#0F6E56");
+                            });
+                            row.ConstantItem(6);
+                            row.RelativeItem().Padding(3).Background("#FFF8E1").Padding(10).Column(c =>
+                            {
+                                c.Item().Text("EXCUSÉS").FontSize(8).Bold().FontColor("#F57C00");
+                                c.Item().Text($"{excuses}").FontSize(20).Bold().FontColor("#F57C00");
+                                if (total > 0) c.Item().Text($"{100 * excuses / total}%").FontSize(8).FontColor("#F57C00");
+                            });
+                            row.ConstantItem(6);
+                            row.RelativeItem().Padding(3).Background("#FFEBEE").Padding(10).Column(c =>
+                            {
+                                c.Item().Text("ABSENTS").FontSize(8).Bold().FontColor("#C62828");
+                                c.Item().Text($"{absents}").FontSize(20).Bold().FontColor("#C62828");
+                                if (total > 0) c.Item().Text($"{100 * absents / total}%").FontSize(8).FontColor("#C62828");
+                            });
+                            row.ConstantItem(6);
+                            row.RelativeItem().Padding(3).Background("#F3F3F3").Padding(10).Column(c =>
+                            {
+                                c.Item().Text("TOTAL").FontSize(8).Bold().FontColor("#555");
+                                c.Item().Text($"{total}").FontSize(20).Bold().FontColor("#333");
+                            });
+                        });
+
+                        // Feuille de présence
+                        if (presences.Any())
+                        {
+                            col.Item().Background("#1565C0").Padding(8).Text("FEUILLE DE PRÉSENCE").FontColor(Colors.White).Bold().FontSize(10);
+                            col.Item().Table(table =>
+                            {
+                                table.ColumnsDefinition(c =>
+                                {
+                                    c.ConstantColumn(25);
+                                    c.RelativeColumn();
+                                    c.ConstantColumn(80);
+                                    c.RelativeColumn(2);
+                                });
+                                table.Header(h =>
+                                {
+                                    h.Cell().Background("#E3F2FD").Padding(5).AlignCenter().Text("#").Bold().FontSize(9);
+                                    h.Cell().Background("#E3F2FD").Padding(5).Text("Membre").Bold().FontSize(9);
+                                    h.Cell().Background("#E3F2FD").Padding(5).AlignCenter().Text("Statut").Bold().FontSize(9);
+                                    h.Cell().Background("#E3F2FD").Padding(5).Text("Remarque").Bold().FontSize(9);
+                                });
+                                int idx = 1;
+                                foreach (var p in presences.OrderBy(x => x.NomMembre))
+                                {
+                                    string bg      = idx % 2 == 0 ? "#FAFAFA" : Colors.White;
+                                    string sColor  = p.StatutPresence switch { "Présent" => "#0F6E56", "Excusé" => "#F57C00", _ => "#C62828" };
+                                    table.Cell().Background(bg).BorderBottom(1).BorderColor("#EEE").Padding(5).AlignCenter().Text(idx.ToString()).FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    table.Cell().Background(bg).BorderBottom(1).BorderColor("#EEE").Padding(5).Text(p.NomMembre).FontSize(9).Bold();
+                                    table.Cell().Background(bg).BorderBottom(1).BorderColor("#EEE").Padding(5).AlignCenter().Text(p.StatutPresence).FontSize(9).FontColor(sColor).Bold();
+                                    table.Cell().Background(bg).BorderBottom(1).BorderColor("#EEE").Padding(5).Text(p.Remarque ?? "").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                    idx++;
+                                }
+                            });
+                        }
+
+                        // Procès-verbal / Notes
+                        if (!string.IsNullOrWhiteSpace(reunion.Notes) || !string.IsNullOrWhiteSpace(reunion.ProcesVerbal))
+                        {
+                            col.Item().Background("#0F6E56").Padding(8).Text("PROCÈS-VERBAL").FontColor(Colors.White).Bold().FontSize(10);
+                            col.Item().Border(1).BorderColor("#C8E6C9").Padding(14).Column(pv =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(reunion.Notes))
+                                {
+                                    pv.Item().Text("Notes").FontSize(9).Bold().FontColor("#0F6E56");
+                                    pv.Item().PaddingTop(4).PaddingBottom(8).Text(reunion.Notes).FontSize(10);
+                                }
+                                if (!string.IsNullOrWhiteSpace(reunion.ProcesVerbal))
+                                {
+                                    pv.Item().Text("Délibérations et décisions").FontSize(9).Bold().FontColor("#0F6E56");
+                                    pv.Item().PaddingTop(4).Text(reunion.ProcesVerbal).FontSize(10);
+                                }
+                            });
+                        }
+
+                        // Espace signatures
+                        col.Item().PaddingTop(20).Row(row =>
+                        {
+                            row.RelativeItem().Column(sig =>
+                            {
+                                sig.Item().Text("Le Président").FontSize(9).Bold();
+                                sig.Item().PaddingTop(30).BorderBottom(1).BorderColor("#999").Text("");
+                                sig.Item().PaddingTop(4).Text("Signature").FontSize(8).FontColor(Colors.Grey.Medium);
+                            });
+                            row.ConstantItem(40);
+                            row.RelativeItem().Column(sig =>
+                            {
+                                sig.Item().Text("Le Secrétaire").FontSize(9).Bold();
+                                sig.Item().PaddingTop(30).BorderBottom(1).BorderColor("#999").Text("");
+                                sig.Item().PaddingTop(4).Text("Signature").FontSize(8).FontColor(Colors.Grey.Medium);
+                            });
+                        });
+                    });
+
+                    page.Footer().AlignCenter().Text(x =>
+                    {
+                        x.Span("TontineApp — Document confidentiel — ").FontSize(8).FontColor(Colors.Grey.Medium);
+                        x.Span(DateTime.Now.ToString("dd/MM/yyyy à HH:mm")).FontSize(8).FontColor(Colors.Grey.Medium);
+                        x.Span("   Page ").FontSize(8).FontColor(Colors.Grey.Medium);
+                        x.CurrentPageNumber().FontSize(8).FontColor(Colors.Grey.Medium);
+                        x.Span("/").FontSize(8).FontColor(Colors.Grey.Medium);
+                        x.TotalPages().FontSize(8).FontColor(Colors.Grey.Medium);
+                    });
+                });
+            }).GeneratePdf();
+        }
+
         private void ComposeHeader(IContainer c)
         {
             c.BorderBottom(1).BorderColor("#0F6E56").PaddingBottom(10).Row(row =>

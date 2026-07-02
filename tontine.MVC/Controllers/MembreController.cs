@@ -50,13 +50,13 @@ namespace tontine.MVC.Controllers
         {
             if (membre.PhotoFile != null && membre.PhotoFile.Length > 0)
             {
+                if (!IsValidImageFile(membre.PhotoFile, out var err))
+                { ModelState.AddModelError("PhotoFile", err); return View(membre); }
                 var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadsDir))
-                    Directory.CreateDirectory(uploadsDir);
-                var fileName = Guid.NewGuid().ToString() +
-                               Path.GetExtension(membre.PhotoFile.FileName);
-                var filePath = Path.Combine(uploadsDir, fileName);
-                using var stream = new FileStream(filePath, FileMode.Create);
+                if (!Directory.Exists(uploadsDir)) Directory.CreateDirectory(uploadsDir);
+                var ext = Path.GetExtension(membre.PhotoFile.FileName).ToLower();
+                var fileName = Guid.NewGuid().ToString() + ext;
+                using var stream = new FileStream(Path.Combine(uploadsDir, fileName), FileMode.Create);
                 await membre.PhotoFile.CopyToAsync(stream);
                 membre.Photo = fileName;
             }
@@ -88,13 +88,13 @@ namespace tontine.MVC.Controllers
         {
             if (membre.PhotoFile != null && membre.PhotoFile.Length > 0)
             {
+                if (!IsValidImageFile(membre.PhotoFile, out var err))
+                { ModelState.AddModelError("PhotoFile", err); return View(membre); }
                 var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadsDir))
-                    Directory.CreateDirectory(uploadsDir);
-                var fileName = Guid.NewGuid().ToString() +
-                               Path.GetExtension(membre.PhotoFile.FileName);
-                var filePath = Path.Combine(uploadsDir, fileName);
-                using var stream = new FileStream(filePath, FileMode.Create);
+                if (!Directory.Exists(uploadsDir)) Directory.CreateDirectory(uploadsDir);
+                var ext = Path.GetExtension(membre.PhotoFile.FileName).ToLower();
+                var fileName = Guid.NewGuid().ToString() + ext;
+                using var stream = new FileStream(Path.Combine(uploadsDir, fileName), FileMode.Create);
                 await membre.PhotoFile.CopyToAsync(stream);
                 membre.Photo = fileName;
             }
@@ -148,6 +148,22 @@ namespace tontine.MVC.Controllers
         {
             await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        private static readonly string[] _allowedImageMimes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+        private static readonly string[] _allowedImageExts  = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+
+        private static bool IsValidImageFile(IFormFile file, out string error)
+        {
+            error = "";
+            if (file.Length > 5 * 1024 * 1024)
+            { error = "La photo ne doit pas dépasser 5 Mo."; return false; }
+            if (!_allowedImageMimes.Contains(file.ContentType.ToLower()))
+            { error = "Type de fichier non autorisé (JPG, PNG, GIF ou WEBP uniquement)."; return false; }
+            var ext = Path.GetExtension(file.FileName).ToLower();
+            if (!_allowedImageExts.Contains(ext))
+            { error = "Extension de fichier non autorisée."; return false; }
+            return true;
         }
     }
 }

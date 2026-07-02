@@ -1,0 +1,178 @@
+@model tontine.MVC.Models.CalendrierViewModel
+@{
+    ViewData["Title"] = "Calendrier des versements";
+    string F(decimal v) => v.ToString("N0") + " FCFA";
+}
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <div>
+        <h2 style="margin:0; font-size:22px; font-weight:600;">Calendrier des versements</h2>
+        <p style="margin:4px 0 0; font-size:13px; color:#888;">
+            Cycle : <strong style="color:#0F6E56;">@Model.NomCycle</strong>
+            @if (Model.DateDebut.HasValue) {
+                <span>— du @Model.DateDebut.Value.ToString("dd/MM/yyyy")</span>
+            }
+            @if (Model.DateFin.HasValue) {
+                <span>au @Model.DateFin.Value.ToString("dd/MM/yyyy")</span>
+            }
+        </p>
+    </div>
+</div>
+
+@* Résumé global *@
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;">
+    <div style="background:white; border-radius:12px; padding:20px 24px; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:12px; color:#888; text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">Total membres</div>
+        <div style="font-size:28px; font-weight:800; color:#0F6E56; margin-top:4px;">@Model.TotalSlots</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">sur ce cycle</div>
+    </div>
+    <div style="background:white; border-radius:12px; padding:20px 24px; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:12px; color:#888; text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">Versements effectués</div>
+        <div style="font-size:28px; font-weight:800; color:#1565C0; margin-top:4px;">@Model.TotalVerses</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">/ @Model.TotalSlots bénéficiaires</div>
+    </div>
+    <div style="background:white; border-radius:12px; padding:20px 24px; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:12px; color:#888; text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">Avancement global</div>
+        <div style="font-size:28px; font-weight:800; color:#F57C00; margin-top:4px;">
+            @(Model.TotalSlots > 0 ? (100 * Model.TotalVerses / Model.TotalSlots) : 0)%
+        </div>
+        @{
+            decimal pct = Model.TotalSlots > 0 ? 100m * Model.TotalVerses / Model.TotalSlots : 0;
+        }
+        <div style="margin-top:6px; height:6px; background:#F0EEE8; border-radius:3px; overflow:hidden;">
+            <div style="height:100%; width:@pct.ToString("0")%; background:#F57C00; border-radius:3px; transition:width 0.8s;"></div>
+        </div>
+    </div>
+</div>
+
+@if (!Model.ParTontine.Any())
+{
+    <div style="background:white; border-radius:12px; padding:60px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        <div style="font-size:40px; opacity:0.2; margin-bottom:12px;">📅</div>
+        <p style="color:#888; font-size:15px;">Aucun membre inscrit à une tontine pour ce cycle.</p>
+        <a asp-controller="MembreCycleTontine" asp-action="Index" style="color:#0F6E56; font-weight:500; text-decoration:none;">
+            Inscrire des membres →
+        </a>
+    </div>
+}
+else
+{
+    @foreach (var tontine in Model.ParTontine)
+    {
+        var avancement = (int)tontine.PourcentageAvancement;
+        <div style="background:white; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.08); margin-bottom:28px; overflow:hidden;">
+
+            @* En-tête tontine *@
+            <div style="background:linear-gradient(135deg,#0B5940,#0F6E56); padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h3 style="color:white; margin:0; font-size:17px; font-weight:700;">@tontine.LibelleTontine</h3>
+                    <p style="color:rgba(255,255,255,0.75); margin:3px 0 0; font-size:13px;">
+                        Fréquence : <strong>@tontine.Frequence</strong>
+                        &nbsp;·&nbsp; Cotisation : <strong>@F(tontine.MontantCotisation)</strong>
+                        &nbsp;·&nbsp; Pot total : <strong>@F(tontine.MontantPot)</strong>
+                    </p>
+                </div>
+                <div style="text-align:right;">
+                    <div style="color:white; font-size:22px; font-weight:800;">@tontine.NombreVerses/@tontine.NombreMembres</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:12px;">versé(s)</div>
+                </div>
+            </div>
+
+            @* Barre de progression *@
+            <div style="height:5px; background:rgba(0,0,0,0.08);">
+                <div style="height:100%; width:@avancement%; background:#9FE1CB; transition:width 0.8s;"></div>
+            </div>
+
+            @* Tableau des slots *@
+            <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                    <thead>
+                        <tr style="background:#F8FDF9; border-bottom:1.5px solid #E1F5EE;">
+                            <th style="padding:12px 16px; text-align:center; font-weight:600; color:#444; width:50px;">#</th>
+                            <th style="padding:12px 16px; text-align:left; font-weight:600; color:#444;">Bénéficiaire</th>
+                            <th style="padding:12px 16px; text-align:left; font-weight:600; color:#444;">Date prévue</th>
+                            <th style="padding:12px 16px; text-align:right; font-weight:600; color:#444;">Montant du pot</th>
+                            <th style="padding:12px 16px; text-align:center; font-weight:600; color:#444;">Statut</th>
+                            <th style="padding:12px 16px; text-align:left; font-weight:600; color:#444;">Date réelle</th>
+                            <th style="padding:12px 16px; text-align:right; font-weight:600; color:#444;">Montant net</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var slot in tontine.Slots)
+                        {
+                            var (sBg, sClr, sBorder) = slot.Statut switch {
+                                "Versé"     => ("#E6F4EE", "#0F6E56", "#C8E6C9"),
+                                "En retard" => ("#FFEBEE", "#C62828", "#FFCDD2"),
+                                _           => ("#FAFAFA", "#555",    "#F0EEE8")
+                            };
+
+                            bool isNext = !slot.Verse && tontine.Slots
+                                .Where(s => !s.Verse)
+                                .OrderBy(s => s.DatePrevue ?? DateTime.MaxValue)
+                                .FirstOrDefault()?.IdMembre == slot.IdMembre
+                                && tontine.Slots.All(s => s.IdMembre != slot.IdMembre || s == slot || !(!s.Verse));
+
+                            <tr style="border-bottom:1px solid #F4F4F2; background:@sBg;"
+                                onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                <td style="padding:14px 16px; text-align:center; font-weight:700; color:#0F6E56; font-size:15px;">
+                                    @slot.NumeroOrdre
+                                </td>
+                                <td style="padding:14px 16px;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <div style="width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0; background:#E6F4EE; display:flex; align-items:center; justify-content:center; font-weight:700; color:#0F6E56; font-size:13px;">
+                                            @if (!string.IsNullOrEmpty(slot.Photo)) {
+                                                <img src="/uploads/@slot.Photo" style="width:100%; height:100%; object-fit:cover;" />
+                                            } else {
+                                                <span>@(slot.NomMembre.Length > 0 ? slot.NomMembre[0].ToString().ToUpper() : "?")</span>
+                                            }
+                                        </div>
+                                        <span style="font-weight:600; color:#333;">@slot.NomMembre</span>
+                                    </div>
+                                </td>
+                                <td style="padding:14px 16px; color:#555;">
+                                    @if (slot.DatePrevue.HasValue) {
+                                        <span>@slot.DatePrevue.Value.ToString("dd/MM/yyyy")</span>
+                                    } else {
+                                        <span style="color:#bbb;">—</span>
+                                    }
+                                </td>
+                                <td style="padding:14px 16px; text-align:right; font-weight:700; color:#0F6E56; font-size:15px;">
+                                    @F(slot.MontantPot)
+                                </td>
+                                <td style="padding:14px 16px; text-align:center;">
+                                    <span style="background:white; border:1.5px solid @sBorder; color:@sClr; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; white-space:nowrap;">
+                                        @if (slot.Statut == "Versé") { <text>✓ Versé</text> }
+                                        else if (slot.Statut == "En retard") { <text>⚠ En retard</text> }
+                                        else { <text>⏳ À venir</text> }
+                                    </span>
+                                </td>
+                                <td style="padding:14px 16px; color:#555;">
+                                    @if (slot.DateVersement.HasValue) {
+                                        <span>@slot.DateVersement.Value.ToString("dd/MM/yyyy")</span>
+                                    } else {
+                                        <span style="color:#bbb;">—</span>
+                                    }
+                                </td>
+                                <td style="padding:14px 16px; text-align:right;">
+                                    @if (slot.Verse) {
+                                        <span style="font-weight:700; color:#0F6E56;">@F(slot.MontantNet)</span>
+                                    } else {
+                                        <span style="color:#bbb;">—</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @* Résumé bas de carte *@
+            <div style="padding:12px 24px; background:#F8FDF9; border-top:1.5px solid #E1F5EE; display:flex; gap:24px; font-size:13px; color:#555;">
+                <span>Versés : <strong style="color:#0F6E56;">@tontine.NombreVerses</strong></span>
+                <span>En attente : <strong style="color:#F57C00;">@(tontine.NombreMembres - tontine.NombreVerses - tontine.Slots.Count(s => s.Statut == "En retard"))</strong></span>
+                <span>En retard : <strong style="color:#C62828;">@tontine.Slots.Count(s => s.Statut == "En retard")</strong></span>
+                <span style="margin-left:auto;">Total pot distribué : <strong style="color:#0F6E56;">@F(tontine.Slots.Where(s => s.Verse).Sum(s => s.MontantNet))</strong></span>
+            </div>
+        </div>
+    }
+}
