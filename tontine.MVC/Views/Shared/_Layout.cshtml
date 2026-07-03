@@ -722,6 +722,41 @@
 
         }
 
+        /* ── Responsive mobile ── */
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 8px;
+            color: #555;
+            margin-right: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 99;
+        }
+        @@media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .sidebar {
+                transform: translateX(-260px);
+                transition: transform 0.3s ease;
+                z-index: 200;
+            }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            .main-wrapper { margin-left: 0 !important; }
+            .topbar { padding: 10px 14px; }
+            .topbar-title { font-size: 14px; }
+            .page-content { padding: 12px !important; }
+        }
+
         /* stylelint-disable-next-line */
 
         @@media print {
@@ -1529,11 +1564,17 @@
 
 
 
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
     <div class="main-wrapper">
 
         <div class="topbar">
 
             <div class="topbar-left">
+
+                <button class="hamburger-btn" onclick="toggleMobileSidebar()" title="Menu">
+                    <i data-lucide="menu" style="width:22px;height:22px;"></i>
+                </button>
 
                 <span class="topbar-title">@ViewData["Title"]</span>
 
@@ -1977,6 +2018,22 @@
     </script>
 
     <script>lucide.createIcons();</script>
+    <script>
+        function toggleMobileSidebar() {
+            document.querySelector('.sidebar').classList.toggle('mobile-open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+        function closeMobileSidebar() {
+            document.querySelector('.sidebar').classList.remove('mobile-open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+        // Fermer le sidebar quand on clique sur un lien (mobile)
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('.sidebar a').forEach(function(link) {
+                link.addEventListener('click', closeMobileSidebar);
+            });
+        }
+    </script>
 
     <!-- ── Bannière hors-ligne ─────────────────────────────────────── -->
     <div id="offline-banner"
