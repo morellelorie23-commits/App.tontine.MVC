@@ -1,0 +1,91 @@
+@model List<tontine.MVC.Models.PaiementMobileViewModel>
+@{
+    ViewData["Title"] = "Paiements mobiles";
+    var confirmes  = Model.Count(p => p.Statut == "Confirmé");
+    var enAttente  = Model.Count(p => p.Statut == "En attente");
+    var echoues    = Model.Count(p => p.Statut == "Échoué");
+    var totalMontant = Model.Where(p => p.Statut == "Confirmé").Sum(p => p.Montant);
+}
+
+<partial name="_Breadcrumb" />
+
+<!-- Cartes résumé -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;">
+    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 6px rgba(0,0,0,.06);border-left:4px solid #0F6E56;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;">Confirmés</div>
+        <div style="font-size:26px;font-weight:700;color:#0F6E56;">@confirmes</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 6px rgba(0,0,0,.06);border-left:4px solid #F59E0B;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;">En attente</div>
+        <div style="font-size:26px;font-weight:700;color:#F59E0B;">@enAttente</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 6px rgba(0,0,0,.06);border-left:4px solid #EF4444;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;">Échoués</div>
+        <div style="font-size:26px;font-weight:700;color:#EF4444;">@echoues</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 1px 6px rgba(0,0,0,.06);border-left:4px solid #6366F1;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;">Total encaissé</div>
+        <div style="font-size:22px;font-weight:700;color:#6366F1;">@totalMontant.ToString("N0") FCFA</div>
+    </div>
+</div>
+
+<!-- Tableau -->
+<div style="background:white;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.07);overflow:hidden;">
+    <div style="padding:18px 24px;border-bottom:1px solid #F0F2F5;display:flex;justify-content:space-between;align-items:center;">
+        <h2 style="font-size:15px;font-weight:600;margin:0;">
+            <i data-lucide="smartphone" style="width:17px;height:17px;vertical-align:-3px;margin-right:6px;color:#0F6E56;"></i>
+            Historique des paiements mobiles
+        </h2>
+        <span style="font-size:12px;color:#888;">@Model.Count transaction(s)</span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div style="padding:48px;text-align:center;color:#888;">
+            <i data-lucide="smartphone" style="width:40px;height:40px;color:#ddd;display:block;margin:0 auto 12px;"></i>
+            Aucun paiement mobile enregistré pour ce cycle.
+        </div>
+    }
+    else
+    {
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                    <tr style="background:#F8FAFB;border-bottom:1px solid #E8EAF0;">
+                        <th style="padding:11px 16px;text-align:left;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Membre</th>
+                        <th style="padding:11px 16px;text-align:left;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Opérateur</th>
+                        <th style="padding:11px 16px;text-align:left;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Téléphone</th>
+                        <th style="padding:11px 16px;text-align:right;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Montant</th>
+                        <th style="padding:11px 16px;text-align:left;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Référence</th>
+                        <th style="padding:11px 16px;text-align:center;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Statut</th>
+                        <th style="padding:11px 16px;text-align:left;font-weight:600;color:#555;font-size:11px;text-transform:uppercase;">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        var (bgColor, textColor, label) = p.Statut switch {
+                            "Confirmé"  => ("#D1FAE5", "#065F46", "Confirmé"),
+                            "En attente" => ("#FEF3C7", "#92400E", "En attente"),
+                            _           => ("#FEE2E2", "#991B1B", "Échoué")
+                        };
+                        var operateurColor = p.Operateur == "MTN" ? "#FCD34D" : "#FB923C";
+                        <tr style="border-bottom:1px solid #F4F6F9;" onmouseover="this.style.background='#FAFBFC'" onmouseout="this.style.background=''">
+                            <td style="padding:12px 16px;font-weight:500;">@(p.NomMembre ?? "—")</td>
+                            <td style="padding:12px 16px;">
+                                <span style="background:@operateurColor;color:white;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;">@p.Operateur</span>
+                            </td>
+                            <td style="padding:12px 16px;color:#555;">@p.Telephone</td>
+                            <td style="padding:12px 16px;text-align:right;font-weight:600;">@p.Montant.ToString("N0") FCFA</td>
+                            <td style="padding:12px 16px;font-family:monospace;font-size:11px;color:#666;">@p.Reference</td>
+                            <td style="padding:12px 16px;text-align:center;">
+                                <span style="background:@bgColor;color:@textColor;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;">@label</span>
+                            </td>
+                            <td style="padding:12px 16px;color:#777;font-size:12px;">@p.DateCreation.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

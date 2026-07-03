@@ -14,6 +14,7 @@ namespace tontine.MVC.Models
         public DateTime  DateCreation     { get; set; }
         public DateTime? DateConfirmation { get; set; }
         public string?   MessageErreur    { get; set; }
+        public string?   NomMembre        { get; set; }
     }
 
     public class InitierPaiementViewModel

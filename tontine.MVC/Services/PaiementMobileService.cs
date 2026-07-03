@@ -9,6 +9,7 @@ namespace tontine.MVC.Services
 
     public interface IPaiementMobileService
     {
+        Task<List<PaiementMobileViewModel>> GetAllAsync(int? idCycle = null);
         Task<InitierResult> InitierAsync(InitierPaiementViewModel req);
         Task<VerifierStatutResult?> VerifierStatutAsync(string reference);
         Task<PaiementMobileViewModel?> GetStatutAsync(string reference);
@@ -22,6 +23,15 @@ namespace tontine.MVC.Services
         private readonly JsonSerializerOptions _json = new() { PropertyNameCaseInsensitive = true };
 
         public PaiementMobileService(HttpClient http) => _http = http;
+
+        public async Task<List<PaiementMobileViewModel>> GetAllAsync(int? idCycle = null)
+        {
+            var url = idCycle.HasValue ? $"api/PaiementMobile?idCycle={idCycle}" : "api/PaiementMobile";
+            var response = await _http.GetAsync(url);
+            if (!response.IsSuccessStatusCode) return new();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<PaiementMobileViewModel>>(json, _json) ?? new();
+        }
 
         public async Task<InitierResult> InitierAsync(InitierPaiementViewModel req)
         {
