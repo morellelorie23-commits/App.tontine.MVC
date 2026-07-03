@@ -10,6 +10,7 @@ namespace tontine.MVC.Controllers
         private readonly IReunionService           _service;
         private readonly ITontineService           _tontines;
         private readonly IEmailService             _email;
+        private readonly ISmsService               _sms;
         private readonly IPresenceService          _presences;
         private readonly IMembreService            _membres;
         private readonly IMembreCycleTontineService _mct;
@@ -19,6 +20,7 @@ namespace tontine.MVC.Controllers
             IReunionService           service,
             ITontineService           tontines,
             IEmailService             email,
+            ISmsService               sms,
             IPresenceService          presences,
             IMembreService            membres,
             IMembreCycleTontineService mct,
@@ -27,6 +29,7 @@ namespace tontine.MVC.Controllers
             _service   = service;
             _tontines  = tontines;
             _email     = email;
+            _sms       = sms;
             _presences = presences;
             _membres   = membres;
             _mct       = mct;
@@ -126,23 +129,31 @@ namespace tontine.MVC.Controllers
             var taches = inscrits.Select(async inscrit =>
             {
                 var membre = await _membres.GetByIdAsync(inscrit.IdMembre);
-                if (membre?.Email != null)
+                if (membre == null) return;
+                var nomComplet = $"{membre.Prenom} {membre.Nom}";
+                bool contacte = false;
+                if (membre.Email != null)
                 {
                     await _email.SendConvocationAsync(
-                        membre.Email,
-                        $"{membre.Prenom} {membre.Nom}",
-                        reunion.Objet,
-                        reunion.LibelleTontine,
-                        reunion.DateReunion,
-                        reunion.Lieu,
-                        reunion.Notes);
-                    Interlocked.Increment(ref envoyes);
+                        membre.Email, nomComplet,
+                        reunion.Objet, reunion.LibelleTontine,
+                        reunion.DateReunion, reunion.Lieu, reunion.Notes);
+                    contacte = true;
                 }
+                if (membre.Telephone != null)
+                {
+                    await _sms.SendConvocationAsync(
+                        membre.Telephone, nomComplet,
+                        reunion.Objet, reunion.LibelleTontine,
+                        reunion.DateReunion, reunion.Lieu);
+                    contacte = true;
+                }
+                if (contacte) Interlocked.Increment(ref envoyes);
             });
 
             _ = Task.WhenAll(taches);
 
-            TempData["Success"] = $"Convocations envoyées à {inscrits.Count} membre(s) (emails configurés uniquement).";
+            TempData["Success"] = $"Convocations envoyées à {inscrits.Count} membre(s) (email + SMS selon coordonnées renseignées).";
             return RedirectToAction(nameof(Index));
         }
 

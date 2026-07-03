@@ -82,6 +82,7 @@ builder.Services.AddHttpClient<IContributionFondsService, ContributionFondsServi
 builder.Services.AddHttpClient<IDemandeAideService, DemandeAideService>(client =>
     client.BaseAddress = new Uri(apiBase));
 builder.Services.AddSingleton<IEmailService, EmailService>();
+builder.Services.AddSingleton<ISmsService, SmsService>();
 builder.Services.AddSingleton<PdfService>();
 builder.Services.AddSingleton<ExcelService>();
 builder.Services.AddHostedService<CommunicationBackgroundService>();

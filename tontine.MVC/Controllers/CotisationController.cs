@@ -20,6 +20,7 @@ namespace tontine.MVC.Controllers
         private readonly IVersementService        _versements;
         private readonly ExcelService             _excel;
         private readonly IEmailService            _email;
+        private readonly ISmsService              _sms;
 
         public CotisationController(ICotisationService service, IMembreService membres,
                                      ITontineService tontines, ICycleService cycles,
@@ -29,7 +30,8 @@ namespace tontine.MVC.Controllers
                                      IGrandLivreService gl,
                                      IVersementService versements,
                                      ExcelService excel,
-                                     IEmailService email)
+                                     IEmailService email,
+                                     ISmsService sms)
         {
             _service    = service;
             _membres    = membres;
@@ -43,6 +45,7 @@ namespace tontine.MVC.Controllers
             _versements = versements;
             _excel      = excel;
             _email      = email;
+            _sms        = sms;
         }
 
         public async Task<IActionResult> Index()
@@ -136,17 +139,23 @@ namespace tontine.MVC.Controllers
             if (ok)
             {
                 TempData["Success"] = "Paiement en espèces enregistré.";
-                // Envoi de la confirmation par email (en arrière-plan, sans bloquer la réponse)
+                // Confirmation par email + SMS (en arrière-plan)
                 _ = Task.Run(async () =>
                 {
                     var cot = await _service.GetByIdAsync(id);
                     if (cot == null) return;
                     var membre = await _membres.GetByIdAsync(cot.IdMembre);
-                    if (membre?.Email != null)
+                    if (membre == null) return;
+                    var nomComplet = $"{membre.Prenom} {membre.Nom}";
+                    if (membre.Email != null)
                         await _email.SendConfirmationPaiementAsync(
-                            membre.Email, $"{membre.Prenom} {membre.Nom}",
+                            membre.Email, nomComplet,
                             cot.LibelleTontine, cot.NomCycle,
                             cot.Montant, cot.DateCotisation, cot.IdCotisation);
+                    if (membre.Telephone != null)
+                        await _sms.SendConfirmationPaiementAsync(
+                            membre.Telephone, nomComplet,
+                            cot.LibelleTontine, cot.Montant, cot.DateCotisation, cot.IdCotisation);
                 });
             }
             else
