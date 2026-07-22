@@ -198,6 +198,30 @@
         .bill.b4 { animation-name: b4Fall; animation-delay: -2.0s; }
         .bill.b5 { animation-name: b5Fall; animation-delay: -1.5s; }
         .bill.b6 { animation-name: b6Fall; animation-delay: -1.0s; }
+
+        /* ── Écran de chargement à la connexion ───────────────
+           Id volontairement non générique ("overlay"/"loading-overlay" sont des
+           motifs souvent bloqués par les filtres anti-popup des bloqueurs de pub). */
+        #tontine-connexion-statut {
+            display: none;
+            position: fixed; inset: 0; z-index: 999;
+            background: linear-gradient(135deg, #0B5940 0%, #0F6E56 50%, #1D9E75 100%);
+            align-items: center; justify-content: center;
+            flex-direction: column; gap: 22px;
+        }
+        .login-spinner {
+            width: 56px; height: 56px;
+            border: 5px solid rgba(255,255,255,0.25);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: login-spin 0.8s linear infinite;
+        }
+        @@keyframes login-spin { to { transform: rotate(360deg); } }
+        #tontine-connexion-statut p {
+            color: white; font-size: 15px; font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .btn-login:disabled { opacity: 0.75; cursor: default; }
     </style>
 </head>
 <body>
@@ -444,12 +468,38 @@
     </div>
 </div>
 
+<!-- ── Écran de chargement affiché pendant la connexion ── -->
+<div id="tontine-connexion-statut">
+    <div class="login-spinner"></div>
+    <p>Connexion en cours…</p>
+</div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 <script src="~/js/lucide.min.js"></script>
 <script>
     lucide.createIcons();
+
+    $(function () {
+        var form    = document.querySelector('form');
+        var btn     = document.querySelector('.btn-login');
+        var overlay = document.getElementById('tontine-connexion-statut');
+
+        // Ce handler est attaché après celui de jquery.validate.unobtrusive (déjà
+        // en place au moment où ce bloc $(document).ready s'exécute) : si la
+        // validation a échoué, elle a déjà appelé preventDefault() sur l'événement
+        // avant que ce handler ne s'exécute à son tour.
+        form.addEventListener('submit', function (e) {
+            if (e.defaultPrevented) return;
+
+            e.preventDefault();
+            btn.disabled = true;
+            overlay.style.display = 'flex';
+            setTimeout(function () { form.submit(); }, 1200);
+        });
+    });
+
     function togglePwd() {
         var input = document.getElementById('pwd-input');
         var icon  = document.getElementById('pwd-icon');
